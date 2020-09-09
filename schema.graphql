@@ -1,0 +1,221 @@
+interface App {
+	tenant: Tenant!
+	type: AppType!
+	auth_type: AppAuthType!
+	name: String!
+	description: String
+	nodes: [Node]
+}
+
+enum AppAuthType {
+	x_account
+	cognito
+}
+
+enum AppType {
+	hl7
+	edge
+}
+
+type CognitoUser {
+	tenant: Tenant!
+	name: String!
+	role: String!
+}
+
+type CustomNode implements Node {
+	tenant: Tenant!
+	name: String!
+	node_type: String!
+	description: String
+	address: Int!
+	edge: Edge
+	app: App
+	metadata: AWSJSON
+}
+
+type Edge {
+	tenant: Tenant!
+	name: String!
+	description: String
+	source: Node!
+	target: Node!
+	metadata: AWSJSON
+	kms_key: KMSKey!
+	queue: String!
+}
+
+type EdgeApp {
+	tenant: Tenant!
+	type: AppType!
+	name: String!
+	description: String
+	nodes: [Node]
+	account: String!
+}
+
+input EdgeAppInput {
+	auth_type: AppAuthType!
+	name: String!
+	description: String
+	nodes: [String]
+	account: String!
+}
+
+input EdgeInput {
+	name: String!
+	description: String
+	kms_key: String!
+	source: String!
+	target: String!
+	metadata: AWSJSON
+}
+
+type EdgeNode implements Node {
+	tenant: Tenant!
+	name: String!
+	description: String
+	edges: [Edge]
+	app: App
+	metadata: AWSJSON
+}
+
+input EdgeNodeInput {
+	name: String!
+	description: String
+	app: String
+	metadata: AWSJSON
+	edges: [String]
+}
+
+type Hl7App implements App {
+	tenant: Tenant!
+	type: AppType!
+	name: String!
+	description: String
+	instances: AWSJSON
+	iso_image: AWSURL
+	nodes: [Node]
+	ssm_activation_code: String
+	auth_type: AppAuthType!
+}
+
+input Hl7AppInput {
+	name: String!
+	description: String
+	nodes: [String]
+}
+
+type Hl7InboundNode implements Node {
+	tenant: Tenant!
+	name: String!
+	node_type: String!
+	description: String
+	port: Int!
+	edge: Edge
+	app: App
+	metadata: AWSJSON
+}
+
+input Hl7InboundNodeInput {
+	name: String!
+	description: String
+	port: Int!
+	app: String
+	metadata: AWSJSON
+	edge: String
+}
+
+type Hl7OutboundNode implements Node {
+	tenant: Tenant!
+	name: String!
+	node_type: String!
+	description: String
+	remote_host: String!
+	edge: Edge
+	app: App
+	metadata: AWSJSON
+}
+
+input Hl7OutboundNodeInput {
+	name: String!
+	description: String
+	remote_host: String!
+	app: String
+	metadata: AWSJSON
+	edge: String
+}
+
+type KMSKey {
+	tenant: Tenant!
+	name: String!
+	arn: String!
+	description: String
+}
+
+input KmsKeyInput {
+	name: String!
+	description: String
+}
+
+type Mutation {
+	PutTenant(tenant: TenantInput!): Tenant
+	PutEdge(edge: EdgeInput!): Edge
+	PutHl7InboundNode(node: Hl7InboundNodeInput!): Hl7InboundNode
+	PutHl7OutboundNode(node: Hl7OutboundNodeInput!): Hl7OutboundNode
+	PutEdgeNode(node: EdgeNodeInput!): Node
+	PutHl7App(app: Hl7AppInput!): Hl7App
+	PutEdgeApp(app: EdgeAppInput!): EdgeApp
+	PutKmsKey(key: KmsKeyInput!): KMSKey
+}
+
+interface Node {
+	name: String!
+	description: String
+	tenant: Tenant!
+	app: App
+	metadata: AWSJSON
+}
+
+type Query {
+	SearchApps(tenant: String!): App
+	ListKeys: [KMSKey]
+}
+
+enum Region {
+	us_east_1
+	us_east_2
+	us_west_1
+	us_west_2
+	af_south_1
+	ap_east_1
+	ap_south_1
+	ap_northeast_1
+	ap_northeast_2
+	ap_northeast_3
+	ap_southeast_1
+	ap_southeast_2
+	ca_central_1
+	cn_north_1
+	cn_northwest_1
+	eu_central_1
+	eu_west_1
+	eu_west_2
+	eu_south_1
+	eu_west_3
+	eu_north_1
+	me_south_1
+	sa_east_1
+	us_gov_east_1
+	us_gov_west_1
+}
+
+type Tenant {
+	name: String!
+	default_region: Region!
+}
+
+input TenantInput {
+	name: String!
+	default_region: Region!
+}
