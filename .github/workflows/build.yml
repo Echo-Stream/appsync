@@ -25,11 +25,9 @@ jobs:
       run: |
         echo "::set-env name=AWS_DEFAULT_REGION::us-east-1"
         if [ "${GITHUB_REF}" = "refs/heads/develop" ]; then
-          echo ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }} >> .env
-          echo "CAT FILE: $(cat .env)"
           echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_DEV }}"
           echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}"
-          echo "::set-env name=API_ID::${API_ID}"
+          echo "::set-env name=API_ID::${{ secret.APPSYNC_API_ID_DEV }}"
         elif [ "${GITHUB_REF}" = "refs/heads/master" ]; then
           echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_PROD }}"
           echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}"
@@ -47,7 +45,7 @@ jobs:
       run: |
 
         echo "API ID: ${API_ID}, KEY_ID: ${AWS_ACCESS_KEY_ID}, AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}, REGION: ${AWS_DEFAULT_REGION}"
-        python -m appsync_schema_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ks6aklbthfdfthe5bgdr4kguxq --schema schema.graphql
+        python -m appsync_schema_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --schema schema.graphql
     - name: Upload resolvers
       run: |
         DYNAMO_SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/single-result.vtl --request-mapping-template "
