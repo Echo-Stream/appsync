@@ -23,7 +23,7 @@ jobs:
       run: pip3.8 install appsync-schema-uploader appsync-resolver-uploader
     - name: Set env vars
       run: |
-        echo ::set-env name=AWS_DEFAULT_REGION::us-east-1
+        echo "::set-env name=AWS_DEFAULT_REGION::us-east-1"
         if [ "${GITHUB_REF}" = "refs/heads/develop" ]; then
           echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_DEV }}"
           echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}"
