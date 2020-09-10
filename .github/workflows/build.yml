@@ -22,21 +22,32 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install --upgrade appsync-resolver-uploader
+        python -m pip install --upgrade appsync-resolver-uploader appsync-schema-uploader
     - name: Set env vars
       run: |
-        if [ "${GITHUB_REF}" == "refs/heads/develop"]; then
+        echo "::set-env name=AWS_DEFAULT_REGION::us-east-1"
+        if [ "${GITHUB_REF}" = "refs/heads/develop"]; then
           echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
-          echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
           echo "::set-env name=API_ID::${{ secrets.APPSYNC_API_ID_DEV }}
-          echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+        fi
+        if [ "${GITHUB_REF}" = "refs/heads/master"]; then
+          echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_PROD }}
+          echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}
+          echo "::set-env name=API_ID::${{ secrets.APPSYNC_API_ID_DEV }}
+        fi
+        if [[ "${GITHUB_REF}" =~ ^refs/heads/(release|rc)-([0-9]+\.)+[0-9]$ ]]; then
+          echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_STAGE }}
+          echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_STAGE }}
+          echo "::set-env name=API_ID::${{ secrets.APPSYNC_API_ID_STAGE }}
+        fi
+    - name: Upload schema
+      run: python -m appsync_schema_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --schema schema.graphql
     - name: Upload resolvers
       run: |
-        SINGLE_RESPONSE=response_templates/single_response.vtl
-        MULTI_RESPONSE=response_templates/multi_response.vtl
-        DYNAMO_SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template ${SINGLE_RESPONSE} --request-mapping-template "
-        DYNAMO_MULTI_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template ${MULTI_RESPONSE} --request-mapping-template "
-        LAMBDA_RESOLVER="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name "
+        DYNAMO_SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/single_response.vtl --request-mapping-template "
+        DYNAMO_MULTI_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/multi_response.vtl --request-mapping-template "
+        LAMBDA_RESOLVER="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name "
 
         # Queries
         $LAMBDA_RESOLVER kms-key-datasource --type-name Query --field-name ListKeys

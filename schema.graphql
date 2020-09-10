@@ -28,7 +28,6 @@ type CustomNode implements Node {
 	name: String!
 	node_type: String!
 	description: String
-	address: Int!
 	edge: Edge
 	app: App
 	metadata: AWSJSON
@@ -85,7 +84,6 @@ input EdgeNodeInput {
 	description: String
 	app: String
 	metadata: AWSJSON
-	edges: [String]
 }
 
 type Hl7App implements App {
@@ -123,7 +121,6 @@ input Hl7InboundNodeInput {
 	port: Int!
 	app: String
 	metadata: AWSJSON
-	edge: String
 }
 
 type Hl7OutboundNode implements Node {
@@ -132,6 +129,7 @@ type Hl7OutboundNode implements Node {
 	node_type: String!
 	description: String
 	remote_host: String!
+	remote_port: Int!
 	edge: Edge
 	app: App
 	metadata: AWSJSON
@@ -141,9 +139,9 @@ input Hl7OutboundNodeInput {
 	name: String!
 	description: String
 	remote_host: String!
+	remote_port: Int!
 	app: String
 	metadata: AWSJSON
-	edge: String
 }
 
 type KMSKey {
