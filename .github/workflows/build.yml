@@ -25,7 +25,7 @@ jobs:
       run: |
         echo "::set-env name=AWS_DEFAULT_REGION::us-east-1"
         if [ "${GITHUB_REF}" = "refs/heads/develop" ]; then
-          API_ID=$(echo ${{ secrets.APPSYNC_API_ID_DEV }} | sed -r 's/./\1 /g'| sed -r 's/\s//g')
+          API_ID=$(echo ${{ secrets.APPSYNC_API_ID_DEV }} | sed -r 's/(.)/\1 /g'| sed -r 's/\s//g')
           echo $API_ID
           exit 0
           echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_DEV }}"
