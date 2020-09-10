@@ -27,7 +27,7 @@ jobs:
         if [ "${GITHUB_REF}" = "refs/heads/develop" ]; then
           echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_DEV }}"
           echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}"
-          echo "::set-env name=API_ID::${{ secret.APPSYNC_API_ID_DEV }}"
+          echo "::set-env name=API_ID::${{ s.APPSYNC_API_ID_DEV }}"
         elif [ "${GITHUB_REF}" = "refs/heads/master" ]; then
           echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_PROD }}"
           echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_PROD }}"
