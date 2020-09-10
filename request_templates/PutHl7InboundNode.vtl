@@ -1,0 +1,30 @@
+#set ($tenant = "$!ctx.identity.claims.tenant")
+#set ($node_sk = "N~$!ctx.args.node.name")
+#set ($lsi = "A~$!ctx.args.node.app")
+
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        "pk": $util.dynamodb.toDynamoDBJson($tenant),
+        "sk": $util.dynamodb.toDynamoDBJson($node_sk)
+    },
+    "attributeValues" : {
+      "tenant": $util.dynamodb.toDynamoDBJson($tenant),
+      "node_type": $util.dynamodb.toDynamoDBJson("hl7-inbound"),
+      "port": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.port}),
+      "name": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.name}),
+      "app": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.app}),
+      "edge": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.edge}),
+      "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.metadata}),
+      "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.description}"),
+      "lsi0_sk": $util.dynamodb.toDynamoDBJson($lsi)
+    },
+    "condition": {
+        "expression": "(attribute_not_exists(sk) OR sk = :sk) AND node_type = :node_type",
+        "expressionValues": {
+          ":sk": $util.dynamodb.toDynamoDBJson($node_sk),
+          ":node_type": $util.dynamodb.toDynamoDBJson("hl7-inbound")
+        }
+    }
+}

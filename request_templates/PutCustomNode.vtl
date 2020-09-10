@@ -1,0 +1,27 @@
+#set ($tenant = "$!ctx.identity.claims.tenant")
+#set ($node_sk = "N~$!ctx.args.node.name")
+#set ($lsi = "E~$!ctx.args.node.app")
+
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        "pk": $util.dynamodb.toDynamoDBJson($tenant),
+        "sk": $util.dynamodb.toDynamoDBJson($node_sk)
+    },
+    "attributeValues" : {
+      "tenant": $util.dynamodb.toDynamoDBJson($tenant),
+      "node_type": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.node_type}),
+      "name": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.name}),
+      "app": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.app}),
+      "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.metadata}),
+      "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.description}"),
+      "lsi0_sk": $util.dynamodb.toDynamoDBJson($lsi)
+    },
+    "condition": {
+        "expression": "attribute_not_exists(sk) OR sk = :sk",
+        "expressionValues": {
+          ":sk": $util.dynamodb.toDynamoDBJson($node_sk)
+        }
+    }
+}

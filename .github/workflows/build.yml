@@ -1,0 +1,59 @@
+name: Python package
+
+on:
+  push:
+    tags:
+    - '*'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install --upgrade appsync-resolver-uploader
+    - name: Set env vars
+      run: |
+        if [ "${GITHUB_REF}" == "refs/heads/develop"]; then
+          echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+          echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          echo "::set-env name=API_ID::${{ secrets.APPSYNC_API_ID_DEV }}
+          echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
+    - name: Upload resolvers
+      run: |
+        SINGLE_RESPONSE=response_templates/single_response.vtl
+        MULTI_RESPONSE=response_templates/multi_response.vtl
+        DYNAMO_SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template ${SINGLE_RESPONSE} --request-mapping-template "
+        DYNAMO_MULTI_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template ${MULTI_RESPONSE} --request-mapping-template "
+        LAMBDA_RESOLVER="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name "
+
+        # Queries
+        $LAMBDA_RESOLVER kms-key-datasource --type-name Query --field-name ListKeys
+
+        # Mutations
+        DYNAMO_SINGLE_RESPONSE requests/PutHl7InboundNode.vtl --type Mutation --field-name PutHl7InboundNode
+        DYNAMO_SINGLE_RESPONSE requests/PutHl7OutboundNode.vtl --type Mutation --field-name PutHl7OutboundNode
+        DYNAMO_SINGLE_RESPONSE requests/PutEdgeNode.vtl --type Mutation --field-name PutEdgeNode
+        DYNAMO_SINGLE_RESPONSE requests/PutCustomNode.vtl --type Mutation --field-name PutEdgeNode
+        DYNAMO_SINGLE_RESPONSE requests/PutEdge.vtl --type Mutation --field-name PutEdge
+
+        # Subtypes
+        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Hl7InboundNode --field-name tenant
+        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Hl7OutboundNode --field-name tenant
+        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type EdgeNode --field-name tenant
+        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type CustomNode --field-name tenant
+        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Edge --field-name tenant
+        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Hl7App --field-name tenant
+        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type EdgeApp --field-name tenant
+        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type KMSKey --field-name tenant
