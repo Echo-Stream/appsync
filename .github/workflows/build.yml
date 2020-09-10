@@ -35,6 +35,7 @@ jobs:
           echo ::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_STAGE }}
           echo ::set-env name=API_ID::${{ secrets.APPSYNC_API_ID_STAGE }}
         else:
+          echo "REF: ${GITHUB_REF}"
           echo "Not a buildable branch. Exiting"
           exit 0
         fi
