@@ -72,12 +72,16 @@ jobs:
         $SINGLE_RESPONSE request_templates/X-tenant.vtl --type Edge --field-name tenant
         $SINGLE_RESPONSE request_templates/X-tenant.vtl --type Hl7App --field-name tenant
         $SINGLE_RESPONSE request_templates/X-tenant.vtl --type EdgeApp --field-name tenant
-        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type KMSKey --field-name tenant
-        $SINGLE_RESPONSE request_templates/App-nodes.vtl --type App --field-name nodes
-        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type Hl7InboundNode --field-name target_edges
-        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type Hl7OutboundNode --field-name target_edges
-        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type EdgeNode --field-name target_edges
-        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type CustomNode --field-name target_edges
+
+        # Nodes for apps
+        $SINGLE_RESPONSE request_templates/App-nodes.vtl --type Hl7App --field-name nodes
+        $SINGLE_RESPONSE request_templates/App-nodes.vtl --type EdgeApp --field-name nodes
+
+        # Edge resolvers for nodes
+        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type Hl7InboundNode --field-name source_edges
+        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type Hl7OutboundNode --field-name source_edges
+        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type EdgeNode --field-name source_edges
+        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type CustomNode --field-name source_edges
         $MULTI_RESPONSE request_templates/Node-target_edges.vtl --type Hl7InboundNode --field-name target_edges
         $MULTI_RESPONSE request_templates/Node-target_edges.vtl --type Hl7OutboundNode --field-name target_edges
         $MULTI_RESPONSE request_templates/Node-target_edges.vtl --type EdgeNode --field-name target_edges
