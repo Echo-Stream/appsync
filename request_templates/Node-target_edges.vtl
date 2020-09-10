@@ -1,0 +1,15 @@
+#set ($tenant = "$!{ctx.identity.claims.tenant}")
+
+{
+  "version" : "2017-02-28",
+  "operation" : "Query",
+  "index": "lsi0",
+  "query": {
+    "expression": "pk = :tenant AND begins_with(lsi0_sk, :target_node)",
+    "expressionValues": {
+      ":target_node": $util.dynamodb.toDynamoDBJson("E~$!{ctx.source.name}|"),
+      ":tenant": $util.dynamodb.toDynamoDBJson($tenant)
+    }
+  },
+  "limit": 1000
+}

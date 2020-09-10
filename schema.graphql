@@ -28,7 +28,8 @@ type CustomNode implements Node {
 	name: String!
 	node_type: String!
 	description: String
-	edge: Edge
+	source_edges: [Edge]
+	target_edges: [Edge]
 	app: App
 	metadata: AWSJSON
 }
@@ -74,7 +75,8 @@ type EdgeNode implements Node {
 	tenant: Tenant!
 	name: String!
 	description: String
-	edges: [Edge]
+	source_edges: [Edge]
+	target_edges: [Edge]
 	app: App
 	metadata: AWSJSON
 }
@@ -110,7 +112,8 @@ type Hl7InboundNode implements Node {
 	node_type: String!
 	description: String
 	port: Int!
-	edge: Edge
+	source_edges: [Edge]
+	target_edges: [Edge]
 	app: App
 	metadata: AWSJSON
 }
@@ -130,7 +133,8 @@ type Hl7OutboundNode implements Node {
 	description: String
 	remote_host: String!
 	remote_port: Int!
-	edge: Edge
+	source_edges: [Edge]
+	target_edges: [Edge]
 	app: App
 	metadata: AWSJSON
 }
@@ -158,10 +162,12 @@ input KmsKeyInput {
 
 type Mutation {
 	PutTenant(tenant: TenantInput!): Tenant
+	@aws_iam
 	PutEdge(edge: EdgeInput!): Edge
 	PutHl7InboundNode(node: Hl7InboundNodeInput!): Hl7InboundNode
 	PutHl7OutboundNode(node: Hl7OutboundNodeInput!): Hl7OutboundNode
-	PutEdgeNode(node: EdgeNodeInput!): Node
+	PutEdgeNode(node: EdgeNodeInput!): EdgeNode
+	PutCustomNode(node: CustomNodeInput!): CustomNode
 	PutHl7App(app: Hl7AppInput!): Hl7App
 	PutEdgeApp(app: EdgeAppInput!): EdgeApp
 	PutKmsKey(key: KmsKeyInput!): KMSKey
@@ -173,6 +179,8 @@ interface Node {
 	tenant: Tenant!
 	app: App
 	metadata: AWSJSON
+	source_edges: [Edge]
+	target_edges: [Edge]
 }
 
 type Query {

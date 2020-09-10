@@ -43,31 +43,43 @@ jobs:
         echo "REF: ${GITHUB_REF}"
     - name: Upload schema
       run: |
-
-        echo "API ID: ${API_ID}, KEY_ID: ${AWS_ACCESS_KEY_ID}, AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}, REGION: ${AWS_DEFAULT_REGION}"
         python -m appsync_schema_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --schema schema.graphql
     - name: Upload resolvers
       run: |
-        DYNAMO_SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/single-result.vtl --request-mapping-template "
-        DYNAMO_MULTI_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/multi-result.vtl --request-mapping-template "
+        SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/single-result.vtl --request-mapping-template "
+        MULTI_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/multi-result.vtl --request-mapping-template "
         LAMBDA_RESOLVER="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name "
 
         # Queries
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
 
         # Mutations
-        $DYNAMO_SINGLE_RESPONSE request_templates/PutHl7InboundNode.vtl --type Mutation --field-name PutHl7InboundNode
-        $DYNAMO_SINGLE_RESPONSE request_templates/PutHl7OutboundNode.vtl --type Mutation --field-name PutHl7OutboundNode
-        $DYNAMO_SINGLE_RESPONSE request_templates/PutEdgeNode.vtl --type Mutation --field-name PutEdgeNode
-        $DYNAMO_SINGLE_RESPONSE request_templates/PutCustomNode.vtl --type Mutation --field-name PutEdgeNode
-        $DYNAMO_SINGLE_RESPONSE request_templates/PutEdge.vtl --type Mutation --field-name PutEdge
+        $LAMBDA_RESOLVER kms_key_datasource --type Mutation --field-name PutKmsKey
+        $SINGLE_RESPONSE request_templates/PutHl7InboundNode.vtl --type Mutation --field-name PutHl7InboundNode
+        $SINGLE_RESPONSE request_templates/PutHl7OutboundNode.vtl --type Mutation --field-name PutHl7OutboundNode
+        $SINGLE_RESPONSE request_templates/PutEdgeNode.vtl --type Mutation --field-name PutEdgeNode
+        $SINGLE_RESPONSE request_templates/PutCustomNode.vtl --type Mutation --field-name PutEdgeNode
+        $SINGLE_RESPONSE request_templates/PutEdge.vtl --type Mutation --field-name PutEdge
+        $SINGLE_RESPONSE request_templates/PutHl7App.vtl --type Mutation --field-name PutHl7App
+        $SINGLE_RESPONSE request_templates/PutEdgeApp.vtl --type Mutation --field-name PutEdgeApp
+        $SINGLE_RESPONSE request_templates/PutTenant.vtl --type Mutation --field-name PutTenant
 
         # Subtypes
-        $DYNAMO_SINGLE_RESPONSE request_templates/tenant-field.vtl --type Hl7InboundNode --field-name tenant
-        $DYNAMO_SINGLE_RESPONSE request_templates/tenant-field.vtl --type Hl7OutboundNode --field-name tenant
-        $DYNAMO_SINGLE_RESPONSE request_templates/tenant-field.vtl --type EdgeNode --field-name tenant
-        $DYNAMO_SINGLE_RESPONSE request_templates/tenant-field.vtl --type CustomNode --field-name tenant
-        $DYNAMO_SINGLE_RESPONSE request_templates/tenant-field.vtl --type Edge --field-name tenant
-        $DYNAMO_SINGLE_RESPONSE request_templates/tenant-field.vtl --type Hl7App --field-name tenant
-        $DYNAMO_SINGLE_RESPONSE request_templates/tenant-field.vtl --type EdgeApp --field-name tenant
-        $DYNAMO_SINGLE_RESPONSE request_templates/tenant-field.vtl --type KMSKey --field-name tenant
+        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type Hl7InboundNode --field-name tenant
+        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type Hl7OutboundNode --field-name tenant
+        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type EdgeNode --field-name tenant
+        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type CustomNode --field-name tenant
+        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type Edge --field-name tenant
+        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type Hl7App --field-name tenant
+        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type EdgeApp --field-name tenant
+        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type KMSKey --field-name tenant
+        $SINGLE_RESPONSE request_templates/App-nodes.vtl --type App --field-name nodes
+        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type Hl7InboundNode --field-name target_edges
+        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type Hl7OutboundNode --field-name target_edges
+        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type EdgeNode --field-name target_edges
+        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type CustomNode --field-name target_edges
+        $MULTI_RESPONSE request_templates/Node-target_edges.vtl --type Hl7InboundNode --field-name target_edges
+        $MULTI_RESPONSE request_templates/Node-target_edges.vtl --type Hl7OutboundNode --field-name target_edges
+        $MULTI_RESPONSE request_templates/Node-target_edges.vtl --type EdgeNode --field-name target_edges
+        $MULTI_RESPONSE request_templates/Node-target_edges.vtl --type CustomNode --field-name target_edges
+        $LAMBDA_RESOLVER kms_key_datasource --type-name Edge --field-name kms_key

@@ -1,6 +1,6 @@
 #set ($tenant = "$!ctx.identity.claims.tenant")
 #set ($node_sk = "N~$!ctx.args.node.name")
-#set ($lsi = "E~$!ctx.args.node.app")
+#set ($lsi = "A~$!ctx.args.node.app")
 
 {
     "version" : "2017-02-28",
@@ -19,9 +19,10 @@
       "lsi0_sk": $util.dynamodb.toDynamoDBJson($lsi)
     },
     "condition": {
-        "expression": "attribute_not_exists(sk) OR sk = :sk",
+        "expression": "(attribute_not_exists(sk) OR sk = :sk) AND (attribute_not_exists(name) OR name = :name)",
         "expressionValues": {
           ":sk": $util.dynamodb.toDynamoDBJson($node_sk)
+          ":name": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.name})
         }
     }
 }

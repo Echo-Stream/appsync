@@ -1,0 +1,23 @@
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        "pk": $util.dynamodb.toDynamoDBJson($tenant),
+        "sk": $util.dynamodb.toDynamoDBJson("T~")
+    },
+    "attributeValues" : {
+      "pk": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.name}),
+      "sk": $util.dynamodb.toDynamoDBJson("T~"),
+      "name": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.name}),
+      "billing_info": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.billing_info})
+      "default_region": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.default_region})
+    },
+    "condition": {
+        "expression": "(attribute_not_exists(pk) OR pk = :pk) AND (attribute_not_exists(name) OR name = :name) AND (attribute_not_exists(default_region) OR default_region = :default_region)",
+        "expressionValues": {
+          ":pk": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.name})
+          ":name": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.name})
+          ":default_region": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.default_region})
+        }
+    }
+}
