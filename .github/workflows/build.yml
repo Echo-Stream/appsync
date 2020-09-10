@@ -19,6 +19,7 @@ jobs:
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+    - name: Install Deps
       run: pip3.8 install appsync-schema-uploader appsync-resolver-uploader
     - name: Set env vars
       run: |
