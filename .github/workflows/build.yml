@@ -40,11 +40,12 @@ jobs:
           echo "Not a buildable branch. Exiting"
           exit 0
         fi
+        echo "API ID: ${API_ID}, KEY_ID: ${AWS_ACCESS_KEY_ID}, AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}"
+
     - name: Upload schema
       run: python -m appsync_schema_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --schema schema.graphql
     - name: Upload resolvers
       run: |
-        echo "API ID: ${API_ID}, KEY_ID: ${AWS_ACCESS_KEY_ID}, AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}"
         exit 0
         DYNAMO_SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/single-result.vtl --request-mapping-template "
         DYNAMO_MULTI_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/multi-result.vtl --request-mapping-template "
