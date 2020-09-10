@@ -120,8 +120,8 @@ type Hl7InboundNode implements Node {
 	node_type: String!
 	description: String
 	port: Int!
-	source_edges: [Edge]
-	target_edges: [Edge]
+	source_edge: Edge
+	target_edge: Edge
 	app: App
 	metadata: AWSJSON
 }
@@ -141,8 +141,8 @@ type Hl7OutboundNode implements Node {
 	description: String
 	remote_host: String!
 	remote_port: Int!
-	source_edges: [Edge]
-	target_edges: [Edge]
+	source_edge: Edge
+	target_edge: Edge
 	app: App
 	metadata: AWSJSON
 }
