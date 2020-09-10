@@ -35,7 +35,7 @@ jobs:
         elif [[ "${GITHUB_REF}" =~ ^refs/heads/release/([0-9]+\.)+[0-9]$ ]]; then
           echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_STAGE }}"
           echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_STAGE }}"
-          echo "::set-env name=API_ID::foo"
+          echo "::set-env name=API_ID::${{ secrets.APPSYNC_API_ID_STAGE }}"
         else:
           echo "REF: ${GITHUB_REF}"
           echo "Not a buildable branch. Exiting"
@@ -53,7 +53,7 @@ jobs:
         LAMBDA_RESOLVER="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name "
 
         # Queries
-        $LAMBDA_RESOLVER kms-key-datasource --type-name Query --field-name ListKeys
+        $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
 
         # Mutations
         DYNAMO_SINGLE_RESPONSE requests/PutHl7InboundNode.vtl --type Mutation --field-name PutHl7InboundNode
