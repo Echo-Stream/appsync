@@ -187,8 +187,6 @@ interface Node {
 	tenant: Tenant!
 	app: App
 	metadata: AWSJSON
-	source_edges: [Edge]
-	target_edges: [Edge]
 }
 
 type Query {
