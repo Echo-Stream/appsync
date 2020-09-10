@@ -35,7 +35,7 @@ jobs:
         elif [[ "${GITHUB_REF}" =~ ^refs/heads/release/([0-9]+\.)+[0-9]$ ]]; then
           echo "::set-env name=AWS_ACCESS_KEY_ID::${{ secrets.AWS_ACCESS_KEY_ID_STAGE }}"
           echo "::set-env name=AWS_SECRET_ACCESS_KEY::${{ secrets.AWS_SECRET_ACCESS_KEY_STAGE }}"
-          echo "::set-env name=API_ID::$(echo ${{ secrets.APPSYNC_API_ID_STAGE }} | tr -d ' ')"
+          echo "::set-env name=API_ID::$(echo ${{ secrets.APPSYNC_API_ID_STAGE }} | sed -r 's/./\1 /g'| sed -r 's/\s//g')"
         else:
           echo "REF: ${GITHUB_REF}"
           echo "Not a buildable branch. Exiting"
