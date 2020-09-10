@@ -1,4 +1,4 @@
-name: Build Resolvers
+name: Build Appsync Resolvers
 
 on:
   push:
