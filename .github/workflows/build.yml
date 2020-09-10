@@ -56,18 +56,18 @@ jobs:
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
 
         # Mutations
-        DYNAMO_SINGLE_RESPONSE requests/PutHl7InboundNode.vtl --type Mutation --field-name PutHl7InboundNode
-        DYNAMO_SINGLE_RESPONSE requests/PutHl7OutboundNode.vtl --type Mutation --field-name PutHl7OutboundNode
-        DYNAMO_SINGLE_RESPONSE requests/PutEdgeNode.vtl --type Mutation --field-name PutEdgeNode
-        DYNAMO_SINGLE_RESPONSE requests/PutCustomNode.vtl --type Mutation --field-name PutEdgeNode
-        DYNAMO_SINGLE_RESPONSE requests/PutEdge.vtl --type Mutation --field-name PutEdge
+        $DYNAMO_SINGLE_RESPONSE requests/PutHl7InboundNode.vtl --type Mutation --field-name PutHl7InboundNode
+        $DYNAMO_SINGLE_RESPONSE requests/PutHl7OutboundNode.vtl --type Mutation --field-name PutHl7OutboundNode
+        $DYNAMO_SINGLE_RESPONSE requests/PutEdgeNode.vtl --type Mutation --field-name PutEdgeNode
+        $DYNAMO_SINGLE_RESPONSE requests/PutCustomNode.vtl --type Mutation --field-name PutEdgeNode
+        $DYNAMO_SINGLE_RESPONSE requests/PutEdge.vtl --type Mutation --field-name PutEdge
 
         # Subtypes
-        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Hl7InboundNode --field-name tenant
-        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Hl7OutboundNode --field-name tenant
-        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type EdgeNode --field-name tenant
-        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type CustomNode --field-name tenant
-        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Edge --field-name tenant
-        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Hl7App --field-name tenant
-        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type EdgeApp --field-name tenant
-        DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type KMSKey --field-name tenant
+        $DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Hl7InboundNode --field-name tenant
+        $DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Hl7OutboundNode --field-name tenant
+        $DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type EdgeNode --field-name tenant
+        $DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type CustomNode --field-name tenant
+        $DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Edge --field-name tenant
+        $DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type Hl7App --field-name tenant
+        $DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type EdgeApp --field-name tenant
+        $DYNAMO_SINGLE_RESPONSE requests/tenant-field.vtl --type KMSKey --field-name tenant
