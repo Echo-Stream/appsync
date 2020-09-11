@@ -78,14 +78,14 @@ jobs:
         $SINGLE_RESPONSE request_templates/App-nodes.vtl --type EdgeApp --field-name nodes
 
         # Source Edge resolvers for nodes
-        $SINGLE_RESPONSE request_templates/Node-source_edges.vtl --type Hl7InboundNode --field-name source_edge
-        $SINGLE_RESPONSE request_templates/Node-source_edges.vtl --type Hl7OutboundNode --field-name source_edge
-        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type EdgeNode --field-name source_edges
-        $MULTI_RESPONSE request_templates/Node-source_edges.vtl --type CustomNode --field-name source_edges
+        $SINGLE_RESPONSE request_templates/Node-send_edges.vtl --type Hl7InboundNode --field-name send_edge
+        $SINGLE_RESPONSE request_templates/Node-send_edges.vtl --type Hl7OutboundNode --field-name send_edge
+        $MULTI_RESPONSE request_templates/Node-send_edges.vtl --type EdgeNode --field-name send_edges
+        $MULTI_RESPONSE request_templates/Node-send_edges.vtl --type CustomNode --field-name send_edges
 
         # Target Edge resolvers for nodes
-        $SINGLE_RESPONSE request_templates/Node-target_edges.vtl --type Hl7InboundNode --field-name target_edge
-        $SINGLE_RESPONSE request_templates/Node-target_edges.vtl --type Hl7OutboundNode --field-name target_edge
-        $MULTI_RESPONSE request_templates/Node-target_edges.vtl --type EdgeNode --field-name target_edges
-        $MULTI_RESPONSE request_templates/Node-target_edges.vtl --type CustomNode --field-name target_edges
+        $SINGLE_RESPONSE request_templates/Node-receive_edges.vtl --type Hl7InboundNode --field-name receive_edge
+        $SINGLE_RESPONSE request_templates/Node-receive_edges.vtl --type Hl7OutboundNode --field-name receive_edge
+        $MULTI_RESPONSE request_templates/Node-receive_edges.vtl --type EdgeNode --field-name receive_edges
+        $MULTI_RESPONSE request_templates/Node-receive_edges.vtl --type CustomNode --field-name receive_edges
         $LAMBDA_RESOLVER kms_key_datasource --type-name Edge --field-name kms_key
