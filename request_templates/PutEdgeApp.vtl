@@ -3,6 +3,13 @@
 #if ("$!ctx.args.app.metadata" == "")
   $ctx.args.app.metadata = {}
 #end
+
+## The tenant + app name cannot be more than 96 characters (including the plus sign) so we have a
+##  Cognito username of no more than 128 characters (base64 of "<tenant>+<app name>")
+#if ($util.matches("\+|\*", $!ctx.args.app.name) || $!ctx.args.app.name.length() > 47)
+  $util.error("Names must be 47 characters or less and cannot contain special characters + or *")
+#end
+
 #if (!["x_account", "cognito"].contains("$ctx.args.app.auth_type"))
   $util.error("auth_type must be one of x_account or cognito")
 #end
