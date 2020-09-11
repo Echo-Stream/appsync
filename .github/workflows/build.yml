@@ -75,7 +75,7 @@ jobs:
         $DEFAULT request_templates/X-tenant.vtl --type Edge --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Hl7App --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type EdgeApp --field-name tenant
-        $DEFAULT request_templates/X-tenant.vtl --type UserTenant --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type User --field-name tenant
 
         # Nodes for apps
         $DEFAULT request_templates/App-nodes.vtl --type Hl7App --field-name nodes
