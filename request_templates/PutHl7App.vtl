@@ -16,21 +16,27 @@
     "attributeValues" : {
 		  "tenant": $util.dynamodb.toDynamoDBJson($tenant),
       "sk": $util.dynamodb.toDynamoDBJson($!{app_sk}),
-      "app_type": $util.dynamodb.toDynamoDBJson("hl7"),
+      "#type": $util.dynamodb.toDynamoDBJson("hl7"),
       "gsi0_pk": $util.dynamodb.toDynamoDBJson($app_id),
       "name": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.name}),
       "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.description}"),
       "auth_type": $util.dynamodb.toDynamoDBJson("cognito"),
       "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata})
     },
+    "attributeNames": {
+      "#type": "type"
+    },
     "condition": {
-        "expression": "(attribute_not_exists(sk) OR sk = :sk) AND (attribute_not_exists(name) OR name = :name) AND (attribute_not_exists(auth_type) OR auth_type = :auth_type) AND (attribute_not_exists(sk) OR sk = :sk) AND (attribute_not_exists(app_type) OR app_type = :app_type) AND (attribute_not_exists(app_id) OR gsi0_pk = :app_id)"
+        "expression": "(attribute_not_exists(sk) OR sk = :sk) AND (attribute_not_exists(name) OR name = :name) AND (attribute_not_exists(auth_type) OR auth_type = :auth_type) AND (attribute_not_exists(#type) OR #type = :app_type) AND (attribute_not_exists(app_id) OR gsi0_pk = :app_id)"
         "expressionValues": {
           ":name": $util.dynamodb.toDynamoDBJson($name),
           ":auth_type": $util.dynamodb.toDynamoDBJson("cognito"),
           ":sk": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.sk}),
           ":app_type": $util.dynamodb.toDynamoDBJson("hl7"),
           ":app_id": $util.dynamodb.toDynamoDBJson($app_id)
+        },
+        "expressionNames": {
+          "#type": "type"
         }
     }
 }

@@ -18,7 +18,9 @@
       "gsi0_pk": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.email}),
       "email": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.email}),
       "first_name": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.first_name}),
-      "last_name": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.last_name})
+      "last_name": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.last_name}),
+      "added_by": $util.dynamodb.toDynamoDBJson($!{ctx.identity.claims.role}),
+      "status": $util.dynamodb.toDynamoDBJson("invited")
     }
     "condition": {
         "expression": "sk <> :sk AND pk <> :pk AND gsi0_sk <> :gsi0_pk"
