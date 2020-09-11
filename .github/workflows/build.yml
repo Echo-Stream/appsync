@@ -58,7 +58,7 @@ jobs:
         $SINGLE_RESPONSE request_templates/PutHl7InboundNode.vtl --type Mutation --field-name PutHl7InboundNode
         $SINGLE_RESPONSE request_templates/PutHl7OutboundNode.vtl --type Mutation --field-name PutHl7OutboundNode
         $SINGLE_RESPONSE request_templates/PutEdgeNode.vtl --type Mutation --field-name PutEdgeNode
-        $SINGLE_RESPONSE request_templates/PutCustomNode.vtl --type Mutation --field-name PutEdgeNode
+        $SINGLE_RESPONSE request_templates/PutCustomNode.vtl --type Mutation --field-name PutCustomNode
         $SINGLE_RESPONSE request_templates/PutEdge.vtl --type Mutation --field-name PutEdge
         $SINGLE_RESPONSE request_templates/PutHl7App.vtl --type Mutation --field-name PutHl7App
         $SINGLE_RESPONSE request_templates/PutEdgeApp.vtl --type Mutation --field-name PutEdgeApp
