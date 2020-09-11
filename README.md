@@ -1,3 +1,19 @@
-## The tenant + app name cannot be more than 96 characters (including the plus sign) so we have a
-##  Cognito username of no more than 128 characters (base64 of "<tenant>+<app name>")
+pk:
+  Users: username
+  All others: tenant name
+
+sk:
+  Users: T~<tenant>
+  Tenant: T~
+  Edge: E~<source|target> 
+
+User:
+pk: <email>
+sk: T~<tenant>
+role: string
+invitation_token: string
+invitation_accepted_date: string
+
+Tenant:
+sk: tenant ame
 

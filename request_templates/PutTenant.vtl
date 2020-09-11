@@ -1,8 +1,3 @@
-## The tenant + app name cannot be more than 96 characters (including the plus sign) so we have a
-##  Cognito username of no more than 128 characters (base64 of "<tenant>+<app name>")
-#if ($util.matches("\+|\*", $!ctx.args.tenant.name) || $!ctx.args.tenant.name.length() > 48)
-  $util.error("Names must be 48 characters or less and cannot contain special characters + or *")
-#end
 
 {
     "version" : "2017-02-28",

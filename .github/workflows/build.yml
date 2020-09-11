@@ -47,45 +47,46 @@ jobs:
     - name: Upload resolvers
       run: |
         SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/single-result.vtl --request-mapping-template "
-        MULTI_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/multi-result.vtl --request-mapping-template "
+        DEFAULT="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/default.vtl --request-mapping-template "
         LAMBDA_RESOLVER="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name "
 
         # Queries
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
+        $DEFAULT request_templates/GetUsersForTenant.vtl --type-name Query --field-name GetUsersForTenant
+        $DEFAULT request_templates/GetUser.vtl --type-name Query --field-name GetUser
 
         # Mutations
         $LAMBDA_RESOLVER kms_key_datasource --type Mutation --field-name PutKmsKey
-        $SINGLE_RESPONSE request_templates/PutHl7InboundNode.vtl --type Mutation --field-name PutHl7InboundNode
-        $SINGLE_RESPONSE request_templates/PutHl7OutboundNode.vtl --type Mutation --field-name PutHl7OutboundNode
-        $SINGLE_RESPONSE request_templates/PutEdgeNode.vtl --type Mutation --field-name PutEdgeNode
-        $SINGLE_RESPONSE request_templates/PutCustomNode.vtl --type Mutation --field-name PutCustomNode
-        $SINGLE_RESPONSE request_templates/PutEdge.vtl --type Mutation --field-name PutEdge
-        $SINGLE_RESPONSE request_templates/PutHl7App.vtl --type Mutation --field-name PutHl7App
-        $SINGLE_RESPONSE request_templates/PutEdgeApp.vtl --type Mutation --field-name PutEdgeApp
-        $SINGLE_RESPONSE request_templates/PutTenant.vtl --type Mutation --field-name PutTenant
+        $LAMBDA_RESOLVER edge_datasource --type Mutation --field-name PutEdge
+        $DEFAULT request_templates/PutHl7InboundNode.vtl --type Mutation --field-name PutHl7InboundNode
+        $DEFAULT request_templates/PutHl7OutboundNode.vtl --type Mutation --field-name PutHl7OutboundNode
+        $DEFAULT request_templates/PutEdgeNode.vtl --type Mutation --field-name PutEdgeNode
+        $DEFAULT request_templates/PutCustomNode.vtl --type Mutation --field-name PutCustomNode
+        $DEFAULT request_templates/PutHl7App.vtl --type Mutation --field-name PutHl7App
+        $DEFAULT request_templates/PutEdgeApp.vtl --type Mutation --field-name PutEdgeApp
+        $DEFAULT request_templates/PutTenant.vtl --type Mutation --field-name PutTenant
+        $DEFAULT request_templates/AddUserToTenant.vtl --type Mutation --field-name AddUserToTenant
 
         # Subtypes
-        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type Hl7InboundNode --field-name tenant
-        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type Hl7OutboundNode --field-name tenant
-        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type EdgeNode --field-name tenant
-        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type CustomNode --field-name tenant
-        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type Edge --field-name tenant
-        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type Hl7App --field-name tenant
-        $SINGLE_RESPONSE request_templates/X-tenant.vtl --type EdgeApp --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type Hl7InboundNode --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type Hl7OutboundNode --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type EdgeNode --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type CustomNode --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type Edge --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type Hl7App --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type EdgeApp --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type UserTenant --field-name tenant
 
         # Nodes for apps
-        $SINGLE_RESPONSE request_templates/App-nodes.vtl --type Hl7App --field-name nodes
-        $SINGLE_RESPONSE request_templates/App-nodes.vtl --type EdgeApp --field-name nodes
+        $DEFAULT request_templates/App-nodes.vtl --type Hl7App --field-name nodes
+        $DEFAULT request_templates/App-nodes.vtl --type EdgeApp --field-name nodes
 
-        # Source Edge resolvers for nodes
-        $SINGLE_RESPONSE request_templates/Node-send_edges.vtl --type Hl7InboundNode --field-name send_edge
-        $SINGLE_RESPONSE request_templates/Node-send_edges.vtl --type Hl7OutboundNode --field-name send_edge
-        $MULTI_RESPONSE request_templates/Node-send_edges.vtl --type EdgeNode --field-name send_edges
-        $MULTI_RESPONSE request_templates/Node-send_edges.vtl --type CustomNode --field-name send_edges
 
         # Target Edge resolvers for nodes
-        $SINGLE_RESPONSE request_templates/Node-receive_edges.vtl --type Hl7InboundNode --field-name receive_edge
-        $SINGLE_RESPONSE request_templates/Node-receive_edges.vtl --type Hl7OutboundNode --field-name receive_edge
-        $MULTI_RESPONSE request_templates/Node-receive_edges.vtl --type EdgeNode --field-name receive_edges
-        $MULTI_RESPONSE request_templates/Node-receive_edges.vtl --type CustomNode --field-name receive_edges
+        $DEFAULT request_templates/Node-send_edges.vtl --type EdgeNode --field-name send_edges
+        $DEFAULT request_templates/Node-send_edges.vtl --type CustomNode --field-name send_edges
+        $SINGLE_RESPONSE request_templates/Hl7Node-receive_edge.vtl --type Hl7InboundNode --field-name edge
+        $SINGLE_RESPONSE request_templates/Hl7Node-send_edge.vtl --type Hl7OutboundNode --field-name edge
+        $DEFAULT request_templates/Node-receive_edges.vtl --type EdgeNode --field-name receive_edges
+        $DEFAULT request_templates/Node-receive_edges.vtl --type CustomNode --field-name receive_edges
         $LAMBDA_RESOLVER kms_key_datasource --type-name Edge --field-name kms_key

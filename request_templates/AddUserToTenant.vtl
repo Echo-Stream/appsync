@@ -1,0 +1,32 @@
+#if ("$!{ctx.identity.claims.role}" != "admin")
+  $util.error("Not Authorized")
+#end
+
+#set ($tenant = "$!{ctx.identity.claims.tenant}")
+#set ($sk = "U~$!{ctx.args.user.email}")
+
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        "pk": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.tenant}),
+        "sk": $util.dynamodb.toDynamoDBJson($sk)
+    },
+    "attributeValues" : {
+		  "tenant": $util.dynamodb.toDynamoDBJson($tenant),
+      "role": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.role}),
+      "gsi0_pk": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.email}),
+      "email": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.email}),
+      "first_name": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.first_name}),
+      "last_name": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.last_name})
+    }
+    "condition": {
+        "expression": "sk <> :sk AND pk <> :pk AND gsi0_sk <> :gsi0_pk"
+        "expressionValues": {
+          ":sk": $util.dynamodb.toDynamoDBJson($sk),
+          ":pk": $util.dynamodb.toDynamoDBJson($tenant),
+          ":gsi0_pk": $util.dynamodb.toDynamoDBJson($!{ctx.args.user.email})
+        }
+    },
+    "returnValues": "ALL_NEW"
+}

@@ -1,13 +1,9 @@
 #set ($tenant = "$!{ctx.identity.claims.tenant}")
 #set ($app_sk = "A~$!{ctx.args.app.name}")
+#set($app_id = "$util.autoId()")
+
 #if ("$!ctx.args.app.metadata" == "")
   $ctx.args.app.metadata = {}
-#end
-
-## The tenant + app name cannot be more than 96 characters (including the plus sign) so we have a
-##  Cognito username of no more than 128 characters (base64 of "<tenant>+<app name>")
-#if ($util.matches("\+|\*", $!ctx.args.app.name) || $!ctx.args.app.name.length() > 47)
-  $util.error("Names must be 47 characters or less and cannot contain special characters + or *")
 #end
 
 #if (!["x_account", "cognito"].contains("$ctx.args.app.auth_type"))
@@ -25,6 +21,7 @@
 		  "tenant": $util.dynamodb.toDynamoDBJson($tenant),
       "sk": $util.dynamodb.toDynamoDBJson($!{app_sk}),
       "app_type": $util.dynamodb.toDynamoDBJson("edge"),
+      "gsi0_pk": $util.dynamodb.toDynamoDBJson($app_id),
       "name": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.name}),
       "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.description}"),
       "auth_type": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.auth_type}),
@@ -32,13 +29,14 @@
       "account": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.account})
     },
     "condition": {
-        "expression": "(attribute_not_exists(name) OR name = :name) AND (attribute_not_exists(auth_type) OR auth_type = :auth_type) AND (attribute_not_exists(sk) OR sk = :sk) AND (attribute_not_exists(app_type) OR app_type = :app_type) AND (attribute_not_exists(account) OR account = :account)"
+        "expression": "(attribute_not_exists(name) OR name = :name) AND (attribute_not_exists(auth_type) OR auth_type = :auth_type) AND (attribute_not_exists(sk) OR sk = :sk) AND (attribute_not_exists(app_type) OR app_type = :app_type) AND (attribute_not_exists(account) OR account = :account) AND (attribute_not_exists(app_id) OR gsi0_pk = :app_id)"
         "expressionValues": {
           ":name": $util.dynamodb.toDynamoDBJson($name),
           ":auth_type": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.auth_type}),
           ":sk": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.sk}),
           ":app_type": $util.dynamodb.toDynamoDBJson("edge"),
-          ":account": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.account})
+          ":account": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.account}),
+          ":app_id": $util.dynamodb.toDynamoDBJson($app_id)
         }
     }
 }

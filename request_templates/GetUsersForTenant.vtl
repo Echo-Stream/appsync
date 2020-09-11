@@ -1,0 +1,17 @@
+#set ($tenant = $!{ctx.identity.claims.tenant})
+
+#if ("$!{ctx.identity.claims.role}" != "admin")
+  $util.error("Unauthorized")
+#end
+
+{
+    "version": "2017-02-28",
+    "operation": "Query",
+    "query": {
+        "expression": "pk = :tenant AND begins_with(skm :sk)",
+        "expressionValues": {
+          ":pk": $util.dynamodb.toDynamoDBJson($tenant),
+          ":sk": $util.dynamodb.toDynamoDBJson("U~")
+        }
+    }
+}

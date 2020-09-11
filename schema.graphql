@@ -1,3 +1,23 @@
+type User {
+	tenant: Tenant!
+	email: AWSEmail!
+	name: String!
+	role: UserRole!
+	status: UserStatus!
+	invitation_token: String!
+	active_date: String
+	invitation_date: String
+}
+
+enum UserStatus {
+
+}
+
+enum UserRole {
+	admin
+	user
+}
+
 interface App {
 	tenant: Tenant!
 	type: AppType!
@@ -120,8 +140,7 @@ type Hl7InboundNode implements Node {
 	node_type: String!
 	description: String
 	port: Int!
-	send_edge: Edge
-	receive_edge: Edge
+	edge: Edge
 	app: App
 	metadata: AWSJSON
 }
@@ -141,8 +160,7 @@ type Hl7OutboundNode implements Node {
 	description: String
 	remote_host: String!
 	remote_port: Int!
-	send_edge: Edge
-	receive_edge: Edge
+	edge: Edge
 	app: App
 	metadata: AWSJSON
 }
@@ -179,6 +197,14 @@ type Mutation {
 	PutHl7App(app: Hl7AppInput!): Hl7App
 	PutEdgeApp(app: EdgeAppInput!): EdgeApp
 	PutKmsKey(key: KmsKeyInput!): KMSKey
+	AddUserToTenant(user: UserTenantInput!): TenantUser
+}
+
+input UserTenantInput {
+	first_name: String!
+	last_name: String!
+	email: String!
+	role: UserRole!
 }
 
 interface Node {
@@ -190,6 +216,8 @@ interface Node {
 }
 
 type Query {
+	GetUsersForTenant(tenant: String!): [User]
+	GetUser(email: AWSEmail): [User]
 	SearchApps(tenant: String!): App
 	ListKeys: [KMSKey]
 }

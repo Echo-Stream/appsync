@@ -1,0 +1,16 @@
+#set ($tenant = $!{ctx.identity.claims.tenant})
+
+#if ("$!{ctx.identity.username}" != "$!{ctx.args.email}")
+  $util.error("Unauthorized")
+#end
+
+{
+  "version": "2017-02-28",
+  "operation": "Query",
+  "query": {
+    expression: ":gsi0_pk = :email",
+    expressionValues: {
+      $util.dynamodb.toDynamoDBJson("${ctx.args.email}")
+    }
+  }
+}
