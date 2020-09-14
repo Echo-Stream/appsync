@@ -1,0 +1,5 @@
+#if ($ctx.result.tenant != $ctx.identity.claims.tenant)
+	null
+#else
+	$util.toJson($ctx.result)
+#end

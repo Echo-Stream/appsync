@@ -26,7 +26,8 @@
       "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.description}"),
       "auth_type": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.auth_type}),
       "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata}),
-      "account": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.account})
+      "account": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.account}),
+      "event_id": $util.dynamodb.toDynamoDBJson($util.autoId())
     },
     "attributeNames": {
       "#type": "type"
@@ -44,5 +45,6 @@
         "expressionNames": {
           "#type": "type"
         }
-    }
+    },
+    "returnValues": "ALL_NEW"
 }

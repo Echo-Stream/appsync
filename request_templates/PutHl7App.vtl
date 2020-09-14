@@ -21,7 +21,8 @@
       "name": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.name}),
       "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.description}"),
       "auth_type": $util.dynamodb.toDynamoDBJson("cognito"),
-      "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata})
+      "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata}),
+      "event_id": $util.dynamodb.toDynamoDBJson($util.autoId())
     },
     "attributeNames": {
       "#type": "type"
@@ -38,5 +39,6 @@
         "expressionNames": {
           "#type": "type"
         }
-    }
+    },
+    "returnValues": "ALL_NEW"
 }

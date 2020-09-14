@@ -16,7 +16,8 @@
     "app": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.app}),
     "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.metadata}),
     "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.description}"),
-    "lsi0_sk": $util.dynamodb.toDynamoDBJson($lsi)
+    "lsi0_sk": $util.dynamodb.toDynamoDBJson($lsi),
+    "event_id": $util.dynamodb.toDynamoDBJson($util.autoId())
   },
   "attributeNames": {
     "#type": "type"
@@ -27,5 +28,6 @@
       ":sk": $util.dynamodb.toDynamoDBJson($node_sk)
       ":name": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.name})
     }
-  }
+  },
+  "returnValues": "ALL_NEW"
 }

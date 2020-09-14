@@ -5,6 +5,7 @@ interface App {
 	name: String!
 	description: String
 	nodes: [Node]
+	event_id: String
 }
 
 enum AppAuthType {
@@ -32,6 +33,7 @@ type CustomNode implements Node {
 	receive_edges: [Edge]
 	app: App
 	metadata: AWSJSON
+	event_id: String
 }
 
 input CustomNodeInput {
@@ -51,6 +53,7 @@ type Edge {
 	metadata: AWSJSON
 	kms_key: KMSKey!
 	queue: String!
+	event_id: String!
 }
 
 type EdgeApp {
@@ -87,6 +90,7 @@ type EdgeNode implements Node {
 	receive_edges: [Edge]
 	app: App
 	metadata: AWSJSON
+	event_id: String
 }
 
 input EdgeNodeInput {
@@ -106,6 +110,7 @@ type Hl7App implements App {
 	nodes: [Node]
 	ssm_activation_code: String
 	auth_type: AppAuthType!
+	event_id: String
 }
 
 input Hl7AppInput {
@@ -123,6 +128,7 @@ type Hl7InboundNode implements Node {
 	edge: Edge
 	app: App
 	metadata: AWSJSON
+	event_id: String
 }
 
 input Hl7InboundNodeInput {
@@ -143,6 +149,7 @@ type Hl7OutboundNode implements Node {
 	edge: Edge
 	app: App
 	metadata: AWSJSON
+	event_id: String
 }
 
 input Hl7OutboundNodeInput {
@@ -178,6 +185,8 @@ type Mutation {
 	PutEdgeApp(app: EdgeAppInput!): EdgeApp
 	PutKmsKey(key: KmsKeyInput!): KMSKey
 	AddUserToTenant(user: UserInput!): User
+	StreamNotifications(tenant: String!, data: AWSJSON, function: String!): StreamNotification
+		@aws_iam
 }
 
 interface Node {
@@ -186,6 +195,7 @@ interface Node {
 	tenant: Tenant!
 	app: App
 	metadata: AWSJSON
+	event_id: String
 }
 
 type Query {
@@ -223,7 +233,23 @@ enum Region {
 	us_gov_west_1
 }
 
-type Tenant {
+type StreamNotification @aws_iam {
+	tenant: String
+	message: String
+	error: String
+	function: String
+	event_name: String
+	item_type: String
+	old_record: AWSJSON
+	new_record: AWSJSON
+}
+
+type Subscription {
+	onStreamNotifications(tenant: String!): StreamNotification
+		@aws_subscribe(mutations: ["StreamNotifications"])
+}
+
+type Tenant @aws_iam {
 	name: String!
 	default_region: Region!
 }
@@ -231,6 +257,7 @@ type Tenant {
 input TenantInput {
 	name: String!
 	default_region: Region!
+	event_id: String
 }
 
 type User {
@@ -242,6 +269,7 @@ type User {
 	invitation_token: String!
 	active_date: String
 	invitation_date: String
+	event_id: String
 }
 
 input UserInput {

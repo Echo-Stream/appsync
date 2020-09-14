@@ -1,0 +1,7 @@
+#if ("$!ctx.identity.claims.tenant" != "$!ctx.args.tenant")
+	$util.error("Not Authorized")
+#end
+{
+    "version": "2017-02-28",
+    "payload":  $util.toJson($ctx.args)
+}

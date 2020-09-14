@@ -9,7 +9,8 @@
     "attributeValues" : {
       "name": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.name}),
       "billing_info": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.billing_info}),
-      "default_region": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.default_region})
+      "default_region": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.default_region}),
+      "event_id": $util.dynamodb.toDynamoDBJson($util.autoId())
     },
     "condition": {
         "expression": "(attribute_not_exists(pk) OR pk = :pk) AND (attribute_not_exists(name) OR name = :name) AND (attribute_not_exists(default_region) OR default_region = :default_region)",
@@ -18,5 +19,6 @@
           ":name": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.name}),
           ":default_region": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.default_region})
         }
-    }
+    },
+    "returnValues": "ALL_NEW"
 }

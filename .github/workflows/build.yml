@@ -49,6 +49,7 @@ jobs:
         SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/single-result.vtl --request-mapping-template "
         DEFAULT="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/default.vtl --request-mapping-template "
         LAMBDA_RESOLVER="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name "
+        SUBSCRIPTION="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name none "
 
         # Queries
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
@@ -66,6 +67,7 @@ jobs:
         $DEFAULT request_templates/PutEdgeApp.vtl --type Mutation --field-name PutEdgeApp
         $DEFAULT request_templates/PutTenant.vtl --type Mutation --field-name PutTenant
         $DEFAULT request_templates/AddUserToTenant.vtl --type Mutation --field-name AddUserToTenant
+        $DEFAULT request_templates/StreamNotifications.vtl --type Mutation --field-name StreamNotifications
 
         # Subtypes
         $DEFAULT request_templates/X-tenant.vtl --type Hl7InboundNode --field-name tenant
@@ -90,3 +92,6 @@ jobs:
         $DEFAULT request_templates/Node-receive_edges.vtl --type EdgeNode --field-name receive_edges
         $DEFAULT request_templates/Node-receive_edges.vtl --type CustomNode --field-name receive_edges
         $LAMBDA_RESOLVER kms_key_datasource --type-name Edge --field-name kms_key
+
+        # Subscriptions
+        $SUBSCRIPTION --response-mapping-template response_templates/onStreamNotifications.vtl --request-mapping-template request_templates/onStreamNotifications.vtl
