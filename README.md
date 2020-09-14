@@ -1,19 +1,16 @@
-pk:
-  Users: username
-  All others: tenant name
+# HL7-Ninja Appsync API
 
-sk:
-  Users: T~<tenant>
-  Tenant: T~
-  Edge: E~<source|target> 
+## Indexes
+#### Primary Key (composit):
+* pk (partition)
+* sk (sort)
 
-User:
-pk: <email>
-sk: T~<tenant>
-role: string
-invitation_token: string
-invitation_accepted_date: string
+#### lsi0 (composit):
+* lsi0_sk (sort)
+* projection: ALL_ATTRIBUTES
 
-Tenant:
-sk: tenant ame
+#### gsi0 (partition only):
+* gsi0_pk
+* projection: gsi0_pk and tenant and tenant attribute
 
+## Schema
