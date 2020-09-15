@@ -1,0 +1,8 @@
+{
+  "operation": "DeleteItem",
+  "index": "lsi0"
+  "key": {
+    "pk": $util.dynamodb.toDynamoDBJson($ctx.stash.tenant),
+    "lsi0_sk": $util.dynamodb.toDynamoDBJson($ctx.stash.app)
+  }
+}
