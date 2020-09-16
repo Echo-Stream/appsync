@@ -12,13 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python3.8-version: [3.8]
+        python-version: [3.8]
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python3.8-version }}
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python3.8@v1
       with:
-        python3.8-version: ${{ matrix.python3.8-version }}
+        python-version: ${{ matrix.python-version }}
     - name: Install Deps
       run: pip3.8 install appsync-schema-uploader appsync-resolver-uploader appsync-function-uploader
     - name: Set env vars
