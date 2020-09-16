@@ -20,7 +20,7 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install Deps
-      run: pip3.8 install appsync-schema-uploader appsync-resolver-uploader
+      run: pip3.8 install appsync-schema-uploader appsync-resolver-uploader appsync-function-uploader
     - name: Set env vars
       run: |
         echo "::set-env name=AWS_DEFAULT_REGION::us-east-1"
