@@ -12,13 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        python3.8-version: [3.8]
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v1
+    - name: Set up Python ${{ matrix.python3.8-version }}
+      uses: actions/setup-python3.8@v1
       with:
-        python-version: ${{ matrix.python-version }}
+        python3.8-version: ${{ matrix.python3.8-version }}
     - name: Install Deps
       run: pip3.8 install appsync-schema-uploader appsync-resolver-uploader appsync-function-uploader
     - name: Set env vars
@@ -43,15 +43,15 @@ jobs:
         echo "REF: ${GITHUB_REF}"
     - name: Upload schema
       run: |
-        python -m appsync_schema_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --schema schema.graphql
+        python3.8 -m appsync_schema_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --schema schema.graphql
     - name: Upload resolvers
       run: |
-        SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/single-result.vtl --request-mapping-template "
-        DEFAULT="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/default.vtl --request-mapping-template "
-        LAMBDA_RESOLVER="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name "
-        SUBSCRIPTION="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name none "
-        PIPELINE="python3.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY}  --api-id ${API_ID} "
-        FUNCTION="python3.8 -m appsync_function_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --name "
+        SINGLE_RESPONSE="python3.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/single-result.vtl --request-mapping-template "
+        DEFAULT="python3.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/default.vtl --request-mapping-template "
+        LAMBDA_RESOLVER="python3.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name "
+        SUBSCRIPTION="python3.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name none "
+        PIPELINE="python3.83.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY}  --api-id ${API_ID} "
+        FUNCTION="python3.83.8 -m appsync_function_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --name "
 
         # Functions
         $FUNCTION test_for_nodes --description "Test if any nodes are attached to an app" --request-mapping-template request_templates/GetNodes_function.vtl --response-mapping-template response_templates/error_on_result.vtl
