@@ -20,7 +20,7 @@ input AppInput {
 	account: String!
 }
 
-union App = Hl7App | EdgeApp
+union App = Hl7App | ExternalApp
 
 enum AppType {
 	Hl7App
