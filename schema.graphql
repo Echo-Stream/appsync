@@ -24,7 +24,7 @@ union App = Hl7App | EdgeApp
 
 enum AppType {
 	Hl7App
-	EdgeApp
+	ExternalApp
 }
 
 type CognitoUser {
@@ -57,7 +57,7 @@ type Edge {
 	event_id: String!
 }
 
-type EdgeApp implements AppInterface {
+type ExternalApp implements AppInterface {
 	tenant: Tenant!
 	type: AppType!
 	name: String!

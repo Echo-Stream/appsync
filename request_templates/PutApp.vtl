@@ -5,10 +5,10 @@
 #set ($requiredAttributes = [])
 #set ($incorrectAttributes) = [])
 
-#if ("$type" == "hl7")
+#if ("$type" == "Hl7App")
   $util.qr($incorrectAttributes.add("auth_type")
   $util.qr($incorrectAttributes.add("account")
-#elseif ("$type" == "edge")
+#elseif ("$type" == "EdgeApp")
   $util.qr($requiredAttributes.add("auth_type")
 #end
 
@@ -42,12 +42,12 @@
       "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.description}"),
       "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata}),
       "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
-      #if ("$type" == "edge")
+      #if ("$type" == "EdgeApp")
         "auth_type": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.auth_type}),
         #if ("$!{ctx.args.app.auth_type}" == "x_account")
           "account": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.account}),
         #end
-      #elseif ("$type" == "hl7")
+      #elseif ("$type" == "Hl7App")
         "auth_type": $util.dynamodb.toDynamoDBJson("cognito")
       #end
     },
