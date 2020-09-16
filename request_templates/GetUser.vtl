@@ -1,6 +1,6 @@
 #set ($tenant = $!{ctx.identity.claims.tenant})
 
-#if ("$!{ctx.identity.username}" != "$!{ctx.args.email}")
+#if ("$!{ctx.identity.username}" != "$!{ctx.args.email}" && "$!{ctx.identity.claims.role}" != "admin")
   $util.error("Unauthorized")
 #end
 
@@ -8,9 +8,10 @@
   "version": "2017-02-28",
   "operation": "Query",
   "query": {
-    expression: ":gsi0_pk = :email",
+    expression: ":pk = :tenant AND sk = :sk",
     expressionValues: {
-      $util.dynamodb.toDynamoDBJson("${ctx.args.email}")
+      ":tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
+      ":sk": $util.dynamodb.toDynamoDBJson("U~$!{ctx.args.email}")
     }
   }
 }

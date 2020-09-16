@@ -61,21 +61,19 @@ jobs:
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
         $DEFAULT request_templates/GetUsersForTenant.vtl --type-name Query --field-name GetUsersForTenant
         $DEFAULT request_templates/GetUser.vtl --type-name Query --field-name GetUser
-        $PIPELINE --type-name Query --field-name DeleteApp --pipeline-config test_for_nodes,delete_app --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/DeleteApp_before.vtl
+        $DEFAULT request_templates/GetUser.vtl --type-name Query --field-name Search
+
 
 
         # Mutations
         $LAMBDA_RESOLVER kms_key_datasource --type Mutation --field-name PutKmsKey
         $LAMBDA_RESOLVER edge_datasource --type Mutation --field-name PutEdge
-        $DEFAULT request_templates/PutHl7InboundNode.vtl --type Mutation --field-name PutHl7InboundNode
-        $DEFAULT request_templates/PutHl7OutboundNode.vtl --type Mutation --field-name PutHl7OutboundNode
-        $DEFAULT request_templates/PutEdgeNode.vtl --type Mutation --field-name PutEdgeNode
-        $DEFAULT request_templates/PutCustomNode.vtl --type Mutation --field-name PutCustomNode
-        $DEFAULT request_templates/PutHl7App.vtl --type Mutation --field-name PutHl7App
-        $DEFAULT request_templates/PutEdgeApp.vtl --type Mutation --field-name PutEdgeApp
+        $DEFAULT request_templates/PutNode.vtl --type Mutation --field-name PutNode
+        $DEFAULT request_templates/PutApp.vtl --type Mutation --field-name PutApp
         $DEFAULT request_templates/PutTenant.vtl --type Mutation --field-name PutTenant
         $DEFAULT request_templates/AddUserToTenant.vtl --type Mutation --field-name AddUserToTenant
         $DEFAULT request_templates/StreamNotifications.vtl --type Mutation --field-name StreamNotifications
+        $PIPELINE --type-name Mutation --field-name DeleteApp --pipeline-config test_for_nodes,delete_app --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/DeleteApp_before.vtl
 
         # Subtypes
         $DEFAULT request_templates/X-tenant.vtl --type Hl7InboundNode --field-name tenant
@@ -92,7 +90,7 @@ jobs:
         $DEFAULT request_templates/App-nodes.vtl --type EdgeApp --field-name nodes
 
 
-        # Target Edge resolvers for nodes
+        # Edge resolvers for nodes
         $DEFAULT request_templates/Node-send_edges.vtl --type EdgeNode --field-name send_edges
         $DEFAULT request_templates/Node-send_edges.vtl --type CustomNode --field-name send_edges
         $SINGLE_RESPONSE request_templates/Hl7Node-receive_edge.vtl --type Hl7InboundNode --field-name edge

@@ -1,0 +1,64 @@
+#set ($tenant = "$!ctx.identity.claims.tenant")
+#set ($node_sk = "N~$!ctx.args.node.name")
+#set ($lsi = "A~$!ctx.args.node.app")
+#set ($type = "$!{ctx.args.node.type}")
+
+#set ($requiredAttributes = [])
+#set ($incorrectAttributes = [])
+#if ("$!{type}" == "Hl7InboundNode")
+  $util.qr($incorrectAttributes.add("remote_port"))
+  $util.qr($incorrectAttributes.add("remote_host"))
+  $util.qr($requiredAttributes.add("port"))
+#elseif ("$!{type}" == "Hl7OutboundNode")
+  $util.qr($requiredAttributes.add("remote_port"))
+  $util.qr($requiredAttributes.add("remote_host"))
+  $util.qr($incorrectAttributes.add("port"))
+#end
+
+#foreach ($key in $requiredAttributes)
+	#if ("$!ctx.args.node.get($key)" == "")
+    	$util.error("Missing required parameter '$key' for node type $type")
+    #end
+#end
+
+#foreach ($key in $incorrectAttributes)
+	#if ("$!ctx.args.node.get($key)" != "")
+    	$util.error("Unknown parameter '$key' for node type $type")
+    #end
+#end
+
+{
+  "version" : "2017-02-28",
+  "operation" : "PutItem",
+  "key" : {
+    "pk": $util.dynamodb.toDynamoDBJson($tenant),
+    "sk": $util.dynamodb.toDynamoDBJson($node_sk)
+  },
+  "attributeValues" : {
+    "tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
+    "type": $util.dynamodb.toDynamoDBJson("$type"),
+    "name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.name}"),
+    "app": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.app}"),
+    "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.metadata}),
+    "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.description}"),
+    "lsi0_sk": $util.dynamodb.toDynamoDBJson("$lsi"),
+    "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
+    #if ("$!{type}" == "Hl7InboundNode")
+      "port": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.port})
+    #elseif ("$!{type}" == "Hl7OutboundNode")
+      "remote_port": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.remote_port}),
+      "remote_host": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.remote_host}")
+    #end
+  },
+  "condition": {
+    "expression": "(attribute_not_exists(pk) AND attribute_not_exists(sk)) OR (#name = :name AND #type = :type)",
+    "expressionValues": {
+      ":type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.type}"),
+      ":name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.name}")
+    },
+    "expressionNames": {
+      "#name": "name",
+      "#type": "type"
+    }
+  }
+}

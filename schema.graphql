@@ -1,7 +1,6 @@
-interface App {
+interface AppInterface {
 	tenant: Tenant!
 	type: AppType!
-	auth_type: AppAuthType!
 	name: String!
 	description: String
 	nodes: [Node]
@@ -13,9 +12,19 @@ enum AppAuthType {
 	cognito
 }
 
+input AppInput {
+	auth_type: AppAuthType!
+	name: String!
+	description: String
+	nodes: [String]
+	account: String!
+}
+
+union App = Hl7App | EdgeApp
+
 enum AppType {
-	hl7
-	edge
+	Hl7App
+	EdgeApp
 }
 
 type CognitoUser {
@@ -24,7 +33,7 @@ type CognitoUser {
 	role: String!
 }
 
-type CustomNode implements Node {
+type CustomNode implements NodeInterface {
 	tenant: Tenant!
 	name: String!
 	node_type: String!
@@ -34,14 +43,6 @@ type CustomNode implements Node {
 	app: App
 	metadata: AWSJSON
 	event_id: String
-}
-
-input CustomNodeInput {
-	name: String!
-	node_type: String!
-	description: String
-	app: String
-	metadata: AWSJSON
 }
 
 type Edge {
@@ -56,21 +57,15 @@ type Edge {
 	event_id: String!
 }
 
-type EdgeApp {
+type EdgeApp implements AppInterface {
 	tenant: Tenant!
 	type: AppType!
 	name: String!
 	description: String
 	nodes: [Node]
-	account: String!
-}
-
-input EdgeAppInput {
-	auth_type: AppAuthType!
-	name: String!
-	description: String
-	nodes: [String]
-	account: String!
+	account: String
+	auth_type: String
+	event_id: String
 }
 
 input EdgeInput {
@@ -82,7 +77,7 @@ input EdgeInput {
 	metadata: AWSJSON
 }
 
-type EdgeNode implements Node {
+type ExternalNode implements NodeInterface {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -93,33 +88,35 @@ type EdgeNode implements Node {
 	event_id: String
 }
 
-input EdgeNodeInput {
-	name: String!
-	description: String
-	app: String
-	metadata: AWSJSON
+type AppResult {
+	items: [App]
+	nextToken: String
+	scannedCount: Int
 }
 
-type Hl7App implements App {
+type NodeResult {
+	items: [Node]
+	nextToken: String
+	scannedCount: Int
+}
+
+type EdgeResult {
+	items: [Edge]
+	nextToken: String
+	scannedCount: Int
+}
+
+type Hl7App implements AppInterface {
 	tenant: Tenant!
 	type: AppType!
 	name: String!
 	description: String
-	instances: AWSJSON
-	iso_image: AWSURL
 	nodes: [Node]
-	ssm_activation_code: String
-	auth_type: AppAuthType!
 	event_id: String
 }
 
-input Hl7AppInput {
-	name: String!
-	description: String
-	nodes: [String]
-}
-
-type Hl7InboundNode implements Node {
+type Hl7InboundNode implements NodeInterface {
+	type: NodeTypes!
 	tenant: Tenant!
 	name: String!
 	node_type: String!
@@ -131,15 +128,8 @@ type Hl7InboundNode implements Node {
 	event_id: String
 }
 
-input Hl7InboundNodeInput {
-	name: String!
-	description: String
-	port: Int!
-	app: String
-	metadata: AWSJSON
-}
-
-type Hl7OutboundNode implements Node {
+type Hl7OutboundNode implements NodeInterface {
+	type: NodeTypes!
 	tenant: Tenant!
 	name: String!
 	node_type: String!
@@ -150,15 +140,6 @@ type Hl7OutboundNode implements Node {
 	app: App
 	metadata: AWSJSON
 	event_id: String
-}
-
-input Hl7OutboundNodeInput {
-	name: String!
-	description: String
-	remote_host: String!
-	remote_port: Int!
-	app: String
-	metadata: AWSJSON
 }
 
 type KMSKey {
@@ -180,19 +161,15 @@ type Mutation {
 	PutTenant(tenant: TenantInput!): Tenant
 		@aws_iam
 	PutEdge(edge: EdgeInput!): Edge
-	PutHl7InboundNode(node: Hl7InboundNodeInput!): Hl7InboundNode
-	PutHl7OutboundNode(node: Hl7OutboundNodeInput!): Hl7OutboundNode
-	PutEdgeNode(node: EdgeNodeInput!): EdgeNode
-	PutCustomNode(node: CustomNodeInput!): CustomNode
-	PutHl7App(app: Hl7AppInput!): Hl7App
-	PutEdgeApp(app: EdgeAppInput!): EdgeApp
+	PutNode(node: NodeInput): Node
+	PutApp(app: AppInput!): App
 	PutKmsKey(key: KmsKeyInput!): KMSKey
 	AddUserToTenant(user: UserInput!): User
 	StreamNotifications(tenant: String!, data: AWSJSON, function: String!): StreamNotification
 		@aws_iam
 }
 
-interface Node {
+interface NodeInterface {
 	name: String!
 	description: String
 	tenant: Tenant!
@@ -201,11 +178,45 @@ interface Node {
 	event_id: String
 }
 
+input NodeInput {
+	name: String!
+	type: String!
+	description: String
+	port: Int
+	remote_port: Int
+	app: String
+	metadata: AWSJSON
+	remote_host: String
+}
+
+union Node = Hl7InboundNode | Hl7OutboundNode | ExternalNode | CustomNode
+
+enum NodeTypes {
+	Hl7InboundNode
+	Hl7OutboundNode
+	ExternalNode
+	CustomNode
+}
+
 type Query {
-	GetUsersForTenant(tenant: String!): [User]
+	GetUsersForTenant(tenant: String!): [UserResult]
 	GetUser(email: AWSEmail): [User]
-	SearchApps(tenant: String!): App
+	Search(
+		object_type: ObjectTypes!
+		partial_name: Boolean
+		name: String
+		filter: String
+		filter_value: String
+		nextToken: String
+		limit: Int
+	): EdgeResult
 	ListKeys: [KMSKey]
+}
+
+enum ObjectTypes {
+	Node
+	App
+	Edge
 }
 
 enum Region {

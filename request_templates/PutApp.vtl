@@ -1,0 +1,67 @@
+#set ($tenant = "$!{ctx.identity.claims.tenant}")
+#set ($app_sk = "A~$!{ctx.args.app.name}")
+#set ($type = "$!ctx.args.app.type")
+
+#set ($requiredAttributes = [])
+#set ($incorrectAttributes) = [])
+
+#if ("$type" == "hl7")
+  $util.qr($incorrectAttributes.add("auth_type")
+  $util.qr($incorrectAttributes.add("account")
+#elseif ("$type" == "edge")
+  $util.qr($requiredAttributes.add("auth_type")
+#end
+
+#foreach ($val in $incorrectAttributes)
+  #if ("$!ctx.args.app.get($val)" != "")
+    $util.error("Unknown paramater '$val' for app type $type")
+  #end
+#end
+
+#foreach ($val in $requiredAttributes)
+  #if ("$!ctx.args.app.get($val)" == "")
+    $util.error("Missing required paramater '$val' for app type $type")
+  #end
+#end
+
+#if ("$!{ctx.args.app.auth_type}" == "x_account" && "$!{ctx.args.app.account}" == "")
+  $util.error("Apps with auth_type 'x_account' require 'account' argument")
+#end
+
+{
+    "version" : "2017-02-28",
+    "operation" : "PutItem",
+    "key" : {
+        "pk": $util.dynamodb.toDynamoDBJson($tenant),
+        "sk": $util.dynamodb.toDynamoDBJson($app_sk)
+    },
+    "attributeValues" : {
+		  "tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
+      "type": $util.dynamodb.toDynamoDBJson("$type"),
+      "name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.name}"),
+      "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.description}"),
+      "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata}),
+      "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
+      #if ("$type" == "edge")
+        "auth_type": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.auth_type}),
+        #if ("$!{ctx.args.app.auth_type}" == "x_account")
+          "account": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.account}),
+        #end
+      #elseif ("$type" == "hl7")
+        "auth_type": $util.dynamodb.toDynamoDBJson("cognito")
+      #end
+    },
+    "condition": {
+        "expression": "(attribute_not_exists(sk) AND attribute_not_exists(pk)) OR (auth_type = :auth_type AND #type = :type AND #name = :name) AND (attribute_not_exists(account) OR account = :account))"
+        "expressionValues": {
+          ":name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.name}"),
+          ":auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.auth_type}"),
+          ":type": $util.dynamodb.toDynamoDBJson("$type"),
+          ":account": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.account}")
+        },
+        "expressionNames": {
+          "#type": "type",
+          "#name": "name"
+        }
+    }
+}

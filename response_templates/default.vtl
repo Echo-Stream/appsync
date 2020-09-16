@@ -1,1 +1,14 @@
+#if ($ctx.info.parentTypeName == "Query" && "$!ctx.result.items.class.name" == "java.util.ArrayList")
+  #set ($items = [])
+  #foreach ($item in $ctx.result.items)
+    #if ("$!item.type" != "")
+      $util.qr($item.put("__typename", $item.type))
+      $util.qr($items.add($item))
+    #end
+  #end
+  $util.qr($ctx.result.put("items", $items))
+#elseif ("$!ctx.result.type" != "")
+  $util.qr($ctx.result.put("__typename", $item.type))
+#end
+
 $util.toJson($ctx.result)

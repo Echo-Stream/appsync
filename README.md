@@ -11,6 +11,6 @@
 
 #### gsi0 (partition only):
 * gsi0_pk
-* projection: gsi0_pk and tenant and tenant attribute
+* projection: gsi0_pk, pk and status
 
 ## Schema
