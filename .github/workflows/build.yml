@@ -43,7 +43,7 @@ jobs:
         echo "REF: ${GITHUB_REF}"
     - name: Upload schema
       run: |
-        # python -m appsync_schema_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --schema schema.graphql
+        python -m appsync_schema_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --schema schema.graphql
     - name: Upload resolvers
       run: |
         SINGLE_RESPONSE="python -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/single-result.vtl --request-mapping-template "
@@ -56,7 +56,6 @@ jobs:
         # Functions
         $FUNCTION test_for_nodes --description "Test if any nodes are attached to an app" --request-mapping-template request_templates/GetNodes_function.vtl --response-mapping-template response_templates/error_on_result.vtl
         $FUNCTION delete_app --description "Delete an app" --request-mapping-template request_templates/DeleteApp_function.vtl --response-mapping-template response_templates/default.vtl
-        $PIPELINE --type-name Mutation --field-name DeleteApp --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/DeleteApp_before.vtl --pipeline-config "test_for_nodes,dynamodb;delete_app,dynamodb" 
 
         # Queries
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
@@ -74,11 +73,12 @@ jobs:
         $DEFAULT request_templates/PutTenant.vtl --type Mutation --field-name PutTenant
         $DEFAULT request_templates/AddUserToTenant.vtl --type Mutation --field-name AddUserToTenant
         $DEFAULT request_templates/StreamNotifications.vtl --type Mutation --field-name StreamNotifications
+        $PIPELINE --type-name Mutation --field-name DeleteApp --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/DeleteApp_before.vtl --pipeline-config "test_for_nodes,dynamodb;delete_app,dynamodb"
 
         # Subtypes
         $DEFAULT request_templates/X-tenant.vtl --type Hl7InboundNode --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Hl7OutboundNode --field-name tenant
-        $DEFAULT request_templates/X-tenant.vtl --type EdgeNode --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type ExternalNode --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type CustomNode --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Edge --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Hl7App --field-name tenant
@@ -91,11 +91,11 @@ jobs:
 
 
         # Edge resolvers for nodes
-        $DEFAULT request_templates/Node-send_edges.vtl --type EdgeNode --field-name send_edges
+        $DEFAULT request_templates/Node-send_edges.vtl --type ExternalNode --field-name send_edges
         $DEFAULT request_templates/Node-send_edges.vtl --type CustomNode --field-name send_edges
         $SINGLE_RESPONSE request_templates/Hl7Node-receive_edge.vtl --type Hl7InboundNode --field-name edge
         $SINGLE_RESPONSE request_templates/Hl7Node-send_edge.vtl --type Hl7OutboundNode --field-name edge
-        $DEFAULT request_templates/Node-receive_edges.vtl --type EdgeNode --field-name receive_edges
+        $DEFAULT request_templates/Node-receive_edges.vtl --type ExternalNode --field-name receive_edges
         $DEFAULT request_templates/Node-receive_edges.vtl --type CustomNode --field-name receive_edges
         $LAMBDA_RESOLVER kms_key_datasource --type-name Edge --field-name kms_key
 
