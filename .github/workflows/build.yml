@@ -56,7 +56,7 @@ jobs:
         # Functions
         $FUNCTION test_for_nodes --description "Test if any nodes are attached to an app" --request-mapping-template request_templates/GetNodes_function.vtl --response-mapping-template response_templates/error_on_result.vtl
         $FUNCTION delete_app --description "Delete an app" --request-mapping-template request_templates/DeleteApp_function.vtl --response-mapping-template response_templates/default.vtl
-        $PIPELINE --type-name Mutation --field-name DeleteApp --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/DeleteApp_before.vtl --pipeline-config test_for_nodes,dynamodb;delete_app,dynamodb 
+        $PIPELINE --type-name Mutation --field-name DeleteApp --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/DeleteApp_before.vtl --pipeline-config "test_for_nodes,dynamodb;delete_app,dynamodb" 
 
         # Queries
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
