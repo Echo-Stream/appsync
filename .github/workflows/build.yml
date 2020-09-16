@@ -82,12 +82,12 @@ jobs:
         $DEFAULT request_templates/X-tenant.vtl --type CustomNode --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Edge --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Hl7App --field-name tenant
-        $DEFAULT request_templates/X-tenant.vtl --type EdgeApp --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type ExternalApp --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type User --field-name tenant
 
         # Nodes for apps
         $DEFAULT request_templates/App-nodes.vtl --type Hl7App --field-name nodes
-        $DEFAULT request_templates/App-nodes.vtl --type EdgeApp --field-name nodes
+        $DEFAULT request_templates/App-nodes.vtl --type ExternalApp --field-name nodes
 
 
         # Edge resolvers for nodes
