@@ -106,6 +106,12 @@ type EdgeResult {
 	scannedCount: Int
 }
 
+type UserResult {
+	items: [User]
+	nextToken: String
+	scannedCount: Int
+}
+
 type Hl7App implements AppInterface {
 	tenant: Tenant!
 	type: AppType!
@@ -198,6 +204,8 @@ enum NodeTypes {
 	CustomNode
 }
 
+union ResultSet = Hl7InboundNode | Hl7OutboundNode | Hl7App | ExternalApp | ExternalNode | CustomNode | Edge
+
 type Query {
 	GetUsersForTenant(tenant: String!): [UserResult]
 	GetUser(email: AWSEmail): [User]
@@ -209,7 +217,7 @@ type Query {
 		filter_value: String
 		nextToken: String
 		limit: Int
-	): EdgeResult
+	): ResultSet
 	ListKeys: [KMSKey]
 }
 

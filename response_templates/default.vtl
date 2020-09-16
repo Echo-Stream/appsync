@@ -4,11 +4,19 @@
     #if ("$!item.type" != "")
       $util.qr($item.put("__typename", $item.type))
       $util.qr($items.add($item))
-    #end
+    #elseif ("$item.sk".split("~")[0] == "U")
+      $util.qr($item.put("__typename", "User"))
+      $util.qr($items.add($item))
   #end
   $util.qr($ctx.result.put("items", $items))
 #elseif ("$!ctx.result.type" != "")
   $util.qr($ctx.result.put("__typename", $item.type))
+#elseif ("$item.sk".split("~")[0] == "U")
+  $util.qr($item.put("__typename", "User"))
+#elseif ("$item.sk".split("~")[0] == "E")
+  $util.qr($item.put("__typename", "Edge"))
+#elseif ("$item.sk".split("~")[0] == "T")
+  $util.qr($item.put("__typename", "Tenant"))
 #end
 
 $util.toJson($ctx.result)
