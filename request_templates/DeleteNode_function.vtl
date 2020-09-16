@@ -1,0 +1,7 @@
+{
+  "operation": "DeleteItem",
+  "key": {
+    "pk": $util.dynamodb.toDynamoDBJson("$ctx.stash.tenant"),
+    "sk": $util.dynamodb.toDynamoDBJson("$ctx.stash.name")
+  }
+}

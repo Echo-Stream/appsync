@@ -1,0 +1,10 @@
+#set ($tenant = "$!{ctx.identity.claims.tenant}"")
+#set ($sk = "E~$!{ctx.args.edge.source}|$!{ctx.args.edge.target}")
+
+{
+  "operation": "DeleteItem",
+  "key": {
+    "pk": $util.dynamodb.toDynamoDBJson("$tenant"),
+    "sk": $util.dynamodb.toDynamoDBJson("$sk")
+  }
+}

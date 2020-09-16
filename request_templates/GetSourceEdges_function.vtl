@@ -1,0 +1,11 @@
+{
+  "operation": "Query",
+	"query" : {
+    "expression" : "pk = :tenant AND begins_with(sk = :source)",
+    "expressionValues" : {
+      ":tenant" : $util.dynamodb.toDynamoDBJson($ctx.stash.tenant),
+      ":source": $util.dynamodb.toDynamoDBJson("E~$!{ctx.stash.name}|")
+    }
+  },
+  limit: 1
+}
