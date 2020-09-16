@@ -50,8 +50,8 @@ jobs:
         DEFAULT="python3.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --response-mapping-template response_templates/default.vtl --request-mapping-template "
         LAMBDA_RESOLVER="python3.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name "
         SUBSCRIPTION="python3.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name none "
-        PIPELINE="python3.83.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY}  --api-id ${API_ID} "
-        FUNCTION="python3.83.8 -m appsync_function_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --name "
+        PIPELINE="python3.8 -m appsync_resolver_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY}  --api-id ${API_ID} "
+        FUNCTION="python3.8 -m appsync_function_uploader --aws-access-key-id ${AWS_ACCESS_KEY_ID} --aws-secret-access-key ${AWS_SECRET_ACCESS_KEY} --api-id ${API_ID} --datasource-name dynamodb --name "
 
         # Functions
         $FUNCTION test_for_nodes --description "Test if any nodes are attached to an app" --request-mapping-template request_templates/GetNodes_function.vtl --response-mapping-template response_templates/error_on_result.vtl
