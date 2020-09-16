@@ -93,8 +93,8 @@ jobs:
         # Edge resolvers for nodes
         $DEFAULT request_templates/Node-send_edges.vtl --type ExternalNode --field-name send_edges
         $DEFAULT request_templates/Node-send_edges.vtl --type CustomNode --field-name send_edges
-        $SINGLE_RESPONSE request_templates/Hl7Node-receive_edge.vtl --type Hl7InboundNode --field-name edge
-        $SINGLE_RESPONSE request_templates/Hl7Node-send_edge.vtl --type Hl7OutboundNode --field-name edge
+        $SINGLE_RESPONSE request_templates/Hl7Node-receive_edges.vtl --type Hl7InboundNode --field-name send_edges
+        $SINGLE_RESPONSE request_templates/Hl7Node-send_edges.vtl --type Hl7OutboundNode --field-name receive_edges
         $DEFAULT request_templates/Node-receive_edges.vtl --type ExternalNode --field-name receive_edges
         $DEFAULT request_templates/Node-receive_edges.vtl --type CustomNode --field-name receive_edges
         $LAMBDA_RESOLVER kms_key_datasource --type-name Edge --field-name kms_key

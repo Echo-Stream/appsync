@@ -128,7 +128,7 @@ type Hl7InboundNode implements NodeInterface {
 	node_type: String!
 	description: String
 	port: Int!
-	edge: Edge
+	send_edges: [Edge]
 	app: App
 	metadata: AWSJSON
 	event_id: String
@@ -142,7 +142,7 @@ type Hl7OutboundNode implements NodeInterface {
 	description: String
 	remote_host: String!
 	remote_port: Int!
-	edge: Edge
+	receive_edges: Edge
 	app: App
 	metadata: AWSJSON
 	event_id: String
