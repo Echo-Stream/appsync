@@ -60,5 +60,5 @@ For queries the type will be inferred by the "type" attribute in the response.
 
 ### Datasource name/source
 * dynamodb: <hl7 ninja table>
-* manage_keys: appsync-kms-key-datasource (Lambda)
-* manage_edges: appsync-edge-datasource (Lambda)
+* kms_key_datasource: appsync-kms-key-datasource (Lambda)
+* edge_datasource: appsync-edge-datasource (Lambda)
