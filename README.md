@@ -30,7 +30,7 @@
 * $auth_type = cognito | x_account
 
 ### Immutable attributes
-Changes to these attributes cause a "Condition check failed" exception for existing items. Once an item is created the arguments for these attributes must match the original
+Attempting to change these attributes on an existing item will cause a "Condition check failed" exception. Once an item is created the arguments for these attributes must match the original.
 * account
 * auth_type
 * type
