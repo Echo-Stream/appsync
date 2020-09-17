@@ -59,6 +59,8 @@ jobs:
         $FUNCTION test_for_source_edges --description "Test if any nodes are attached to an app" --request-mapping-template request_templates/GetSourceEdges_function.vtl --response-mapping-template response_templates/error_on_result.vtl
         $FUNCTION test_for_target_edges --description "Test if any nodes are attached to an app" --request-mapping-template request_templates/GetTargetEdges_function.vtl --response-mapping-template response_templates/error_on_result.vtl
         $FUNCTION delete_node --description "Delete an app" --request-mapping-template request_templates/DeleteNode_function.vtl --response-mapping-template response_templates/default.vtl
+        $FUNCTION get_app --description "GetItem on an app" --request-mapping-template request_templates/ResetAppPassword_get_app_function.vtl --response-mapping-template response_templates/default.vtl
+        $FUNCTION reset_password --description "Reset an app password" --request-mapping-template request_templates/ResetAppPassword_function.vtl --response-mapping-template response_templates/default.vtl
 
         # Queries
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
@@ -80,6 +82,7 @@ jobs:
         $DEFAULT request_templates/DeleteEdge.vtl --type Mutation --field-name DeleteEdge
         $PIPELINE --type-name Mutation --field-name DeleteApp --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/DeleteApp_before.vtl --pipeline-config "test_for_nodes,dynamodb;delete_app,dynamodb"
         $PIPELINE --type-name Mutation --field-name DeleteNode --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/DeleteNode_before.vtl --pipeline-config "test_for_source_edges,dynamodb;test_for_target_edges,dynamodb;delete_node,dynamodb"
+        $PIPELINE --type-name Mutation --field-name ResetAppPassword --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/ResetAappPassword_before.vtl --pipeline-config "get_app,dynamodb;reset_password,dynamodb"
 
         # Subtypes
         $DEFAULT request_templates/X-tenant.vtl --type Hl7InboundNode --field-name tenant

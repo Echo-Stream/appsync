@@ -46,6 +46,9 @@
         "auth_type": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.auth_type}),
         #if ("$!{ctx.args.app.auth_type}" == "x_account")
           "account": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.account}),
+          #if ("$!{ctx.args.app.auth_type}" == "cognito")
+            "password": "**********",
+          #end
         #end
       #elseif ("$type" == "Hl7App")
         "auth_type": $util.dynamodb.toDynamoDBJson("cognito")
