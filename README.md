@@ -39,6 +39,7 @@ Attempting to change these attributes on an existing item will cause a "Conditio
 * name
 * gsi0_pk
 * sk (Tenants, Users, App, Node)
+* password (Password is reset by a special mutation)
 
 
 ### Response types
@@ -56,3 +57,8 @@ mutation = """
 ```
 
 For queries the type will be inferred by the "type" attribute in the response.
+
+### Datasource name/source
+* dynamodb: <hl7 ninja table>
+* manage_keys: appsync-kms-key-datasource (Lambda)
+* manage_edges: appsync-edge-datasource (Lambda)
