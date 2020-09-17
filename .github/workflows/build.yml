@@ -64,8 +64,9 @@ jobs:
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
         $DEFAULT request_templates/GetUsersForTenant.vtl --type-name Query --field-name GetUsersForTenant
         $DEFAULT request_templates/GetUser.vtl --type-name Query --field-name GetUser
-        $DEFAULT request_templates/GetUser.vtl --type-name Query --field-name Search
-
+        $DEFAULT request_templates/GenericSearch.vtl --type-name Query --field-name SearchNodes
+        $DEFAULT request_templates/GenericSearch.vtl --type-name Query --field-name SearchApps
+        $DEFAULT request_templates/SearchEdges.vtl --type-name Query --field-name SearchEdges
 
 
         # Mutations

@@ -16,8 +16,8 @@
   "version": "2017-02-28",
   "operation": "Query",
   "query": {
-    expression: "pk = :tenant AND $sk_opt",
-    expressionValues: {
+    "expression": "pk = :tenant AND $sk_opt",
+    "expressionValues": {
       ":tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
       ":name": $util.dynamodb.toDynamoDBJson("${sk_type}~$!{ctx.args.name}")
     }
