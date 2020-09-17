@@ -42,15 +42,17 @@ Attempting to change these attributes on an existing item will cause a "Conditio
 
 
 ### Response types
-For any item that has a "type" field, the __typename for that object will match its name. A query to return an Hl7InboundNode for example would be typed as:
+For any item that has a "type" field, the __typename for that object will match its name. A mutation that returns an Hl7InboundNode for example would be typed as:
 ```
-query = """
+mutation = """
   putNode($node: String) {
     PutNode(node: $node){
-      ... on Hl7InboundNode { # Declare __typename as the "type" field you are expecting
+      ... on Hl7InboundNode { # Declare __typename as the "type" argument to the mutation
         name
       }
     }
   }
 """
 ```
+
+For queries the type will be inferred by the "type" attribute in the response.
