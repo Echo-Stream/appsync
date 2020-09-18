@@ -16,12 +16,11 @@
 ## Schema
 
 #### App
-
 |<item type>| pk      |sk                  |lsi0_sk               |tenant  |name  |type       |metadata|source       |target       |app_id|auth_type   |account              |email    |gsi0_pk |iso          |default_region|billing_info|event_id|
 |-----------|---------|--------------------|----------------------|--------|------|-----------|--------|-------------|-------------|------|------------|---------------------|---------|--------|-------------|--------------|------------|--------|
-|Tenant     |<name>   |T~                  |                      |        |<name>|           |{}      |             |             |<uuid>|            |                     |         |        |             |<aws region>  |{}          |<uuid>  |
+|Tenant     |<name>   |T~                  |                      |        |<name>|           |{}      |             |             |      |            |                     |         |        |             |<aws region>  |{}          |<uuid>  |
 |User       |<tenant> |U~<email>           |                      |<tenant>|<name>|           |{}      |             |             |      |            |                     |<email>  |<email> |             |              |            |        |
-|App        |<tenant> |A~<name>            |                      |<tenant>|<name>|$app_type  |{}      |             |             |      |$auth_type  |<aws account number> |         |        |<b64 string> |              |            |        |
+|App        |<tenant> |A~<name>            |                      |<tenant>|<name>|$app_type  |{}      |             |             |<uuid>|$auth_type  |<aws account number> |         |<app_id>|<b64 string> |              |            |        |
 |Node       |<tenant> |N~<name>            |                      |<tenant>|<name>|$node_type |{}      |<source node>|<target node>|      |            |                     |         |        |             |              |            |        |
 |Edge       |<tenant> |E~<source>\|<target>|E~<target>\|<source>  |<tenant>|<name>|           |{}      |             |             |      |            |                     |         |        |             |              |            |        |
 
