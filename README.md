@@ -69,3 +69,6 @@ For queries the type will be inferred by the "type" attribute in the response.
 * dynamodb: <hl7 ninja table>
 * kms_key_datasource: appsync-kms-key-datasource (Lambda)
 * edge_datasource: appsync-edge-datasource (Lambda)
+
+### App.iso attribute
+The iso attribute of app items is a base64 encoded string representation of a zipped iso file and should be returned to the UI as a downloaded file.
