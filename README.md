@@ -50,7 +50,7 @@ do an UpdateItem that deletes the password attribute. Calling ResetApp on any ap
 will result in an appsync error. Once the UI has discarded the message the password can not be retreived as it is not actually stored anywhere.
 
 ### Response types
-For any item that has a "type" field, the __typename for that object will match its name. A mutation that returns an Hl7InboundNode for example would be typed as:
+For any item that has a "type" attribute, the __typename for that object will match its "type" attribute. A mutation that returns an Hl7InboundNode for example would be typed as:
 ```
 mutation = """
   putNode($node: String) {
