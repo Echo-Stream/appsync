@@ -75,7 +75,8 @@ jobs:
         $LAMBDA_RESOLVER kms_key_datasource --type Mutation --field-name PutKmsKey
         $LAMBDA_RESOLVER edge_datasource --type Mutation --field-name PutEdge
         $DEFAULT request_templates/PutNode.vtl --type Mutation --field-name PutNode
-        $DEFAULT request_templates/PutApp.vtl --type Mutation --field-name PutApp
+        $DEFAULT request_templates/PutManagedApp.vtl --type Mutation --field-name PutApp
+        $DEFAULT request_templates/PutEdgeApp.vtl --type Mutation --field-name PutApp
         $DEFAULT request_templates/PutTenant.vtl --type Mutation --field-name PutTenant
         $DEFAULT request_templates/AddUserToTenant.vtl --type Mutation --field-name AddUserToTenant
         $DEFAULT request_templates/StreamNotifications.vtl --type Mutation --field-name StreamNotifications

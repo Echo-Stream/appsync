@@ -6,11 +6,8 @@ enum AppAuthType {
 }
 
 input AppInput {
-	auth_type: AppAuthType
 	name: String!
 	description: String
-	account: String
-	type: AppType!
 }
 
 interface AppInterface {
@@ -147,8 +144,20 @@ type Mutation {
 	PutTenant(tenant: TenantInput!): Tenant
 		@aws_iam
 	PutEdge(edge: EdgeInput!): Edge
-	PutNode(node: NodeInput): Node
-	PutApp(app: AppInput!): App
+	PutHl7MLLPOutboundNode(
+		node: NodeInput,
+		remote_port: Int!,
+		remote_host: String!
+	): Node
+	PutHl7MLLPInboundNode(
+		node: NodeInput,
+		port: Int!,
+	): Node
+	PutExternalNode(
+		node: NodeInput
+	)
+	PutExternalApp(app: AppInput!, auth_type: AppAuthType!, account: String): App
+	PutManagedApp(app: AppInput!): App
 	PutKmsKey(key: KmsKeyInput!): KMSKey
 	AddUserToTenant(user: UserInput!): User
 	StreamNotifications(tenant: String!, data: AWSJSON, function: String!): StreamNotification
@@ -162,11 +171,8 @@ input NodeInput {
 	name: String!
 	type: String!
 	description: String
-	port: Int
-	remote_port: Int
 	app: String
 	metadata: AWSJSON
-	remote_host: String
 }
 
 interface NodeInterface {

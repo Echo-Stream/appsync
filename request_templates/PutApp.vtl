@@ -1,38 +1,13 @@
 #set ($tenant = "$!{ctx.identity.claims.tenant}")
+#set ($type = $ctx.info.fieldName.replaceAll("^Put|App$", ""))
 #set ($app_sk = "A~$!{ctx.args.app.name}")
-#set ($type = "$!ctx.args.app.type")
-
-#set ($requiredAttributes = [])
-#set ($incorrectAttributes = [])
-
-#if ("$type" == "Managed")
-  $util.qr($incorrectAttributes.add("auth_type"))
-  $util.qr($incorrectAttributes.add("account"))
-#elseif ("$type" == "EdgeApp")
-  #if ("$!ctx.args.app.auth_type" == "")
-    $util.error("You must specify an auth_type.")
-  #end
-  $util.qr($requiredAttributes.add("auth_type"))
-#end
-
-#foreach ($val in $incorrectAttributes)
-  #if ("$!ctx.args.app.get($val)" != "")
-    $util.error("Unknown paramater '$val' for app type $type")
-  #end
-#end
-
-#foreach ($val in $requiredAttributes)
-  #if ("$!ctx.args.app.get($val)" == "")
-    $util.error("Missing required paramater '$val' for app type $type")
-  #end
-#end
+#set ($auth_type_list = ["cognito", "x_account"])
 
 #if ("$!{ctx.args.app.auth_type}" == "x_account" && "$!{ctx.args.app.account}" == "")
   $util.error("Apps with auth_type 'x_account' require 'account' argument")
 #end
-
-#if ("$!type" == "Managed")
-  #set($ctx.args.app.auth_type = "cognito")
+#if ("$!{ctx.args.app.auth_type}" != "" and $auth_type_list.contains("$!{ctx.args.app.auth_type}"))
+  $util.error("Valid auth_type's are 'cognito' or 'x_account'")
 #end
 
 {
@@ -50,10 +25,10 @@
     "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata}),
     "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
     "config": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.config}),
-    #if ("$type" == "EdgeApp")
-      "auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.auth_type}"),
+    #if ("$type" == "Edge")
+      "auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.auth_type}"),
       #if ("$!{ctx.args.app.auth_type}" == "x_account")
-        "account": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.account}"),
+        "account": $util.dynamodb.toDynamoDBJson("$!{ctx.args.account}"),
       #end
     #elseif ("$type" == "Managed")
       "auth_type": $util.dynamodb.toDynamoDBJson("cognito")
