@@ -88,7 +88,6 @@ jobs:
         $PIPELINE --type-name Mutation --field-name ResetAppPassword --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/ResetAppPassword_before.vtl --pipeline-config "get_app,dynamodb;reset_password,dynamodb"
 
         # Subtypes
-        $DEFAULT request_templates/X-tenant.vtl --type Hl7MLLPInbound --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type KMSKey --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Hl7MLLPOutboundNode --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Hl7MLLPInboundNode --field-name tenant
