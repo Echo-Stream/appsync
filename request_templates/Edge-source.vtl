@@ -1,0 +1,14 @@
+#set ($tenant = "$!{ctx.identity.claims.tenant}")
+
+{
+  "version" : "2017-02-28",
+  "operation" : "Query",
+  "query": {
+    "expression": "pk = :tenant AND begins_with(sk, :source",
+    "expressionValues": {
+      ":source": $util.dynamodb.toDynamoDBJson("E~$!{ctx.source.source}|"),
+      ":tenant": $util.dynamodb.toDynamoDBJson($tenant)
+    }
+  },
+  limit: 1
+}

@@ -1,11 +1,4 @@
-interface AppInterface {
-	tenant: Tenant!
-	type: AppType!
-	name: String!
-	description: String
-	nodes: [Node]
-	event_id: String
-}
+union App = Hl7App | ExternalApp
 
 enum AppAuthType {
 	x_account
@@ -13,14 +6,29 @@ enum AppAuthType {
 }
 
 input AppInput {
-	auth_type: AppAuthType!
+	auth_type: AppAuthType
 	name: String!
 	description: String
 	nodes: [String]
-	account: String!
+	account: String
+	type: AppType!
 }
 
-union App = Hl7App | ExternalApp
+interface AppInterface {
+	tenant: Tenant!
+	type: AppType!
+	name: String!
+	description: String
+	nodes: [Node]
+	event_id: String
+	config: AWSJSON
+}
+
+type AppResult {
+	items: [App]
+	nextToken: String
+	scannedCount: Int
+}
 
 enum AppType {
 	Hl7App
@@ -57,6 +65,21 @@ type Edge {
 	event_id: String!
 }
 
+input EdgeInput {
+	name: String!
+	description: String
+	kms_key: String!
+	source: String!
+	target: String!
+	metadata: AWSJSON
+}
+
+type EdgeResult {
+	items: [Edge]
+	nextToken: String
+	scannedCount: Int
+}
+
 type ExternalApp implements AppInterface {
 	tenant: Tenant!
 	type: AppType!
@@ -65,16 +88,8 @@ type ExternalApp implements AppInterface {
 	nodes: [Node]
 	account: String
 	auth_type: String
+	config: AWSJSON
 	event_id: String
-}
-
-input EdgeInput {
-	name: String!
-	description: String
-	kms_key: String!
-	source: String!
-	target: String!
-	metadata: AWSJSON
 }
 
 type ExternalNode implements NodeInterface {
@@ -88,30 +103,6 @@ type ExternalNode implements NodeInterface {
 	event_id: String
 }
 
-type AppResult {
-	items: [App]
-	nextToken: String
-	scannedCount: Int
-}
-
-type NodeResult {
-	items: [Node]
-	nextToken: String
-	scannedCount: Int
-}
-
-type EdgeResult {
-	items: [Edge]
-	nextToken: String
-	scannedCount: Int
-}
-
-type UserResult {
-	items: [User]
-	nextToken: String
-	scannedCount: Int
-}
-
 type Hl7App implements AppInterface {
 	tenant: Tenant!
 	type: AppType!
@@ -119,6 +110,7 @@ type Hl7App implements AppInterface {
 	description: String
 	nodes: [Node]
 	iso: String
+	config: AWSJSON
 	event_id: String
 }
 
@@ -177,14 +169,7 @@ type Mutation {
 	ResetAppPassword(name: String!): App
 }
 
-interface NodeInterface {
-	name: String!
-	description: String
-	tenant: Tenant!
-	app: App
-	metadata: AWSJSON
-	event_id: String
-}
+union Node = Hl7InboundNode | Hl7OutboundNode | ExternalNode | CustomNode
 
 input NodeInput {
 	name: String!
@@ -197,7 +182,20 @@ input NodeInput {
 	remote_host: String
 }
 
-union Node = Hl7InboundNode | Hl7OutboundNode | ExternalNode | CustomNode
+interface NodeInterface {
+	name: String!
+	description: String
+	tenant: Tenant!
+	app: App
+	metadata: AWSJSON
+	event_id: String
+}
+
+type NodeResult {
+	items: [Node]
+	nextToken: String
+	scannedCount: Int
+}
 
 enum NodeTypes {
 	Hl7InboundNode
@@ -206,41 +204,41 @@ enum NodeTypes {
 	CustomNode
 }
 
-type Query {
-	GetUsersForTenant(tenant: String!): [UserResult]
-	GetUser(email: AWSEmail): [User]
-	SearchNodes(
-		partial_name: Boolean
-		name: String
-		filter: String
-		filter_value: String
-		nextToken: String
-		limit: Int
-	): NodeResult
-	SearchEdges(
-		partial_name: Boolean
-		source: String
-		target: String
-		filter: String
-		filter_value: String
-		nextToken: String
-		limit: Int
-	): EdgeResult
-	SearchApps(
-		partial_name: Boolean
-		name: String
-		filter: String
-		filter_value: String
-		nextToken: String
-		limit: Int
-	): AppResult
-	ListKeys: [KMSKey]
-}
-
 enum ObjectTypes {
 	Node
 	App
 	Edge
+}
+
+type Query {
+	GetUsersForTenant(tenant: String!): [UserResult]
+	GetUser(email: AWSEmail): [User]
+	SearchNodes(
+		partial_name: Boolean,
+		name: String,
+		filter: String,
+		filter_value: String,
+		nextToken: String,
+		limit: Int
+	): NodeResult
+	SearchEdges(
+		partial_name: Boolean,
+		source: String,
+		target: String,
+		filter: String,
+		filter_value: String,
+		nextToken: String,
+		limit: Int
+	): EdgeResult
+	SearchApps(
+		partial_name: Boolean,
+		name: String,
+		filter: String,
+		filter_value: String,
+		nextToken: String,
+		limit: Int
+	): AppResult
+	ListKeys: [KMSKey]
 }
 
 enum Region {
@@ -290,11 +288,13 @@ type Subscription {
 type Tenant @aws_iam {
 	name: String!
 	default_region: Region!
+	billing_info: AWSJSON
 }
 
 input TenantInput {
 	name: String!
 	default_region: Region!
+	billing_info: AWSJSON
 	event_id: String
 }
 
@@ -315,6 +315,12 @@ input UserInput {
 	last_name: String!
 	email: String!
 	role: UserRole!
+}
+
+type UserResult {
+	items: [User]
+	nextToken: String
+	scannedCount: Int
 }
 
 enum UserRole {

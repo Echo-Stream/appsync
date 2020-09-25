@@ -3,13 +3,16 @@
 #set ($type = "$!ctx.args.app.type")
 
 #set ($requiredAttributes = [])
-#set ($incorrectAttributes) = [])
+#set ($incorrectAttributes = [])
 
 #if ("$type" == "Hl7App")
-  $util.qr($incorrectAttributes.add("auth_type")
-  $util.qr($incorrectAttributes.add("account")
+  $util.qr($incorrectAttributes.add("auth_type"))
+  $util.qr($incorrectAttributes.add("account"))
 #elseif ("$type" == "EdgeApp")
-  $util.qr($requiredAttributes.add("auth_type")
+  #if ("$!ctx.args.app.auth_type" == "")
+    $util.error("You must specify an auth_type.")
+  #end
+  $util.qr($requiredAttributes.add("auth_type"))
 #end
 
 #foreach ($val in $incorrectAttributes)
@@ -28,43 +31,46 @@
   $util.error("Apps with auth_type 'x_account' require 'account' argument")
 #end
 
+#if ("$!type" == "Hl7App")
+  #set($ctx.args.app.auth_type = "cognito")
+#end
+
 {
-    "version" : "2017-02-28",
-    "operation" : "PutItem",
-    "key" : {
-        "pk": $util.dynamodb.toDynamoDBJson($tenant),
-        "sk": $util.dynamodb.toDynamoDBJson($app_sk)
-    },
-    "attributeValues" : {
-		  "tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
-      "type": $util.dynamodb.toDynamoDBJson("$type"),
-      "name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.name}"),
-      "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.description}"),
-      "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata}),
-      "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
-      #if ("$type" == "EdgeApp")
-        "auth_type": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.auth_type}),
-        #if ("$!{ctx.args.app.auth_type}" == "x_account")
-          "account": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.account}),
-          #if ("$!{ctx.args.app.auth_type}" == "cognito")
-            "password": "**********",
-          #end
-        #end
-      #elseif ("$type" == "Hl7App")
-        "auth_type": $util.dynamodb.toDynamoDBJson("cognito")
+  "version" : "2017-02-28",
+  "operation" : "PutItem",
+  "key" : {
+      "pk": $util.dynamodb.toDynamoDBJson($tenant),
+      "sk": $util.dynamodb.toDynamoDBJson($app_sk)
+  },
+  "attributeValues" : {
+	  "tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
+    "type": $util.dynamodb.toDynamoDBJson("$type"),
+    "name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.name}"),
+    "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.description}"),
+    "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata}),
+    "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
+    "config": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.config}),
+    #if ("$type" == "EdgeApp")
+      "auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.auth_type}"),
+      #if ("$!{ctx.args.app.auth_type}" == "x_account")
+        "account": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.account}"),
       #end
+    #elseif ("$type" == "Hl7App")
+      "auth_type": $util.dynamodb.toDynamoDBJson("cognito")
+    #end
+  },
+  "condition": {
+    "expression": "(attribute_not_exists(sk) AND attribute_not_exists(pk)) OR (auth_type = :auth_type AND #type = :type AND #name = :name AND account = :account AND config = :config)",
+    "expressionValues": {
+      ":name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.name}"),
+      ":auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.auth_type}"),
+      ":type": $util.dynamodb.toDynamoDBJson("$type"),
+      ":account": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.account}"),
+      ":config": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.config})
     },
-    "condition": {
-        "expression": "(attribute_not_exists(sk) AND attribute_not_exists(pk)) OR (auth_type = :auth_type AND #type = :type AND #name = :name) AND (attribute_not_exists(account) OR account = :account))"
-        "expressionValues": {
-          ":name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.name}"),
-          ":auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.auth_type}"),
-          ":type": $util.dynamodb.toDynamoDBJson("$type"),
-          ":account": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.account}")
-        },
-        "expressionNames": {
-          "#type": "type",
-          "#name": "name"
-        }
+    "expressionNames": {
+      "#type": "type",
+      "#name": "name"
     }
+  }
 }
