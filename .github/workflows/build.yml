@@ -89,7 +89,6 @@ jobs:
         $DEFAULT request_templates/X-tenant.vtl --type KMSKey --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Hl7MLLPOutbound --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type ExternalNode --field-name tenant
-        $DEFAULT request_templates/X-tenant.vtl --type CustomNode --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Edge --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Managed --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type External --field-name tenant
@@ -104,11 +103,9 @@ jobs:
 
         # Edge resolvers for nodes
         $DEFAULT request_templates/Node-send_edges.vtl --type ExternalNode --field-name send_edges
-        $DEFAULT request_templates/Node-send_edges.vtl --type CustomNode --field-name send_edges
         $SINGLE_RESPONSE request_templates/Node-receive_edges.vtl --type Hl7MLLPInbound --field-name send_edges
         $SINGLE_RESPONSE request_templates/Node-send_edges.vtl --type Hl7MLLPOutbound --field-name receive_edges
         $DEFAULT request_templates/Node-receive_edges.vtl --type ExternalNode --field-name receive_edges
-        $DEFAULT request_templates/Node-receive_edges.vtl --type CustomNode --field-name receive_edges
         $LAMBDA_RESOLVER kms_key_datasource --type-name Edge --field-name kms_key
 
         # Subscriptions
