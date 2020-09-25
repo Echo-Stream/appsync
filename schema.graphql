@@ -1,4 +1,4 @@
-union App = Managed | External
+union App = ManagedApp | ExternalApp
 
 enum AppAuthType {
 	x_account
@@ -87,17 +87,6 @@ type ExternalNode implements NodeInterface {
 	event_id: String
 }
 
-type ManagedApp implements AppInterface {
-	tenant: Tenant!
-	type: AppType!
-	name: String!
-	description: String
-	nodes: [Node]
-	iso: String
-	config: AWSJSON
-	event_id: String
-}
-
 type Hl7MLLPInboundNode implements NodeInterface {
 	type: NodeTypes!
 	tenant: Tenant!
@@ -137,6 +126,17 @@ input KmsKeyInput {
 	description: String
 }
 
+type ManagedApp implements AppInterface {
+	tenant: Tenant!
+	type: AppType!
+	name: String!
+	description: String
+	nodes: [Node]
+	iso: String
+	config: AWSJSON
+	event_id: String
+}
+
 type Mutation {
 	DeleteNode(node: String!): Node
 	DeleteEdge(edge: String!): Edge
@@ -144,18 +144,9 @@ type Mutation {
 	PutTenant(tenant: TenantInput!): Tenant
 		@aws_iam
 	PutEdge(edge: EdgeInput!): Edge
-	PutHl7MLLPOutboundNode(
-		node: NodeInput,
-		remote_port: Int!,
-		remote_host: String!
-	): Node
-	PutHl7MLLPInboundNode(
-		node: NodeInput,
-		port: Int!,
-	): Node
-	PutExternalNode(
-		node: NodeInput
-	)
+	PutHl7MLLPOutboundNode(node: NodeInput, remote_port: Int!, remote_host: String!): Hl7MLLPOutboundNode
+	PutHl7MLLPInboundNode(node: NodeInput, port: Int!): Hl7MLLPInboundNode
+	PutExternalNode(node: NodeInput): ExternalNode
 	PutExternalApp(app: AppInput!, auth_type: AppAuthType!, account: String): ExternalApp
 	PutManagedApp(app: AppInput!): ManagedApp
 	PutKmsKey(key: KmsKeyInput!): KMSKey
@@ -165,7 +156,7 @@ type Mutation {
 	ResetAppPassword(name: String!): App
 }
 
-union Node = Hl7MLLPInbound | Hl7MLLPOutbound | External
+union Node = Hl7MLLPInboundNode | Hl7MLLPOutboundNode | ExternalNode
 
 input NodeInput {
 	name: String!
