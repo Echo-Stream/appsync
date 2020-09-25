@@ -76,7 +76,7 @@ jobs:
         $LAMBDA_RESOLVER edge_datasource --type Mutation --field-name PutEdge
         $DEFAULT request_templates/PutNode.vtl --type Mutation --field-name PutHl7MLLPOutboundNode
         $DEFAULT request_templates/PutNode.vtl --type Mutation --field-name PutHl7MLLPInboundNode
-        $DEFAULT request_templates/PutNode.vtl --type Mutation --field-name PutEdgeNode
+        $DEFAULT request_templates/PutNode.vtl --type Mutation --field-name PutExternalNode
         $DEFAULT request_templates/PutApp.vtl --type Mutation --field-name PutExternalApp
         $DEFAULT request_templates/PutApp.vtl --type Mutation --field-name PutManagedApp
         $DEFAULT request_templates/PutTenant.vtl --type Mutation --field-name PutTenant
