@@ -86,6 +86,7 @@ jobs:
 
         # Subtypes
         $DEFAULT request_templates/X-tenant.vtl --type Hl7InboundNode --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type KMSKey --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Hl7OutboundNode --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type ExternalNode --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type CustomNode --field-name tenant

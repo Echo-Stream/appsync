@@ -9,7 +9,6 @@ input AppInput {
 	auth_type: AppAuthType
 	name: String!
 	description: String
-	nodes: [String]
 	account: String
 	type: AppType!
 }
@@ -285,7 +284,7 @@ type Subscription {
 		@aws_subscribe(mutations: ["StreamNotifications"])
 }
 
-type Tenant @aws_iam {
+type Tenant {
 	name: String!
 	default_region: Region!
 	billing_info: AWSJSON
