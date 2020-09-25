@@ -3,13 +3,12 @@
 {
   "version" : "2017-02-28",
   "operation" : "Query",
-  "index": "lsi0_sk"
   "query": {
-    "expression": "pk = :tenant AND begins_with(lsi0_sk, :target",
+    "expression": "pk = :tenant AND sk = :target",
     "expressionValues": {
-      ":target": $util.dynamodb.toDynamoDBJson("E~$!{ctx.source.target}|"),
+      ":target": $util.dynamodb.toDynamoDBJson("N~$!{ctx.source.target}"),
       ":tenant": $util.dynamodb.toDynamoDBJson($tenant)
     }
   },
-  limit: 1
+  "limit": 1
 }

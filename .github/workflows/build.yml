@@ -93,8 +93,8 @@ jobs:
         $DEFAULT request_templates/X-tenant.vtl --type Hl7App --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type ExternalApp --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type User --field-name tenant
-        $DEFAULT request_templates/Edge-source.vtl --type Edge --field-name source
-        $DEFAULT request_templates/Edge-target.vtl --type Edge --field-name target
+        $SINGLE request_templates/Edge-source.vtl --type Edge --field-name source
+        $SINGLE request_templates/Edge-target.vtl --type Edge --field-name target
 
         # Nodes for apps
         $DEFAULT request_templates/App-nodes.vtl --type Hl7App --field-name nodes
