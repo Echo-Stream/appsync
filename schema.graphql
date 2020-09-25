@@ -1,4 +1,4 @@
-union App = Hl7App | ExternalApp
+union App = Managed | External
 
 enum AppAuthType {
 	x_account
@@ -30,26 +30,14 @@ type AppResult {
 }
 
 enum AppType {
-	Hl7App
-	ExternalApp
+	Managed
+	External
 }
 
 type CognitoUser {
 	tenant: Tenant!
 	name: String!
 	role: String!
-}
-
-type CustomNode implements NodeInterface {
-	tenant: Tenant!
-	name: String!
-	node_type: String!
-	description: String
-	send_edges: [Edge]
-	receive_edges: [Edge]
-	app: App
-	metadata: AWSJSON
-	event_id: String
 }
 
 type Edge {
@@ -79,7 +67,7 @@ type EdgeResult {
 	scannedCount: Int
 }
 
-type ExternalApp implements AppInterface {
+type External implements AppInterface {
 	tenant: Tenant!
 	type: AppType!
 	name: String!
@@ -102,7 +90,7 @@ type ExternalNode implements NodeInterface {
 	event_id: String
 }
 
-type Hl7App implements AppInterface {
+type Managed implements AppInterface {
 	tenant: Tenant!
 	type: AppType!
 	name: String!
@@ -113,7 +101,7 @@ type Hl7App implements AppInterface {
 	event_id: String
 }
 
-type Hl7InboundNode implements NodeInterface {
+type Hl7MLLPInbound implements NodeInterface {
 	type: NodeTypes!
 	tenant: Tenant!
 	name: String!
@@ -126,7 +114,7 @@ type Hl7InboundNode implements NodeInterface {
 	event_id: String
 }
 
-type Hl7OutboundNode implements NodeInterface {
+type Hl7MLLPOutbound implements NodeInterface {
 	type: NodeTypes!
 	tenant: Tenant!
 	name: String!
@@ -168,7 +156,7 @@ type Mutation {
 	ResetAppPassword(name: String!): App
 }
 
-union Node = Hl7InboundNode | Hl7OutboundNode | ExternalNode | CustomNode
+union Node = Hl7MLLPInbound | Hl7MLLPOutbound | ExternalNode
 
 input NodeInput {
 	name: String!
@@ -197,10 +185,9 @@ type NodeResult {
 }
 
 enum NodeTypes {
-	Hl7InboundNode
-	Hl7OutboundNode
+	Hl7MLLPInbound
+	Hl7MLLPOutbound
 	ExternalNode
-	CustomNode
 }
 
 enum ObjectTypes {

@@ -5,11 +5,11 @@
 
 #set ($requiredAttributes = [])
 #set ($incorrectAttributes = [])
-#if ("$!{type}" == "Hl7InboundNode")
+#if ("$!{type}" == "Hl7MLLPInbound")
   $util.qr($incorrectAttributes.add("remote_port"))
   $util.qr($incorrectAttributes.add("remote_host"))
   $util.qr($requiredAttributes.add("port"))
-#elseif ("$!{type}" == "Hl7OutboundNode")
+#elseif ("$!{type}" == "Hl7MLLPOutbound")
   $util.qr($requiredAttributes.add("remote_port"))
   $util.qr($requiredAttributes.add("remote_host"))
   $util.qr($incorrectAttributes.add("port"))
@@ -43,9 +43,9 @@
     "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.description}"),
     "lsi0_sk": $util.dynamodb.toDynamoDBJson("$lsi"),
     "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
-    #if ("$!{type}" == "Hl7InboundNode")
+    #if ("$!{type}" == "Hl7MLLPInbound")
       "port": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.port})
-    #elseif ("$!{type}" == "Hl7OutboundNode")
+    #elseif ("$!{type}" == "Hl7MLLPOutbound")
       "remote_port": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.remote_port}),
       "remote_host": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.remote_host}")
     #end

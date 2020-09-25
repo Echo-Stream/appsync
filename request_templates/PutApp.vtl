@@ -5,7 +5,7 @@
 #set ($requiredAttributes = [])
 #set ($incorrectAttributes = [])
 
-#if ("$type" == "Hl7App")
+#if ("$type" == "Managed")
   $util.qr($incorrectAttributes.add("auth_type"))
   $util.qr($incorrectAttributes.add("account"))
 #elseif ("$type" == "EdgeApp")
@@ -31,7 +31,7 @@
   $util.error("Apps with auth_type 'x_account' require 'account' argument")
 #end
 
-#if ("$!type" == "Hl7App")
+#if ("$!type" == "Managed")
   #set($ctx.args.app.auth_type = "cognito")
 #end
 
@@ -55,7 +55,7 @@
       #if ("$!{ctx.args.app.auth_type}" == "x_account")
         "account": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.account}"),
       #end
-    #elseif ("$type" == "Hl7App")
+    #elseif ("$type" == "Managed")
       "auth_type": $util.dynamodb.toDynamoDBJson("cognito")
     #end
   },
