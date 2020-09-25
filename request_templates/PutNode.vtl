@@ -1,5 +1,5 @@
 #set ($tenant = "$!ctx.identity.claims.tenant")
-#set ($type = $ctx.info.fieldName.replaceAll("^Put|Node$", ""))
+#set ($type = $ctx.info.fieldName.replace("Put", ""))
 
 #set ($node_sk = "N~$!ctx.args.node.name")
 #set ($lsi = "A~$!ctx.args.node.app")
@@ -20,9 +20,9 @@
     "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.description}"),
     "lsi0_sk": $util.dynamodb.toDynamoDBJson("$lsi"),
     "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
-    #if ("$!{type}" == "Hl7MLLPInbound")
+    #if ("$!{type}" == "Hl7MLLPInboundNode")
       "port": $util.dynamodb.toDynamoDBJson($!{ctx.args.port})
-    #elseif ("$!{type}" == "Hl7MLLPOutbound")
+    #elseif ("$!{type}" == "Hl7MLLPOutboundNode")
       "remote_port": $util.dynamodb.toDynamoDBJson($!{ctx.args.remote_port}),
       "remote_host": $util.dynamodb.toDynamoDBJson("$!{ctx.args.remote_host}")
     #end

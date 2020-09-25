@@ -64,7 +64,7 @@ type EdgeResult {
 	scannedCount: Int
 }
 
-type External implements AppInterface {
+type ExternalApp implements AppInterface {
 	tenant: Tenant!
 	type: AppType!
 	name: String!
@@ -87,7 +87,7 @@ type ExternalNode implements NodeInterface {
 	event_id: String
 }
 
-type Managed implements AppInterface {
+type ManagedApp implements AppInterface {
 	tenant: Tenant!
 	type: AppType!
 	name: String!
@@ -98,7 +98,7 @@ type Managed implements AppInterface {
 	event_id: String
 }
 
-type Hl7MLLPInbound implements NodeInterface {
+type Hl7MLLPInboundNode implements NodeInterface {
 	type: NodeTypes!
 	tenant: Tenant!
 	name: String!
@@ -111,7 +111,7 @@ type Hl7MLLPInbound implements NodeInterface {
 	event_id: String
 }
 
-type Hl7MLLPOutbound implements NodeInterface {
+type Hl7MLLPOutboundNode implements NodeInterface {
 	type: NodeTypes!
 	tenant: Tenant!
 	name: String!
@@ -156,8 +156,8 @@ type Mutation {
 	PutExternalNode(
 		node: NodeInput
 	)
-	PutExternalApp(app: AppInput!, auth_type: AppAuthType!, account: String): App
-	PutManagedApp(app: AppInput!): App
+	PutExternalApp(app: AppInput!, auth_type: AppAuthType!, account: String): ExternalApp
+	PutManagedApp(app: AppInput!): ManagedApp
 	PutKmsKey(key: KmsKeyInput!): KMSKey
 	AddUserToTenant(user: UserInput!): User
 	StreamNotifications(tenant: String!, data: AWSJSON, function: String!): StreamNotification
@@ -165,7 +165,7 @@ type Mutation {
 	ResetAppPassword(name: String!): App
 }
 
-union Node = Hl7MLLPInbound | Hl7MLLPOutbound | ExternalNode
+union Node = Hl7MLLPInbound | Hl7MLLPOutbound | External
 
 input NodeInput {
 	name: String!
@@ -193,7 +193,7 @@ type NodeResult {
 enum NodeTypes {
 	Hl7MLLPInbound
 	Hl7MLLPOutbound
-	ExternalNode
+	External
 }
 
 enum ObjectTypes {
@@ -247,8 +247,6 @@ enum Region {
 	ap_southeast_1
 	ap_southeast_2
 	ca_central_1
-	cn_north_1
-	cn_northwest_1
 	eu_central_1
 	eu_west_1
 	eu_west_2

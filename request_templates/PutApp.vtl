@@ -1,5 +1,5 @@
 #set ($tenant = "$!{ctx.identity.claims.tenant}")
-#set ($type = $ctx.info.fieldName.replaceAll("^Put|App$", ""))
+#set ($type = $ctx.info.fieldName.replace("^Put", ""))
 #set ($app_sk = "A~$!{ctx.args.app.name}")
 #set ($auth_type_list = ["cognito", "x_account"])
 
@@ -25,12 +25,12 @@
     "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata}),
     "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
     "config": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.config}),
-    #if ("$type" == "Edge")
+    #if ("$type" == "ExternalApp")
       "auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.auth_type}"),
       #if ("$!{ctx.args.app.auth_type}" == "x_account")
         "account": $util.dynamodb.toDynamoDBJson("$!{ctx.args.account}"),
       #end
-    #elseif ("$type" == "Managed")
+    #elseif ("$type" == "ManagedApp")
       "auth_type": $util.dynamodb.toDynamoDBJson("cognito")
     #end
   },
