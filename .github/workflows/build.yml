@@ -69,15 +69,13 @@ jobs:
 
 
         # Mutation functions
+        $FUNCTION  PutNode --description "Creates/updates Nodes" --request-mapping-template request_templates/PutNode.vtl --response-mapping-template response_templates/default.vtl
 
 
         # Queries
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
         $DEFAULT request_templates/GetUsersForTenant.vtl --type-name Query --field-name GetUsersForTenant
         $DEFAULT request_templates/GetUser.vtl --type-name Query --field-name GetUser
-        # $DEFAULT request_templates/SearchNodes.vtl --type-name Query --field-name SearchNodes
-        # $DEFAULT request_templates/SearchApps.vtl --type-name Query --field-name SearchApps
-        # $DEFAULT request_templates/SearchEdges.vtl --type-name Query --field-name SearchEdges
         $PIPELINE --type-name Query --field-name SearchApps --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "SearchApps,dynamodb"
         $PIPELINE --type-name Query --field-name SearchEdges --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "SearchEdges,dynamodb"
         $PIPELINE --type-name Query --field-name SearchNodes --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "SearchNodes,dynamodb"
@@ -86,9 +84,10 @@ jobs:
         # Mutations
         $LAMBDA_RESOLVER kms_key_datasource --type Mutation --field-name PutKmsKey
         $LAMBDA_RESOLVER edge_datasource --type Mutation --field-name PutEdge
-        $DEFAULT request_templates/PutNode.vtl --type Mutation --field-name PutHl7MLLPOutboundNode
-        $DEFAULT request_templates/PutNode.vtl --type Mutation --field-name PutHl7MLLPInboundNode
-        $DEFAULT request_templates/PutNode.vtl --type Mutation --field-name PutExternalNode
+        $PIPELINE --type-name Mutation --field-name PutHl7MLLPInboundNode --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/PutNode.vtl --pipeline-config "PutNode,dynamodb"
+        $PIPELINE --type-name Mutation --field-name PutHl7MLLPOutboundNode --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/PutNode.vtl --pipeline-config "PutNode,dynamodb"
+        $PIPELINE --type-name Mutation --field-name PutExternalNode --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/PutNode.vtl --pipeline-config "PutNode,dynamodb"
+
         $DEFAULT request_templates/PutApp.vtl --type Mutation --field-name PutExternalApp
         $DEFAULT request_templates/PutApp.vtl --type Mutation --field-name PutManagedApp
         $DEFAULT request_templates/PutTenant.vtl --type Mutation --field-name PutTenant
