@@ -1,12 +1,11 @@
-#set ($tenant = "$!{ctx.identity.claims.tenant}")
 #set ($type = $ctx.info.fieldName.replace("^Put", ""))
-#set ($app_sk = "A~$!{ctx.args.app.name}")
+#set ($app_sk = "A~$!{ctx.stash.app.name}")
 #set ($auth_type_list = ["cognito", "x_account"])
 
-#if ("$!{ctx.args.app.auth_type}" == "x_account" && "$!{ctx.args.app.account}" == "")
+#if ("$!{ctx.stash.app.auth_type}" == "x_account" && "$!{ctx.stash.app.account}" == "")
   $util.error("Apps with auth_type 'x_account' require 'account' argument")
 #end
-#if ("$!{ctx.args.app.auth_type}" != "" and $auth_type_list.contains("$!{ctx.args.app.auth_type}"))
+#if ("$!{ctx.stash.app.auth_type}" != "" and $auth_type_list.contains("$!{ctx.stash.app.auth_type}"))
   $util.error("Valid auth_type's are 'cognito' or 'x_account'")
 #end
 
@@ -20,15 +19,15 @@
   "attributeValues" : {
 	  "tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
     "type": $util.dynamodb.toDynamoDBJson("$type"),
-    "name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.name}"),
-    "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.description}"),
-    "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.metadata}),
+    "name": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.app.name}"),
+    "description": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.app.description}"),
+    "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.stash.app.metadata}),
     "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
-    "config": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.config}),
+    "config": $util.dynamodb.toDynamoDBJson($!{ctx.stash.app.config}),
     #if ("$type" == "ExternalApp")
-      "auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.auth_type}"),
-      #if ("$!{ctx.args.app.auth_type}" == "x_account")
-        "account": $util.dynamodb.toDynamoDBJson("$!{ctx.args.account}"),
+      "auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.auth_type}"),
+      #if ("$!{ctx.stash.app.auth_type}" == "x_account")
+        "account": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.account}"),
       #end
     #elseif ("$type" == "ManagedApp")
       "auth_type": $util.dynamodb.toDynamoDBJson("cognito")
@@ -37,11 +36,11 @@
   "condition": {
     "expression": "(attribute_not_exists(sk) AND attribute_not_exists(pk)) OR (auth_type = :auth_type AND #type = :type AND #name = :name AND account = :account AND config = :config)",
     "expressionValues": {
-      ":name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.name}"),
-      ":auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.auth_type}"),
+      ":name": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.app.name}"),
+      ":auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.app.auth_type}"),
       ":type": $util.dynamodb.toDynamoDBJson("$type"),
-      ":account": $util.dynamodb.toDynamoDBJson("$!{ctx.args.app.account}"),
-      ":config": $util.dynamodb.toDynamoDBJson($!{ctx.args.app.config})
+      ":account": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.app.account}"),
+      ":config": $util.dynamodb.toDynamoDBJson($!{ctx.stash.app.config})
     },
     "expressionNames": {
       "#type": "type",

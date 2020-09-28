@@ -1,5 +1,4 @@
-#set ($tenant = "$!{ctx.identity.claims.tenant}"")
-#set ($sk = "E~$!{ctx.args.edge.source}|$!{ctx.args.edge.target}")
+#set ($sk = "E~$!{ctx.stash.edge.source}|$!{ctx.stash.edge.target}")
 
 {
   "operation": "DeleteItem",

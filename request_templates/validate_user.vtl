@@ -9,6 +9,7 @@
 
 #if ($tenant_list.containsKey($tenant))
   $util.qr($ctx.stash.put("tenant", $tenant))
+  $util.qr($ctx.stash.put("username", $ctx.identity.claims.username))
 #else
   $util.error("Unauthorized: Not part of tenant ${tenant}")
 #end

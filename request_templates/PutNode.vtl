@@ -1,8 +1,7 @@
-#set ($tenant = "$!ctx.identity.claims.tenant")
 #set ($type = $ctx.info.fieldName.replace("Put", ""))
 
-#set ($node_sk = "N~$!ctx.args.node.name")
-#set ($lsi = "A~$!ctx.args.node.app")
+#set ($node_sk = "N~$!ctx.stash.node.name")
+#set ($lsi = "A~$!ctx.stash.node.app")
 
 {
   "version" : "2017-02-28",
@@ -14,24 +13,24 @@
   "attributeValues" : {
     "tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
     "type": $util.dynamodb.toDynamoDBJson("$type"),
-    "name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.name}"),
-    "app": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.app}"),
-    "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.args.node.metadata}),
-    "description": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.description}"),
+    "name": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.node.name}"),
+    "app": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.node.app}"),
+    "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.stash.node.metadata}),
+    "description": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.node.description}"),
     "lsi0_sk": $util.dynamodb.toDynamoDBJson("$lsi"),
     "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
     #if ("$!{type}" == "Hl7MLLPInboundNode")
-      "port": $util.dynamodb.toDynamoDBJson($!{ctx.args.port})
+      "port": $util.dynamodb.toDynamoDBJson($!{ctx.stash.port})
     #elseif ("$!{type}" == "Hl7MLLPOutboundNode")
-      "remote_port": $util.dynamodb.toDynamoDBJson($!{ctx.args.remote_port}),
-      "remote_host": $util.dynamodb.toDynamoDBJson("$!{ctx.args.remote_host}")
+      "remote_port": $util.dynamodb.toDynamoDBJson($!{ctx.stash.remote_port}),
+      "remote_host": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.remote_host}")
     #end
   },
   "condition": {
     "expression": "(attribute_not_exists(pk) AND attribute_not_exists(sk)) OR (#name = :name AND #type = :type)",
     "expressionValues": {
-      ":type": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.type}"),
-      ":name": $util.dynamodb.toDynamoDBJson("$!{ctx.args.node.name}")
+      ":type": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.node.type}"),
+      ":name": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.node.name}")
     },
     "expressionNames": {
       "#name": "name",

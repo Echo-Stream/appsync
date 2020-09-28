@@ -1,42 +1,28 @@
-#set ($tenant = $!{ctx.identity.claims.tenant})
-
-#if ("$!ctx.stash.source" != "" && "$!ctx.stash.target" != "")
-  $util.error("Choose one of either source or target, but not both")
-#elseif ("$!{ctx.stash.source}${!ctx.stash.source}" == "")
-  #set($ctx.stash.partial_name = true)
-#end
-
-#set ($sk_opt = "begins_with(sk, :node)")
-#set ($lsi_opt = "begins_with(lsi0_sk, :node)")
-#if ("$!{ctx.stash.filter}" != "" && "$!{ctx.stash.filter_value}" == "")
-  $util.error("Cannot have an empty value for 'filter_value' if using 'filter'")
+#if ($ctx.stash.partial_name || "$!ctx.stash.name" == "")
+  #set ($sk_opt = "begins_with(sk, :name)")
+  #if ("$!{ctx.stash.filter}" != "" && "$!{ctx.stash.filter_value}" == "")
+    $util.error("Cannot have an empty value for 'filter_value' if using 'filter'")
+  #end
+#else
+  #set ($sk_opt = "sk = :name")
+  #set ($ctx.stash.limit = 1)
+  #set ($ctx.stash.type = "")
 #end
 
 {
   "version": "2017-02-28",
   "operation": "Query",
-  #if ("$!ctx.stash.target" != "")
-    "index": "lsi0",
-    "query": {
-
-      "expression": "pk = :tenant AND $lsi_opt",
-      "expressionValues": {
-        ":tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
-        ":node": $util.dynamodb.toDynamoDBJson("E~$!{ctx.stash.target}|")
-      },
-  #else
-    "query": {
-      "expression": "pk = :tenant AND $sk_opt",
-      "expressionValues": {
-        ":tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
-        ":node": $util.dynamodb.toDynamoDBJson("E~$!{ctx.stash.node}")
-      }
-  #end
+  "query": {
+    "expression": "pk = :tenant AND $sk_opt",
+    "expressionValues": {
+      ":tenant": $util.dynamodb.toDynamoDBJson("$ctx.stash.tenant"),
+      ":name": $util.dynamodb.toDynamoDBJson("A~$!{ctx.stash.name}")
+    }
   },
-  #if ("$!{ctx.stash.filter}" != "")
+  #if ("$!ctx.stash.filter" != "")
     "filter": {
-      "expression": "#filter = :filter",
-      "expressionNames": {"#filter": "$!{ctx.stash.filter_value}"},
+      "expression": "#filter = :filter_value",
+      "expressionNames": {"#filter": "$!{ctx.stash.filter}"},
       "expressionValues": {":filter_value": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.filter_value}")}
     },
   #end

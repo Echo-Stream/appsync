@@ -1,22 +1,22 @@
-#set ($region = $ctx.args.tenant.default_region.replace("_", "-"))
+#set ($region = $ctx.stash.tenant.default_region.replace("_", "-"))
 
 {
     "version" : "2017-02-28",
     "operation" : "PutItem",
     "key" : {
-      "pk": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.name}),
+      "pk": $util.dynamodb.toDynamoDBJson($!{ctx.stash.tenant.name}),
       "sk": $util.dynamodb.toDynamoDBJson("T~")
     },
     "attributeValues" : {
-      "name": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.name}),
-      "billing_info": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.billing_info}),
+      "name": $util.dynamodb.toDynamoDBJson($!{ctx.stash.tenant.name}),
+      "billing_info": $util.dynamodb.toDynamoDBJson($!{ctx.stash.tenant.billing_info}),
       "default_region": $util.dynamodb.toDynamoDBJson($region),
       "event_id": $util.dynamodb.toDynamoDBJson($util.autoId())
     },
     "condition": {
         "expression": "(attribute_not_exists(pk) AND attribute_not_exists(sk)) OR (#name = :name AND default_region = :default_region)",
         "expressionValues": {
-          ":name": $util.dynamodb.toDynamoDBJson($!{ctx.args.tenant.name}),
+          ":name": $util.dynamodb.toDynamoDBJson($!{ctx.stash.tenant.name}),
           ":default_region": $util.dynamodb.toDynamoDBJson($region))
         },
         "expressionNames": {"#name": "name"}

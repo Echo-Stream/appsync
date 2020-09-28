@@ -1,21 +1,21 @@
-#set ($data = $util.parseJson("$!{ctx.args.data}"))
-#set ($data = $ctx.args.data)
+#set ($data = $util.parseJson("$!{ctx.stash.data}"))
+#set ($data = $ctx.stash.data)
 
 ## This will allow clients in the same tenant to speak to one another.
 ## If it was a UI user who sent the notification then the event_id will be their username.
 ## This could be used, for instance, to warn another client that we are about to save
 ## changes or to show one user unsaved changes as they happen from another user's UI.
 #if ("$!{ctx.identity.claims.tenant}" != "")
-  #set ($ctx.args.tenant = "${ctx.identity.claims.tenant}")
-  #set ($ctx.args.event_id = "USER: $!{ctx.identity.claims.username}")
+  #set ($ctx.stash.tenant = "${ctx.identity.claims.tenant}")
+  #set ($ctx.stash.event_id = "USER: $!{ctx.identity.claims.username}")
 #end
 
 {
     "version": "2017-02-28",
     "payload": {
-        "event_id": $util.toJson($ctx.args.event_id),
-        "tenant": $util.toJson($ctx.args.tenant),
-        "function": $util.toJson($ctx.args.function),
+        "event_id": $util.toJson($ctx.stash.event_id),
+        "tenant": $util.toJson($ctx.stash.tenant),
+        "function": $util.toJson($ctx.stash.function),
         "error": $util.toJson($!{data.error}),
         "message": $util.toJson($!{data.message}),
         "item_type": $util.toJson($!{data.item_type}),

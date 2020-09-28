@@ -1,15 +1,14 @@
-#set ($tenant = $!{ctx.identity.claims.tenant})
-#set ($sk_type = "$ctx.args.object_type.substring(0, 1)")
+#set ($sk_type = "$ctx.stash.object_type.substring(0, 1)")
 
-#if ($ctx.args.partial_name || "$!ctx.args.name" == "")
+#if ($ctx.stash.partial_name || "$!ctx.stash.name" == "")
   #set ($sk_opt = "begins_with(sk, :name)")
-  #if ("$!{ctx.args.filter}" != "" && "$!{ctx.args.filter_value}" == "")
+  #if ("$!{ctx.stash.filter}" != "" && "$!{ctx.stash.filter_value}" == "")
     $util.error("Cannot have an empty value for 'filter_value' if using 'filter'")
   #end
 #else
   #set ($sk_opt = "sk = :name")
-  #set ($ctx.args.limit = 1)
-  #set ($ctx.args.type = "")
+  #set ($ctx.stash.limit = 1)
+  #set ($ctx.stash.type = "")
 #end
 
 {
@@ -19,21 +18,21 @@
     "expression": "pk = :tenant AND $sk_opt",
     "expressionValues": {
       ":tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
-      ":name": $util.dynamodb.toDynamoDBJson("${sk_type}~$!{ctx.args.name}")
+      ":name": $util.dynamodb.toDynamoDBJson("${sk_type}~$!{ctx.stash.name}")
     }
   },
-  #if ("$ctx.args.filter" != "")
+  #if ("$ctx.stash.filter" != "")
     "filter": {
       "expression": "#filter = :filter",
-      "expressionNames": {"#filter": "$!{ctx.args.filter}"},
-      "expressionValues": {":filter_value": $util.dynamodb.toDynamoDBJson("$!{ctx.args.filter_value}"})
+      "expressionNames": {"#filter": "$!{ctx.stash.filter}"},
+      "expressionValues": {":filter_value": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.filter_value}"})
     },
   #end
-  #if ("$!{ctx.args.limit}" != "")
-    "limit": $!{ctx.args.limit},
+  #if ("$!{ctx.stash.limit}" != "")
+    "limit": $!{ctx.stash.limit},
   #end
-  #if ("$!{ctx.args.nextToken}" != "")
-    "nextToken": "$!{ctx.args.nextToken}"
+  #if ("$!{ctx.stash.nextToken}" != "")
+    "nextToken": "$!{ctx.stash.nextToken}"
   #end
 }
 `

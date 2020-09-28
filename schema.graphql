@@ -1,6 +1,6 @@
 union App = ManagedApp | ExternalApp
 
-enum AppAuthType {
+enum AppAuthType @aws_cognito_user_pools{
 	x_account
 	cognito
 }
@@ -10,7 +10,7 @@ input AppInput {
 	description: String
 }
 
-interface AppInterface {
+interface AppInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	type: AppType!
 	name: String!
@@ -20,24 +20,24 @@ interface AppInterface {
 	config: AWSJSON
 }
 
-type AppResult {
+type AppResult @aws_cognito_user_pools{
 	items: [App]
 	nextToken: String
 	scannedCount: Int
 }
 
 enum AppType {
-	Managed
-	External
+	ManagedApp
+	ExternalApp
 }
 
-type CognitoUser {
+type CognitoUser @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	role: String!
 }
 
-type Edge {
+type Edge @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -58,13 +58,13 @@ input EdgeInput {
 	metadata: AWSJSON
 }
 
-type EdgeResult {
+type EdgeResult @aws_cognito_user_pools{
 	items: [Edge]
 	nextToken: String
 	scannedCount: Int
 }
 
-type ExternalApp implements AppInterface {
+type ExternalApp implements AppInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	type: AppType!
 	name: String!
@@ -76,7 +76,7 @@ type ExternalApp implements AppInterface {
 	event_id: String
 }
 
-type ExternalNode implements NodeInterface {
+type ExternalNode implements NodeInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -87,7 +87,7 @@ type ExternalNode implements NodeInterface {
 	event_id: String
 }
 
-type Hl7MLLPInboundNode implements NodeInterface {
+type Hl7MLLPInboundNode implements NodeInterface @aws_cognito_user_pools{
 	type: NodeTypes!
 	tenant: Tenant!
 	name: String!
@@ -100,7 +100,7 @@ type Hl7MLLPInboundNode implements NodeInterface {
 	event_id: String
 }
 
-type Hl7MLLPOutboundNode implements NodeInterface {
+type Hl7MLLPOutboundNode implements NodeInterface @aws_cognito_user_pools{
 	type: NodeTypes!
 	tenant: Tenant!
 	name: String!
@@ -114,7 +114,7 @@ type Hl7MLLPOutboundNode implements NodeInterface {
 	event_id: String
 }
 
-type KMSKey {
+type KMSKey @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	arn: String!
@@ -126,7 +126,7 @@ input KmsKeyInput {
 	description: String
 }
 
-type ManagedApp implements AppInterface {
+type ManagedApp implements AppInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	type: AppType!
 	name: String!
@@ -137,23 +137,22 @@ type ManagedApp implements AppInterface {
 	event_id: String
 }
 
-type Mutation {
-	DeleteNode(node: String!): Node
-	DeleteEdge(edge: String!): Edge
-	DeleteApp(app: String!): App
+type Mutation @aws_cognito_user_pools{
+	DeleteNode(tenant: String!, node: String!): Node
+	DeleteEdge(tenant: String!, edge: String!): Edge
+	DeleteApp(tenant: String!, app: String!): App
 	PutTenant(tenant: TenantInput!): Tenant
-		@aws_iam
-	PutEdge(edge: EdgeInput!): Edge
-	PutHl7MLLPOutboundNode(node: NodeInput, remote_port: Int!, remote_host: String!): Hl7MLLPOutboundNode
-	PutHl7MLLPInboundNode(node: NodeInput, port: Int!): Hl7MLLPInboundNode
-	PutExternalNode(node: NodeInput): ExternalNode
-	PutExternalApp(app: AppInput!, auth_type: AppAuthType!, account: String): ExternalApp
-	PutManagedApp(app: AppInput!): ManagedApp
-	PutKmsKey(key: KmsKeyInput!): KMSKey
-	AddUserToTenant(user: UserInput!): User
+	PutEdge(tenant: String!, edge: EdgeInput!): Edge
+	PutHl7MLLPOutboundNode(tenant: String!, node: NodeInput, remote_port: Int!, remote_host: String!): Hl7MLLPOutboundNode
+	PutHl7MLLPInboundNode(tenant: String!, node: NodeInput, port: Int!): Hl7MLLPInboundNode
+	PutExternalNode(tenant: String!, node: NodeInput): ExternalNode
+	PutExternalApp(tenant: String!, app: AppInput!, auth_type: AppAuthType!, account: String): ExternalApp
+	PutManagedApp(tenant: String!, app: AppInput!): ManagedApp
+	PutKmsKey(tenant: String!, key: KmsKeyInput!): KMSKey
+	AddUserToTenant(tenant: String!, user: UserInput!): User
 	StreamNotifications(tenant: String!, data: AWSJSON, function: String!): StreamNotification
-		@aws_iam
-	ResetAppPassword(name: String!): App
+	@aws_iam @aws_cognito_user_pools
+	ResetAppPassword(tenant: String!, name: String!): App
 }
 
 union Node = Hl7MLLPInboundNode | Hl7MLLPOutboundNode | ExternalNode
@@ -166,7 +165,7 @@ input NodeInput {
 	metadata: AWSJSON
 }
 
-interface NodeInterface {
+interface NodeInterface @aws_cognito_user_pools{
 	name: String!
 	description: String
 	tenant: Tenant!
@@ -175,7 +174,7 @@ interface NodeInterface {
 	event_id: String
 }
 
-type NodeResult {
+type NodeResult @aws_cognito_user_pools{
 	items: [Node]
 	nextToken: String
 	scannedCount: Int
@@ -193,10 +192,11 @@ enum ObjectTypes {
 	Edge
 }
 
-type Query {
+type Query @aws_cognito_user_pools{
 	GetUsersForTenant(tenant: String!): [UserResult]
 	GetUser(email: AWSEmail): [User]
 	SearchNodes(
+		tenant: String!
 		partial_name: Boolean,
 		name: String,
 		filter: String,
@@ -205,6 +205,7 @@ type Query {
 		limit: Int
 	): NodeResult
 	SearchEdges(
+		tenant: String!
 		partial_name: Boolean,
 		source: String,
 		target: String,
@@ -262,25 +263,26 @@ type StreamNotification @aws_iam {
 	new_record: AWSJSON
 }
 
-type Subscription {
+type Subscription @aws_cognito_user_pools{
 	onStreamNotifications(tenant: String!): StreamNotification
 		@aws_subscribe(mutations: ["StreamNotifications"])
+		@aws_cognito_user_pools
 }
 
-type Tenant {
+type Tenant @aws_cognito_user_pools{
 	name: String!
 	default_region: Region!
 	billing_info: AWSJSON
 }
 
-input TenantInput {
+input TenantInput @aws_cognito_user_pools{
 	name: String!
 	default_region: Region!
 	billing_info: AWSJSON
 	event_id: String
 }
 
-type User {
+type User @aws_cognito_user_pools{
 	tenant: Tenant!
 	email: AWSEmail!
 	name: String!
@@ -299,7 +301,7 @@ input UserInput {
 	role: UserRole!
 }
 
-type UserResult {
+type UserResult @aws_cognito_user_pools{
 	items: [User]
 	nextToken: String
 	scannedCount: Int
