@@ -1,4 +1,4 @@
-#set ($type = $ctx.stash._appsyncInfo.fieldName.replace("Put", ""))
+#set ($type = $ctx.stash.appsyncInfo.fieldName.replace("Put", ""))
 
 #set ($node_sk = "N~$!ctx.stash.name")
 #set ($lsi = "A~$!ctx.stash.app")
