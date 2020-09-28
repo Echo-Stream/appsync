@@ -6,8 +6,8 @@
   "query": {
     "expression": "pk = :tenant AND lsi0_sk = :app",
     "expressionValues": {
-      ":app": $util.dynamodb.toDynamoDBJson($!{ctx.source.sk}),
-      ":tenant": $util.dynamodb.toDynamoDBJson($tenant)
+      ":app": $util.dynamodb.toDynamoDBJson("$!{ctx.source.sk}"),
+      ":tenant": $util.dynamodb.toDynamoDBJson("$!{ctx.source.pk}")
     }
   },
   limit: 10000

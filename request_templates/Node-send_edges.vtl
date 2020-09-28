@@ -6,7 +6,7 @@
     "expression": "pk = :tenant AND begins_with(sk, :source_node)",
     "expressionValues": {
       ":source_node": $util.dynamodb.toDynamoDBJson("E~$!{ctx.source.name}|"),
-      ":tenant": $util.dynamodb.toDynamoDBJson($tenant)
+      ":tenant": $util.dynamodb.toDynamoDBJson("$!{ctx.source.pk}")
     }
   },
   "limit": 10000

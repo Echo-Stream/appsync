@@ -7,7 +7,7 @@
     "expression": "pk = :tenant AND begins_with(lsi0_sk, :target_node)",
     "expressionValues": {
       ":target_node": $util.dynamodb.toDynamoDBJson("E~$!{ctx.source.name}|"),
-      ":tenant": $util.dynamodb.toDynamoDBJson($tenant)
+      ":tenant": $util.dynamodb.toDynamoDBJson("$!{ctx.source.pk}")
     }
   },
   "limit": 1000

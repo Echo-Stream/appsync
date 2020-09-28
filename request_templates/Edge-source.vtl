@@ -6,7 +6,7 @@
     "expression": "pk = :tenant AND sk = :source",
     "expressionValues": {
       ":source": $util.dynamodb.toDynamoDBJson("N~$!{ctx.source.source}"),
-      ":tenant": $util.dynamodb.toDynamoDBJson($tenant)
+      ":tenant": $util.dynamodb.toDynamoDBJson("$!{ctx.source.pk}")
     }
   },
   "limit": 1
