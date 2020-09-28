@@ -143,8 +143,8 @@ type Mutation @aws_cognito_user_pools{
 	DeleteApp(tenant: String!, app: String!): App
 	PutTenant(tenant: TenantInput!): Tenant
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge
-	PutHl7MLLPOutboundNode(tenant: String!, node: NodeInput, remote_port: Int!, remote_host: String!): Hl7MLLPOutboundNode
-	PutHl7MLLPInboundNode(tenant: String!, node: NodeInput, port: Int!): Hl7MLLPInboundNode
+	PutHl7MLLPOutboundNode(tenant: String!, node: NodeInput!, remote_port: Int!, remote_host: String!): Hl7MLLPOutboundNode
+	PutHl7MLLPInboundNode(tenant: String!, node: NodeInput!, port: Int!): Hl7MLLPInboundNode
 	PutExternalNode(tenant: String!, node: NodeInput): ExternalNode
 	PutExternalApp(tenant: String!, app: AppInput!, auth_type: AppAuthType!, account: String): ExternalApp
 	PutManagedApp(tenant: String!, app: AppInput!): ManagedApp
@@ -159,7 +159,6 @@ union Node = Hl7MLLPInboundNode | Hl7MLLPOutboundNode | ExternalNode
 
 input NodeInput {
 	name: String!
-	type: String!
 	description: String
 	app: String
 	metadata: AWSJSON

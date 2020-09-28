@@ -1,4 +1,4 @@
-#if ($ctx.info.parentTypeName == "Query" && "$!ctx.result.items.class.name" == "java.util.ArrayList")
+#if ("$!ctx.result.items.class.name" == "java.util.ArrayList")
   #set ($items = [])
   #foreach ($item in $ctx.result.items)
     #if ("$!item.type" != "")
