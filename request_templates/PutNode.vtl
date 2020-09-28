@@ -1,7 +1,7 @@
-#set ($type = $ctx.stash.appsyncInfo.fieldName.replace("Put", ""))
+#set ($type = $ctx.info.fieldName.replace("Put", ""))
 
-#set ($node_sk = "N~$!ctx.stash.name")
-#set ($lsi = "A~$!ctx.stash.app")
+#set ($node_sk = "N~$!ctx.stash.node.name")
+#set ($lsi = "A~$!ctx.stash.node.app")
 
 {
   "version" : "2017-02-28",
@@ -13,10 +13,10 @@
   "attributeValues" : {
     "ctx.stash.tenant": $util.dynamodb.toDynamoDBJson("$ctx.stash.tenant"),
     "type": $util.dynamodb.toDynamoDBJson("$type"),
-    "name": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.name}"),
-    "app": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.app}"),
-    "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.stash.metadata}),
-    "description": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.description}"),
+    "name": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.node.name}"),
+    "app": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.node.app}"),
+    "metadata": $util.dynamodb.toDynamoDBJson($!{ctx.stash.node.metadata}),
+    "description": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.node.description}"),
     "lsi0_sk": $util.dynamodb.toDynamoDBJson("$lsi"),
     "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
     #if ("$!{type}" == "Hl7MLLPInboundNode")
