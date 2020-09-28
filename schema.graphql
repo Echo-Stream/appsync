@@ -214,6 +214,7 @@ type Query {
 		limit: Int
 	): EdgeResult
 	SearchApps(
+		tenant: String!
 		partial_name: Boolean,
 		name: String,
 		filter: String,

@@ -1,49 +1,49 @@
 #set ($tenant = $!{ctx.identity.claims.tenant})
 
-#if ("$!ctx.args.source" != "" && "$!ctx.args.target" != "")
+#if ("$!ctx.stash.source" != "" && "$!ctx.stash.target" != "")
   $util.error("Choose one of either source or target, but not both")
-#elseif ("$!{ctx.args.source}${!ctx.args.source}" == "")
-  #set($ctx.args.partial_name = true)
+#elseif ("$!{ctx.stash.source}${!ctx.stash.source}" == "")
+  #set($ctx.stash.partial_name = true)
 #end
 
 #set ($sk_opt = "begins_with(sk, :node)")
 #set ($lsi_opt = "begins_with(lsi0_sk, :node)")
-#if ("$!{ctx.args.filter}" != "" && "$!{ctx.args.filter_value}" == "")
+#if ("$!{ctx.stash.filter}" != "" && "$!{ctx.stash.filter_value}" == "")
   $util.error("Cannot have an empty value for 'filter_value' if using 'filter'")
 #end
 
 {
   "version": "2017-02-28",
   "operation": "Query",
-  #if ("$!ctx.args.target" != "")
+  #if ("$!ctx.stash.target" != "")
     "index": "lsi0",
     "query": {
 
       "expression": "pk = :tenant AND $lsi_opt",
       "expressionValues": {
         ":tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
-        ":node": $util.dynamodb.toDynamoDBJson("E~$!{ctx.args.target}|")
+        ":node": $util.dynamodb.toDynamoDBJson("E~$!{ctx.stash.target}|")
       },
   #else
     "query": {
       "expression": "pk = :tenant AND $sk_opt",
       "expressionValues": {
         ":tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
-        ":node": $util.dynamodb.toDynamoDBJson("E~$!{ctx.args.node}")
+        ":node": $util.dynamodb.toDynamoDBJson("E~$!{ctx.stash.node}")
       }
   #end
   },
-  #if ("$!{ctx.args.filter}" != "")
+  #if ("$!{ctx.stash.filter}" != "")
     "filter": {
       "expression": "#filter = :filter",
-      "expressionNames": {"#filter": "$!{ctx.args.filter_value}"},
-      "expressionValues": {":filter_value": $util.dynamodb.toDynamoDBJson("$!{ctx.args.filter_value}")}
+      "expressionNames": {"#filter": "$!{ctx.stash.filter_value}"},
+      "expressionValues": {":filter_value": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.filter_value}")}
     },
   #end
-  #if ("$!{ctx.args.limit}" != "")
-    "limit": $!{ctx.args.limit},
+  #if ("$!{ctx.stash.limit}" != "")
+    "limit": $!{ctx.stash.limit},
   #end
-  #if ("$!{ctx.args.nextToken}" != "")
-    "nextToken": "$!{ctx.args.nextToken}"
+  #if ("$!{ctx.stash.nextToken}" != "")
+    "nextToken": "$!{ctx.stash.nextToken}"
   #end
 }

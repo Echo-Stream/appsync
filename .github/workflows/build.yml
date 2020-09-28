@@ -61,6 +61,10 @@ jobs:
         $FUNCTION delete_node --description "Delete an app" --request-mapping-template request_templates/DeleteNode_function.vtl --response-mapping-template response_templates/default.vtl
         $FUNCTION get_app --description "GetItem on an app" --request-mapping-template request_templates/ResetAppPassword_get_app_function.vtl --response-mapping-template response_templates/default.vtl
         $FUNCTION reset_password --description "Reset an app password" --request-mapping-template request_templates/ResetAppPassword_function.vtl --response-mapping-template response_templates/default.vtl
+        $FUNCTION  SearchNodes --description "Searches Nodes" --request-mapping-template request_templates/SearchNodes --response-mapping-template response_templates/default.vtl
+        $FUNCTION  SearchEdges --description "Searches Edges" --request-mapping-template request_templates/SearchEdges --response-mapping-template response_templates/default.vtl
+        $FUNCTION  SearchApps --description "Searches Apps" --request-mapping-template request_templates/SearchApps --response-mapping-template response_templates/default.vtl
+
 
         # Queries
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
@@ -68,7 +72,10 @@ jobs:
         $DEFAULT request_templates/GetUser.vtl --type-name Query --field-name GetUser
         $DEFAULT request_templates/SearchNodes.vtl --type-name Query --field-name SearchNodes
         $DEFAULT request_templates/SearchApps.vtl --type-name Query --field-name SearchApps
-        $DEFAULT request_templates/SearchEdges.vtl --type-name Query --field-name SearchEdges
+        # $DEFAULT request_templates/SearchEdges.vtl --type-name Query --field-name SearchEdges
+        $PIPELINE --type-name Query --field-name SearchApps --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "SearchApps,dynamodb"
+        # $PIPELINE --type-name Query --field-name SearchEdges --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "SearchEdges,dynamodb"
+        # $PIPELINE --type-name Query --field-name SearchNodes --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "SearchNodes,dynamodb"
 
 
         # Mutations

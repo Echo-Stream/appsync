@@ -18,3 +18,7 @@
 #else
   $util.error("Unauthorized: Invalid role")
 #end
+
+#foreach ($arg in $ctx.args.keys())
+  $util.qr($ctx.stash.put($arg, $ctx.args.get($arg)))
+#end
