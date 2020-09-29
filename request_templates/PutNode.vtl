@@ -11,7 +11,7 @@
     "sk": $util.dynamodb.toDynamoDBJson($node_sk)
   },
   "attributeValues" : {
-    "ctx.stash.tenant": $util.dynamodb.toDynamoDBJson("$ctx.stash.tenant"),
+    "tenant": $util.dynamodb.toDynamoDBJson("$ctx.stash.tenant"),
     "type": $util.dynamodb.toDynamoDBJson("$type"),
     "name": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.node.name}"),
     "app": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.node.app}"),
