@@ -79,7 +79,7 @@ jobs:
         $PIPELINE --type-name Query --field-name SearchApps --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "SearchApps,dynamodb"
         $PIPELINE --type-name Query --field-name SearchEdges --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "SearchEdges,dynamodb"
         $PIPELINE --type-name Query --field-name SearchNodes --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "SearchNodes,dynamodb"
-        $LAMBDA_RESOLVER --type-name Query --field-name ValidateFunction --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/ValidateFunction.vtl
+        $LAMBDA_RESOLVER validate_function --type-name Query --field-name ValidateFunction --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/ValidateFunction.vtl
 
 
         # Mutations
