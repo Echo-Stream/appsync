@@ -223,7 +223,7 @@ type Query @aws_cognito_user_pools{
 		limit: Int
 	): AppResult
 	ListKeys: [KMSKey]
-	ValidateFunction(function: String!, args: AWSJSON, kwargs: AWSJSON): type ValidateFunctionResult {
+	ValidateFunction(function: String!, args: AWSJSON, kwargs: AWSJSON): ValidateFunctionResult
 }
 
 enum Region {
