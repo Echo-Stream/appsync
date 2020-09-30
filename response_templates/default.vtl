@@ -3,11 +3,8 @@
   #foreach ($item in $ctx.result.items)
     #if ("$!item.type" != "")
       $util.qr($item.put("__typename", "$item.type"))
-      $util.qr($items.add($item))
-    #elseif ($item.sk.split("~")[0] == "U")
-       $util.qr($item.put("__typename", "User"))
-       $util.qr($items.add($item))
     #end
+    $util.qr($items.add($item))
   #end
   $util.qr($ctx.result.put("items", $items))
 #elseif ("$!{ctx.result.type}" != "")

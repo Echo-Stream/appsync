@@ -64,13 +64,13 @@ jobs:
         $FUNCTION reset_password --description "Reset an app password" --request-mapping-template request_templates/ResetAppPassword_function.vtl --response-mapping-template response_templates/default.vtl
 
         # Query functions
-        $FUNCTION SearchNodes --description "Searches Nodes" --request-mapping-template request_templates/SearchNodes.vtl --response-mapping-template response_templates/default.vtl
-        $FUNCTION SearchEdges --description "Searches Edges" --request-mapping-template request_templates/SearchEdges.vtl --response-mapping-template response_templates/default.vtl
-        $FUNCTION SearchApps --description "Searches Apps" --request-mapping-template request_templates/SearchApps.vtl --response-mapping-template response_templates/default.vtl
+        $FUNCTION SearchNodes --description "Searches Nodes" --request-mapping-template request_templates/SearchNodes.vtl --response-mapping-template response_templates/pass_result.vtl
+        $FUNCTION SearchEdges --description "Searches Edges" --request-mapping-template request_templates/SearchEdges.vtl --response-mapping-template response_templates/pass_result.vtl
+        $FUNCTION SearchApps --description "Searches Apps" --request-mapping-template request_templates/SearchApps.vtl --response-mapping-template response_templates/pass_result.vtl
 
 
         # Mutation functions
-        $FUNCTION PutNode --description "Creates/updates Nodes" --request-mapping-template request_templates/PutNode.vtl --response-mapping-template response_templates/default.vtl
+        $FUNCTION PutNode --description "Creates/updates Nodes" --request-mapping-template request_templates/PutNode.vtl --response-mapping-template response_templates/pass_result.vtl
 
         # Queries
         $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys

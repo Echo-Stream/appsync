@@ -205,7 +205,6 @@ type Query @aws_cognito_user_pools{
 	): NodeResult
 	SearchEdges(
 		tenant: String!
-		partial_name: Boolean,
 		source: String,
 		target: String,
 		filter: String,
