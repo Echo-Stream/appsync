@@ -11,4 +11,8 @@
   $util.qr($ctx.result.put("__typename", $ctx.result.type))
 #end
 
-$util.toJson($ctx.result)
+#if ("$ctx.info.parentTypeName" == "Query")
+  $util.toJson($ctx.result)
+#else
+  $util.toJson($ctx.result.items)
+#end
