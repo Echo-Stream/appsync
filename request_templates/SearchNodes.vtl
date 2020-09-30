@@ -16,7 +16,7 @@
   "query": {
     "expression": "pk = :tenant AND $sk_opt",
     "expressionValues": {
-      ":tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
+      ":tenant": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.tenant}"),
       ":name": $util.dynamodb.toDynamoDBJson("N~$!{ctx.stash.name}")
     }
   },

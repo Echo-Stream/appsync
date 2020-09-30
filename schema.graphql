@@ -180,9 +180,9 @@ type NodeResult @aws_cognito_user_pools{
 }
 
 enum NodeTypes {
-	Hl7MLLPInbound
-	Hl7MLLPOutbound
-	External
+	Hl7MLLPInboundNode
+	Hl7MLLPOutboundNode
+	ExternalNode
 }
 
 enum ObjectTypes {
