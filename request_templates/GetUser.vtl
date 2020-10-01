@@ -1,16 +1,14 @@
 
-#if ("$!{ctx.identity.username}" != "$!{ctx.stash.email}" && "$!{ctx.identity.claims.role}" != "admin")
+#if ("$!{ctx.identity.claims.username}" != "$!{ctx.stash.email}" && "$!{ctx.identity.claims.role}" != "admin")
   $util.error("Unauthorized")
 #end
 
 {
   "version": "2017-02-28",
-  "operation": "Query",
-  "query": {
-    expression: ":pk = :tenant AND sk = :sk",
-    expressionValues: {
-      ":tenant": $util.dynamodb.toDynamoDBJson("$tenant"),
-      ":sk": $util.dynamodb.toDynamoDBJson("U~$!{ctx.stash.email}")
+  "operation": "GetItem",
+  "key": {
+      "pk": $util.dynamodb.toDynamoDBJson("$tenant"),
+      "sk": $util.dynamodb.toDynamoDBJson("U~$!{ctx.stash.email}")
     }
   }
 }

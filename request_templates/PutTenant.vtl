@@ -1,4 +1,5 @@
 #set ($region = $ctx.stash.tenant.default_region.replace("_", "-"))
+#set ($owner = $ctx.identity.claims.email)
 
 {
     "version" : "2017-02-28",
@@ -9,6 +10,7 @@
     },
     "attributeValues" : {
       "name": $util.dynamodb.toDynamoDBJson($!{ctx.stash.tenant.name}),
+      "owner": $util.dynamodb.toDynamoDBJson($owner),
       "billing_info": $util.dynamodb.toDynamoDBJson($!{ctx.stash.tenant.billing_info}),
       "default_region": $util.dynamodb.toDynamoDBJson($region),
       "event_id": $util.dynamodb.toDynamoDBJson($util.autoId())

@@ -193,7 +193,7 @@ enum ObjectTypes {
 
 type Query @aws_cognito_user_pools{
 	GetUsersForTenant(tenant: String!): [UserResult]
-	GetUser(email: AWSEmail): [User]
+	GetUser(email: AWSEmail): User
 	SearchNodes(
 		tenant: String!
 		partial_name: Boolean,
