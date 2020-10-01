@@ -72,7 +72,7 @@ jobs:
         $FUNCTION GetAppNodes --description "Test if any nodes are attached to an app" --request-mapping-template request_templates/GetAppNodes.vtl --response-mapping-template response_templates/error_on_result.vtl
         $FUNCTION DeleteApp --description "Delete an app" --request-mapping-template request_templates/DeleteApp.vtl --response-mapping-template response_templates/pass_result.vtl
         $FUNCTION AddUserToTenant --description "Add a user to a tenant" --request-mapping-template request_templates/AddUserToTenant.vtl --response-mapping-template response_templates/pass_result.vtl
-        $FUNCTION GetApp --description "GetItem on an app" --request-mapping-template request_templates/ResetAppPassword_get_app.vtl --response-mapping-template response_templates/pass_result.vtl
+        $FUNCTION GetApp --description "GetItem on an app" --request-mapping-template request_templates/GetApp.vtl --response-mapping-template response_templates/pass_result.vtl
         $FUNCTION ResetPassword --description "Reset an app password" --request-mapping-template request_templates/ResetAppPassword.vtl --response-mapping-template response_templates/pass_result.vtl
 
 
@@ -115,10 +115,10 @@ jobs:
         $SINGLE_RESPONSE request_templates/Edge-source.vtl --type Edge --field-name source
         $SINGLE_RESPONSE request_templates/Edge-target.vtl --type Edge --field-name target
 
+
         # Nodes for apps
         $DEFAULT request_templates/App-nodes.vtl --type ManagedApp --field-name nodes
         $DEFAULT request_templates/App-nodes.vtl --type ExternalApp --field-name nodes
-
 
         # Edge resolvers for nodes
         $DEFAULT request_templates/Node-send_edges.vtl --type ExternalNode --field-name send_edges
