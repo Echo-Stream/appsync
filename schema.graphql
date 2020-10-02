@@ -1,4 +1,4 @@
-union App = ManagedApp | ExternalApp
+union App = ManagedApp | ExternalApp | XTenantReceivingApp | XTenantSendingApp
 
 enum AppAuthType {
 	x_account
@@ -15,7 +15,6 @@ interface AppInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	description: String
-	nodes: [Node]
 	config: AWSJSON
 }
 
@@ -83,7 +82,7 @@ type ExternalApp implements AppInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	description: String
-	nodes: [Node]
+	nodes: [ExternalNode]
 	account: String
 	authType: AppAuthType!
 	config: AWSJSON
@@ -162,10 +161,12 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	description: String
-	nodes: [Node]
+	nodes: [ManagedNode]
 	iso: String!
 	config: AWSJSON
 }
+
+union ManagedNode = DicomInboundNode | DicomOutboundNode | Hl7MllpInboundNode | Hl7MllpOutboundNode
 
 type MessageType {
 	name: String!
@@ -196,9 +197,8 @@ type Mutation @aws_cognito_user_pools{
 	DeleteApp(tenant: String!, app: String!): App
 	EdgeNotification(tenant: String!, name: String!): Edge!
 	NodeNotification(tenant: String!, name: String!): Node!
-	PutTenant(tenant: TenantInput!): Tenant!
-	PutDicomInboundNode(tenant: String!, app: String!,node: NodeInput!, port: Int!): Hl7MllpInboundNode!
-	PutDicomOutboundNode(tenant: String!, app: String!,node: NodeInput!, remoteHost: String!, remotePort: Int!): Hl7MllpOutboundNode!
+	PutDicomInboundNode(tenant: String!, app: String!, node: NodeInput!, port: Int!): Hl7MllpInboundNode!
+	PutDicomOutboundNode(tenant: String!, app: String!, node: NodeInput!, remoteHost: String!, remotePort: Int!): Hl7MllpOutboundNode!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
 	PutExternalApp(tenant: String!, app: AppInput!, authType: AppAuthType!, account: String): ExternalApp!
 	PutExternalNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!): ExternalNode!
@@ -209,13 +209,16 @@ type Mutation @aws_cognito_user_pools{
 	PutManagedApp(tenant: String!, app: AppInput!): ManagedApp!
 	PutMessageType(tenant: String!, type: MessageTypeInput!): MessageType!
 	PutRouterNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, bitmapper: String!, routeTable: AWSJSON!): RouterNode!
+	PutTenant(tenant: TenantInput!): Tenant!
 	PutTransNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, transformer: String): TransNode!
+	PutXTenantSendingApp(tenant: String!, app: AppInput!, receivingTenant: String!)
+	PutXTenantSendingNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, transformer: String)
 	AddUserToTenant(tenant: String!, user: UserInput!): User!
 	@aws_iam @aws_cognito_user_pools
 	ResetAppPassword(tenant: String!, name: String!): App!
 }
 
-union Node = DicomInboundNode | DicomOutboundNode | ExternalNode | Hl7MllpInboundNode | Hl7MllpOutboundNode | RouterNode | TransNode
+union Node =  DicomInboundNode | DicomOutboundNode | ExternalNode | Hl7MllpInboundNode | Hl7MllpOutboundNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
 
 input NodeInput {
 	name: String!
@@ -401,4 +404,44 @@ enum UserStatus {
 type ValidateFunctionResult {
 	result: String!
 	stdout: String!
+}
+
+type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools{
+	tenant: Tenant!
+	sendingTenant: String!
+	name: String!
+	description: String
+	nodes: [XTenantReceivingNode]
+	config: AWSJSON
+}
+
+type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools{
+	tenant: Tenant!
+	name: String!
+	description: String
+	sendEdges: [Edge]
+	messageType: String!
+	metadata: AWSJSON
+	app: XTenantReceivingApp!
+}
+
+type XTenantSendingApp implements AppInterface @aws_cognito_user_pools{
+	tenant: Tenant!
+	receivingTenant: String!
+	name: String!
+	description: String
+	nodes: [XTenantSendingNode]
+	config: AWSJSON
+}
+
+type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools{
+	tenant: Tenant!
+	name: String!
+	description: String
+	receiveEdges: [Edge]
+	receiveMessageType: String!
+	sendMessageType: String!
+	metadata: AWSJSON
+	app: XTenantSendingApp!
+	transformer: String
 }
