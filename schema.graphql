@@ -124,6 +124,7 @@ type Hl7MllpOutboundNode implements NodeInterface @aws_cognito_user_pools{
 type KmsKey @aws_cognito_user_pools{
 	name: String!
 	description: String
+	arn: String!
 }
 
 input KmsKeyInput {
@@ -317,9 +318,9 @@ type Subscription @aws_cognito_user_pools{
 		@aws_subscribe(mutations: ["DeleteApp"])
 	appUpdated(tenant: String!, name: String): App
 		@aws_subscribe(mutations: [
-			"AppNotification", 
-			"PutExternalApp", 
-			"PutManagedApp", 
+			"AppNotification",
+			"PutExternalApp",
+			"PutManagedApp",
 			"ResetAppPassword"
 		])
 	edgeDeleted(tenant: String!, name: String): Edge
@@ -330,11 +331,11 @@ type Subscription @aws_cognito_user_pools{
 		@aws_subscribe(mutations: ["DeleteNode"])
 	nodeUpdated(tenant: String!, name: String): Node
 		@aws_subscribe(mutations: [
-			"NodeNotification", 
-			"PutDicomInboundNode", 
-			"PutDicomOutboundNode", 
-			"PutExternalNode", 
-			"PutHl7MllpInboundNode", 
+			"NodeNotification",
+			"PutDicomInboundNode",
+			"PutDicomOutboundNode",
+			"PutExternalNode",
+			"PutHl7MllpInboundNode",
 			"PutHl7MllpOutboundNode"
 		])
 }
