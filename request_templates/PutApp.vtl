@@ -9,6 +9,10 @@
   $util.error("Valid authType's are 'cognito' or 'x_account'")
 #end
 
+#if ("$!{ctx.stash.app.metadata}" == "")
+  #set ($ctx.stash.app.metadata = {})
+#end
+
 {
   "version" : "2017-02-28",
   "operation" : "PutItem",

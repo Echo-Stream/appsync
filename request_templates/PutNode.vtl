@@ -3,6 +3,10 @@
 #set ($node_sk = "N~$!ctx.stash.node.name")
 #set ($lsi = "A~$!ctx.stash.node.app")
 
+#if ("$!{ctx.stash.app.metadata}" == "")
+  #set ($ctx.stash.app.metadata = {})
+#end
+
 {
   "version" : "2017-02-28",
   "operation" : "PutItem",
