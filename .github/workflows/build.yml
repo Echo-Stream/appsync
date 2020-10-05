@@ -100,7 +100,7 @@ jobs:
         $PIPELINE --type-name Mutation --field-name PutManagedApp --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "PutApp,dynamodb"
         $PIPELINE --type-name Mutation --field-name AddUserToTenant --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "AddUserToTenant,dynamodb"
         $PIPELINE --type-name Mutation --field-name ResetAppPassword --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "GetApp,dynamodb;ResetPassword,dynamodb"
-        $DEFAULT request_templates/StreamNotifications.vtl --type Mutation --field-name StreamNotifications
+        # $DEFAULT request_templates/StreamNotifications.vtl --type Mutation --field-name StreamNotifications
         $DEFAULT request_templates/DeleteEdge.vtl --type Mutation --field-name DeleteEdge
 
         # Subtypes
