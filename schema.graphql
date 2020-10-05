@@ -202,7 +202,7 @@ type Mutation @aws_cognito_user_pools{
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
 	PutExternalApp(tenant: String!, app: AppInput!, authType: AppAuthType!, account: String): App!
 	PutExternalNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!): Node!
-	PutHl7MllpInboundNode(tenant: String!, app: String!,node: NodeInput!, port: Int!): Hl7MllpInboundNode!
+	PutHl7MllpInboundNode(tenant: String!, app: String!,node: NodeInput!, port: Int!): Node!
 	PutHl7MllpOutboundNode(tenant: String!, app: String!,node: NodeInput!, remoteHost: String!, remotePort: Int!): Node!
 	PutKmsKey(tenant: String!, key: KmsKeyInput!): KmsKey!
 	PutLambdaLayer(tenant: String!, name: String!, description: String, pipPackages: [String], wheels: [String]): LambdaLayer!
