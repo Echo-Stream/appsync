@@ -195,24 +195,24 @@ type Mutation @aws_cognito_user_pools{
 	DeleteNode(tenant: String!, node: String!): Node
 	DeleteEdge(tenant: String!, edge: String!): Edge
 	DeleteApp(tenant: String!, app: String!): App
-	EdgeNotification(tenant: String!, name: String!): Edge!
-	NodeNotification(tenant: String!, name: String!): Node!
-	PutDicomInboundNode(tenant: String!, app: String!, node: NodeInput!, port: Int!): Node!
-	PutDicomOutboundNode(tenant: String!, app: String!, node: NodeInput!, remoteHost: String!, remotePort: Int!): Node!
+	EdgeNotification(tenant: String!, name: String!): Notification!
+	NodeNotification(tenant: String!, name: String!): Notification!
+	PutDicomInboundNode(tenant: String!, app: String!, node: NodeInput!, port: Int!): DicomInboundNode!
+	PutDicomOutboundNode(tenant: String!, app: String!, node: NodeInput!, remoteHost: String!, remotePort: Int!): DicomOutboundNode!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
-	PutExternalApp(tenant: String!, app: AppInput!, authType: AppAuthType!, account: String): App!
-	PutExternalNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!): Node!
-	PutHl7MllpInboundNode(tenant: String!, app: String!,node: NodeInput!, port: Int!): Node!
-	PutHl7MllpOutboundNode(tenant: String!, app: String!,node: NodeInput!, remoteHost: String!, remotePort: Int!): Node!
+	PutExternalApp(tenant: String!, app: AppInput!, authType: AppAuthType!, account: String): ExternalApp!
+	PutExternalNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!): ExternalNode!
+	PutHl7MllpInboundNode(tenant: String!, app: String!,node: NodeInput!, port: Int!): Hl7MllpInboundNode!
+	PutHl7MllpOutboundNode(tenant: String!, app: String!,node: NodeInput!, remoteHost: String!, remotePort: Int!): Hl7MllpOutboundNode!
 	PutKmsKey(tenant: String!, key: KmsKeyInput!): KmsKey!
 	PutLambdaLayer(tenant: String!, name: String!, description: String, pipPackages: [String], wheels: [String]): LambdaLayer!
 	PutManagedApp(tenant: String!, app: AppInput!): ManagedApp!
 	PutMessageType(tenant: String!, type: MessageTypeInput!): MessageType!
-	PutRouterNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, bitmapper: String!, routeTable: AWSJSON!): Node!
+	PutRouterNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, bitmapper: String!, routeTable: AWSJSON!): RouterNode!
 	PutTenant(tenant: TenantInput!): Tenant!
-	PutTransNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, transformer: String): Node!
-	PutXTenantSendingApp(tenant: String!, app: AppInput!, receivingTenant: String!): App!
-	PutXTenantSendingNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, transformer: String): Node!
+	PutTransNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, transformer: String): TransNode!
+	PutXTenantSendingApp(tenant: String!, app: AppInput!, receivingTenant: String!): XTenantSendingApp!
+	PutXTenantSendingNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, transformer: String): XTenantSendingNode!
 	AddUserToTenant(tenant: String!, user: UserInput!): User!
 	@aws_iam @aws_cognito_user_pools
 	ResetAppPassword(tenant: String!, name: String!): App!
@@ -318,23 +318,29 @@ type RouterNode implements NodeInterface {
 	routeTable: AWSJSON!
 }
 
+type Notification {
+	itemType: String!
+	message: AWSJSON!
+	tenant: String!
+}
+
 type Subscription @aws_cognito_user_pools{
-	appDeleted(tenant: String!, name: String): App
+	appDeleted(tenant: String!, name: String): Notification
 		@aws_subscribe(mutations: ["DeleteApp"])
-	appUpdated(tenant: String!, name: String): App
+	appUpdated(tenant: String!, name: String): Notification
 		@aws_subscribe(mutations: [
 			"AppNotification",
 			"PutExternalApp",
 			"PutManagedApp",
 			"ResetAppPassword"
 		])
-	edgeDeleted(tenant: String!, name: String): Edge
+	edgeDeleted(tenant: String!, name: String): Notification
 		@aws_subscribe(mutations: ["DeleteEdge"])
-	edgeUpdated(tenant: String!, name: String): Edge
+	edgeUpdated(tenant: String!, name: String): Notification
 		@aws_subscribe(mutations: ["EdgeNotification", "PutEdge"])
-	nodeDeleted(tenant: String!, name: String): Node
+	nodeDeleted(tenant: String!, name: String): Notification
 		@aws_subscribe(mutations: ["DeleteNode"])
-	nodeUpdated(tenant: String!, name: String): Node
+	nodeUpdated(tenant: String!, name: String): Notification
 		@aws_subscribe(mutations: [
 			"NodeNotification",
 			"PutDicomInboundNode",
