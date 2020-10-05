@@ -139,24 +139,6 @@ type KmsKeyResult {
 	scannedCount: Int
 }
 
-type LambdaLayer {
-	name: String!
-	version: Int!
-	description: String
-}
-
-input LambdaLayerInput {
-	name: String!
-	version: Int!
-	description: String
-}
-
-type LambdaLayerResult {
-	items: [LambdaLayer]
-	nextToken: String
-	scannedCount: Int
-}
-
 type ManagedApp implements AppInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
@@ -169,19 +151,20 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools{
 union ManagedNode = DicomInboundNode | DicomOutboundNode | Hl7MllpInboundNode | Hl7MllpOutboundNode
 
 type MessageType {
+	tenant: Tenant!
 	name: String!
 	auditor: String!
-	transformTemplate: String!
-	bitmapTemplate: String!
-	lambdaLayer: LambdaLayer
+	transformerTemplate: String!
+	bitmapperTemplate: String!
+	requirements: [String!]!
 }
 
 input MessageTypeInput {
 	name: String!
 	auditor: String!
-	transformTemplate: String!
-	bitmapTemplate: String!
-	lambdaLayer: LambdaLayerInput
+	transformerTemplate: String!
+	bitmapperTemplate: String!
+	requirements: [String!]!
 }
 
 type MessageTypeResult {
@@ -205,7 +188,6 @@ type Mutation @aws_cognito_user_pools{
 	PutHl7MllpInboundNode(tenant: String!, app: String!,node: NodeInput!, port: Int!): Hl7MllpInboundNode!
 	PutHl7MllpOutboundNode(tenant: String!, app: String!,node: NodeInput!, remoteHost: String!, remotePort: Int!): Hl7MllpOutboundNode!
 	PutKmsKey(tenant: String!, key: KmsKeyInput!): KmsKey!
-	PutLambdaLayer(tenant: String!, name: String!, description: String, pipPackages: [String], wheels: [String]): LambdaLayer!
 	PutManagedApp(tenant: String!, app: AppInput!): ManagedApp!
 	PutMessageType(tenant: String!, type: MessageTypeInput!): MessageType!
 	PutRouterNode(tenant: String!, app: String!, node: NodeInput!, messageType: String!, bitmapper: String!, routeTable: AWSJSON!): RouterNode!
@@ -274,8 +256,7 @@ type Query @aws_cognito_user_pools{
 		limit: Int
 		nextToken: String
 	): KmsKeyResult
-	ListLambdaLayers(tenant: String!): LambdaLayerResult
-	ListMessageTypes(tenant: String!): MessageTypeResult
+	ListMessageTypes(tenant: String!, nextToken: String, limit: Int): MessageTypeResult
 	ValidateFunction(messageType: String!, function: String!, args: AWSJSON, kwargs: AWSJSON): ValidateFunctionResult
 }
 
