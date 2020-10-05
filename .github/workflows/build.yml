@@ -128,4 +128,4 @@ jobs:
         $LAMBDA_RESOLVER kms_key_datasource --type-name Edge --field-name kms_key
 
         # Subscriptions
-        $SUBSCRIPTION --type Subscription --field-name onStreamNotifications --response-mapping-template response_templates/onStreamNotifications.vtl --request-mapping-template request_templates/onStreamNotifications.vtl
+        # $SUBSCRIPTION --type Subscription --field-name onStreamNotifications --response-mapping-template response_templates/onStreamNotifications.vtl --request-mapping-template request_templates/onStreamNotifications.vtl
