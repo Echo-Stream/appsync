@@ -126,7 +126,6 @@ jobs:
         $DEFAULT request_templates/Node-sendEdges.vtl --type Hl7MllpInboundNode --field-name sendEdges
         $DEFAULT request_templates/Node-receiveEdges.vtl --type Hl7MllpOutboundNode --field-name receiveEdges
         $DEFAULT request_templates/Node-receiveEdges.vtl --type ExternalNode --field-name receiveEdges
-        $LAMBDA_RESOLVER kmsKey_datasource --type-name Edge --field-name kmsKey
 
         # Subscriptions
         # $SUBSCRIPTION --type Subscription --field-name onStreamNotifications --response-mapping-template response_templates/onStreamNotifications.vtl --request-mapping-template request_templates/onStreamNotifications.vtl
