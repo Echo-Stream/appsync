@@ -1,4 +1,4 @@
-#set ($region = $ctx.stash.tenant.default_region.replace("_", "-"))
+#set ($region = $ctx.stash.tenant.defaultRegion.replace("_", "-"))
 #set ($owner = $ctx.identity.claims.email)
 
 {
@@ -11,15 +11,15 @@
     "attributeValues" : {
       "name": $util.dynamodb.toDynamoDBJson($!{ctx.stash.tenant.name}),
       "owner": $util.dynamodb.toDynamoDBJson($owner),
-      "billing_info": $util.dynamodb.toDynamoDBJson($!{ctx.stash.tenant.billing_info}),
-      "default_region": $util.dynamodb.toDynamoDBJson($region),
+      "billingInfo": $util.dynamodb.toDynamoDBJson($!{ctx.stash.tenant.billingInfo}),
+      "defaultRegion": $util.dynamodb.toDynamoDBJson($region),
       "event_id": $util.dynamodb.toDynamoDBJson($util.autoId())
     },
     "condition": {
-        "expression": "(attribute_not_exists(pk) AND attribute_not_exists(sk)) OR (#name = :name AND default_region = :default_region)",
+        "expression": "(attribute_not_exists(pk) AND attribute_not_exists(sk)) OR (#name = :name AND defaultRegion = :defaultRegion)",
         "expressionValues": {
           ":name": $util.dynamodb.toDynamoDBJson($!{ctx.stash.tenant.name}),
-          ":default_region": $util.dynamodb.toDynamoDBJson($region))
+          ":defaultRegion": $util.dynamodb.toDynamoDBJson($region))
         },
         "expressionNames": {"#name": "name"}
     }

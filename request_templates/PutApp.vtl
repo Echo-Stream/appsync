@@ -1,12 +1,12 @@
 #set ($type = $ctx.info.fieldName.replace("^Put", ""))
 #set ($app_sk = "A~$!{ctx.stash.app.name}")
-#set ($auth_type_list = ["cognito", "x_account"])
+#set ($authType_list = ["cognito", "x_account"])
 
-#if ("$!{ctx.stash.app.auth_type}" == "x_account" && "$!{ctx.stash.app.account}" == "")
-  $util.error("Apps with auth_type 'x_account' require 'account' argument")
+#if ("$!{ctx.stash.app.authType}" == "x_account" && "$!{ctx.stash.app.account}" == "")
+  $util.error("Apps with authType 'x_account' require 'account' argument")
 #end
-#if ("$!{ctx.stash.app.auth_type}" != "" and $auth_type_list.contains("$!{ctx.stash.app.auth_type}"))
-  $util.error("Valid auth_type's are 'cognito' or 'x_account'")
+#if ("$!{ctx.stash.app.authType}" != "" and $authType_list.contains("$!{ctx.stash.app.authType}"))
+  $util.error("Valid authType's are 'cognito' or 'x_account'")
 #end
 
 {
@@ -25,19 +25,19 @@
     "event_id": $util.dynamodb.toDynamoDBJson($util.autoId()),
     "config": $util.dynamodb.toDynamoDBJson($!{ctx.stash.app.config}),
     #if ("$type" == "ExternalApp")
-      "auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.auth_type}"),
-      #if ("$!{ctx.stash.app.auth_type}" == "x_account")
+      "authType": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.authType}"),
+      #if ("$!{ctx.stash.app.authType}" == "x_account")
         "account": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.account}"),
       #end
     #elseif ("$type" == "ManagedApp")
-      "auth_type": $util.dynamodb.toDynamoDBJson("cognito")
+      "authType": $util.dynamodb.toDynamoDBJson("cognito")
     #end
   },
   "condition": {
-    "expression": "(attribute_not_exists(sk) AND attribute_not_exists(pk)) OR (auth_type = :auth_type AND #type = :type AND #name = :name AND account = :account AND config = :config)",
+    "expression": "(attribute_not_exists(sk) AND attribute_not_exists(pk)) OR (authType = :authType AND #type = :type AND #name = :name AND account = :account AND config = :config)",
     "expressionValues": {
       ":name": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.app.name}"),
-      ":auth_type": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.app.auth_type}"),
+      ":authType": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.app.authType}"),
       ":type": $util.dynamodb.toDynamoDBJson("$type"),
       ":account": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.app.account}"),
       ":config": $util.dynamodb.toDynamoDBJson($!{ctx.stash.app.config})

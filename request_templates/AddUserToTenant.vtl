@@ -16,8 +16,8 @@
       "role": $util.dynamodb.toDynamoDBJson($!{ctx.stash.user.role}),
       "gsi0_pk": $util.dynamodb.toDynamoDBJson($!{ctx.stash.user.email}),
       "email": $util.dynamodb.toDynamoDBJson($!{ctx.stash.user.email}),
-      "first_name": $util.dynamodb.toDynamoDBJson($!{ctx.stash.user.first_name}),
-      "last_name": $util.dynamodb.toDynamoDBJson($!{ctx.stash.user.last_name}),
+      "firstName": $util.dynamodb.toDynamoDBJson($!{ctx.stash.user.firstName}),
+      "lastName": $util.dynamodb.toDynamoDBJson($!{ctx.stash.user.lastName}),
       "added_by": $util.dynamodb.toDynamoDBJson($!{ctx.identity.claims.role}),
       "status": $util.dynamodb.toDynamoDBJson("invited")
     }

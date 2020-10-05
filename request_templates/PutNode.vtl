@@ -22,8 +22,8 @@
     #if ("$!{type}" == "Hl7MLLPInboundNode")
       "port": $util.dynamodb.toDynamoDBJson($!{ctx.stash.port})
     #elseif ("$!{type}" == "Hl7MLLPOutboundNode")
-      "remote_port": $util.dynamodb.toDynamoDBJson($!{ctx.stash.remote_port}),
-      "remote_host": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.remote_host}")
+      "remotePort": $util.dynamodb.toDynamoDBJson($!{ctx.stash.remotePort}),
+      "remoteHost": $util.dynamodb.toDynamoDBJson("$!{ctx.stash.remoteHost}")
     #end
   },
   "condition": {

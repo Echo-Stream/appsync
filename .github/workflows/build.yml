@@ -60,6 +60,7 @@ jobs:
         $FUNCTION SearchApps --description "Searches Apps" --request-mapping-template request_templates/SearchApps.vtl --response-mapping-template response_templates/pass_result.vtl
         $FUNCTION GetUser --description "Gets a user" --request-mapping-template request_templates/GetUser.vtl --response-mapping-template response_templates/pass_result.vtl
         $FUNCTION GetUsersForTenant --description "Gets a list of users" --request-mapping-template request_templates/GetUsersForTenant.vtl --response-mapping-template response_templates/pass_result.vtl
+        $FUNCTION ListKeys --description "Lists KMS keys" --request-mapping-template request_templates/ListKeys.vtl --response-mapping-template response_templates/pass_result.vtl
 
 
         # Mutation functions
@@ -77,8 +78,8 @@ jobs:
 
 
         # Queries
-        $LAMBDA_RESOLVER kms_key_datasource --type-name Query --field-name ListKeys
         $DEFAULT request_templates/GetUsersForTenant.vtl --type-name Query --field-name GetUsersForTenant
+        $PIPELINE --type-name Query --field-name ListKeys --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "ListKeys,dynamodb"
         $PIPELINE --type-name Query --field-name GetUser --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "GetUser,dynamodb"
         $PIPELINE --type-name Query --field-name GetUsersForTenant --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "GetUsersForTenant,dynamodb"
         $PIPELINE --type-name Query --field-name SearchApps --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "SearchApps,dynamodb"
@@ -88,7 +89,7 @@ jobs:
 
 
         # Mutations
-        $LAMBDA_RESOLVER kms_key_datasource --type Mutation --field-name PutKmsKey
+        $LAMBDA_RESOLVER kmsKey_datasource --type Mutation --field-name PutKmsKey
         $LAMBDA_RESOLVER edge_datasource --type Mutation --field-name PutEdge
         $PIPELINE --type-name Mutation --field-name PutHl7MllpInboundNode --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "PutNode,dynamodb"
         $PIPELINE --type-name Mutation --field-name PutHl7MllpOutboundNode --response-mapping-template response_templates/default.vtl --request-mapping-template request_templates/validate_user.vtl --pipeline-config "PutNode,dynamodb"
@@ -104,7 +105,7 @@ jobs:
         $DEFAULT request_templates/DeleteEdge.vtl --type Mutation --field-name DeleteEdge
 
         # Subtypes
-        $DEFAULT request_templates/X-tenant.vtl --type KMSKey --field-name tenant
+        $DEFAULT request_templates/X-tenant.vtl --type KmsKey --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Hl7MllpOutboundNode --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type Hl7MllpInboundNode --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type ExternalNode --field-name tenant
@@ -112,6 +113,7 @@ jobs:
         $DEFAULT request_templates/X-tenant.vtl --type ManagedApp --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type ExternalApp --field-name tenant
         $DEFAULT request_templates/X-tenant.vtl --type User --field-name tenant
+        $DEFAULT request_templates/X-kmsKey.vtl --type Edge --field-name kmsKey
         $SINGLE_RESPONSE request_templates/Edge-source.vtl --type Edge --field-name source
         $SINGLE_RESPONSE request_templates/Edge-target.vtl --type Edge --field-name target
 
@@ -121,11 +123,11 @@ jobs:
         $DEFAULT request_templates/App-nodes.vtl --type ExternalApp --field-name nodes
 
         # Edge resolvers for nodes
-        $DEFAULT request_templates/Node-send_edges.vtl --type ExternalNode --field-name send_edges
-        $DEFAULT request_templates/Node-send_edges.vtl --type Hl7MllpInboundNode --field-name send_edges
-        $DEFAULT request_templates/Node-receive_edges.vtl --type Hl7MllpOutboundNode --field-name receive_edges
-        $DEFAULT request_templates/Node-receive_edges.vtl --type ExternalNode --field-name receive_edges
-        $LAMBDA_RESOLVER kms_key_datasource --type-name Edge --field-name kms_key
+        $DEFAULT request_templates/Node-sendEdges.vtl --type ExternalNode --field-name sendEdges
+        $DEFAULT request_templates/Node-sendEdges.vtl --type Hl7MllpInboundNode --field-name sendEdges
+        $DEFAULT request_templates/Node-receiveEdges.vtl --type Hl7MllpOutboundNode --field-name receiveEdges
+        $DEFAULT request_templates/Node-receiveEdges.vtl --type ExternalNode --field-name receiveEdges
+        $LAMBDA_RESOLVER kmsKey_datasource --type-name Edge --field-name kmsKey
 
         # Subscriptions
         # $SUBSCRIPTION --type Subscription --field-name onStreamNotifications --response-mapping-template response_templates/onStreamNotifications.vtl --request-mapping-template request_templates/onStreamNotifications.vtl
