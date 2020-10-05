@@ -208,7 +208,7 @@ type Mutation @aws_cognito_user_pools{
 	PutLambdaLayer(tenant: String!, name: String!, description: String, pipPackages: [String], wheels: [String]): LambdaLayer!
 	PutManagedApp(tenant: String!, app: AppInput!): ManagedApp!
 	PutMessageType(tenant: String!, type: MessageTypeInput!): MessageType!
-	PutRouterNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, bitmapper: String!, routeTable: AWSJSON!): RouterNode!
+	PutRouterNode(tenant: String!, app: String!, node: NodeInput!, messageType: String!, bitmapper: String!, routeTable: AWSJSON!): RouterNode!
 	PutTenant(tenant: TenantInput!): Tenant!
 	PutTransNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, transformer: String): TransNode!
 	PutXTenantSendingApp(tenant: String!, app: AppInput!, receivingTenant: String!): XTenantSendingApp!
@@ -310,9 +310,8 @@ type RouterNode implements NodeInterface {
 	name: String!
 	description: String
 	sendEdges: [Edge]
-	sendMessageType: String!
+	messageType: String!
 	receiveEdges: [Edge]
-	receiveMessageType: String!
 	metadata: AWSJSON
 	bitmapper: String!
 	routeTable: AWSJSON!
