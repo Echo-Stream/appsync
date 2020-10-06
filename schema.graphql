@@ -157,6 +157,12 @@ type MessageType {
 	transformerTemplate: String!
 	bitmapperTemplate: String!
 	requirements: [String!]!
+	owner: MessageTypeOwner!
+}
+
+enum MessageTypeOwner {
+	system
+	tenant
 }
 
 input MessageTypeInput {
