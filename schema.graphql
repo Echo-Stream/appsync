@@ -222,6 +222,7 @@ type NodeResult @aws_cognito_user_pools{
 }
 
 type Query @aws_cognito_user_pools{
+	GetMessageType(tenant: String!, name: String!): MessageType!
 	GetUsersForTenant(tenant: String!): [UserResult]
 	GetUser(email: AWSEmail): User
 	SearchNodes(
