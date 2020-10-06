@@ -257,7 +257,7 @@ type Query @aws_cognito_user_pools{
 		nextToken: String
 	): KmsKeyResult
 	ListMessageTypes(tenant: String!, nextToken: String, limit: Int): MessageTypeResult
-	ValidateFunction(messageType: String!, function: String!, args: AWSJSON, kwargs: AWSJSON): ValidateFunctionResult
+	ValidateFunction(tenant: String!, messageType: String!, function: String!, args: AWSJSON, kwargs: AWSJSON): ValidateFunctionResult
 }
 
 enum Region {
