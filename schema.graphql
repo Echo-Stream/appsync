@@ -30,7 +30,7 @@ type CognitoUser @aws_cognito_user_pools{
 	role: String!
 }
 
-type DicomInboundNode implements NodeInterface @aws_cognito_user_pools{
+type DicomTcpInboundNode implements NodeInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -40,7 +40,7 @@ type DicomInboundNode implements NodeInterface @aws_cognito_user_pools{
 	metadata: AWSJSON
 }
 
-type DicomOutboundNode implements NodeInterface @aws_cognito_user_pools{
+type DicomTcpOutboundNode implements NodeInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -148,7 +148,7 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools{
 	config: AWSJSON
 }
 
-union ManagedNode = DicomInboundNode | DicomOutboundNode | Hl7MllpInboundNode | Hl7MllpOutboundNode
+union ManagedNode = DicomTcpInboundNode | DicomTcpOutboundNode | Hl7MllpInboundNode | Hl7MllpOutboundNode
 
 type MessageType {
 	tenant: Tenant!
@@ -186,8 +186,8 @@ type Mutation @aws_cognito_user_pools{
 	DeleteApp(tenant: String!, app: String!): App
 	EdgeNotification(tenant: String!, name: String!): Notification!
 	NodeNotification(tenant: String!, name: String!): Notification!
-	PutDicomInboundNode(tenant: String!, app: String!, node: NodeInput!, port: Int!): DicomInboundNode!
-	PutDicomOutboundNode(tenant: String!, app: String!, node: NodeInput!, remoteHost: String!, remotePort: Int!): DicomOutboundNode!
+	PutDicomTcpInboundNode(tenant: String!, app: String!, node: NodeInput!, port: Int!): DicomTcpInboundNode!
+	PutDicomTcpOutboundNode(tenant: String!, app: String!, node: NodeInput!, remoteHost: String!, remotePort: Int!): DicomTcpOutboundNode!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
 	PutExternalApp(tenant: String!, app: AppInput!, authType: AppAuthType!, account: String): ExternalApp!
 	PutExternalNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!): ExternalNode!
@@ -206,7 +206,7 @@ type Mutation @aws_cognito_user_pools{
 	ResetAppPassword(tenant: String!, name: String!): App!
 }
 
-union Node =  DicomInboundNode | DicomOutboundNode | ExternalNode | Hl7MllpInboundNode | Hl7MllpOutboundNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
+union Node =  DicomTcpInboundNode | DicomTcpOutboundNode | ExternalNode | Hl7MllpInboundNode | Hl7MllpOutboundNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
 
 input NodeInput {
 	name: String!
@@ -330,8 +330,8 @@ type Subscription @aws_cognito_user_pools{
 	nodeUpdated(tenant: String!, name: String): Notification
 		@aws_subscribe(mutations: [
 			"NodeNotification",
-			"PutDicomInboundNode",
-			"PutDicomOutboundNode",
+			"PutDicomTcpInboundNode",
+			"PutDicomTcpOutboundNode",
 			"PutExternalNode",
 			"PutHl7MllpInboundNode",
 			"PutHl7MllpOutboundNode"
