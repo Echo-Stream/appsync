@@ -139,6 +139,11 @@ type KmsKeyResult {
 	scannedCount: Int
 }
 
+type LargeMessageStorage {
+	presignedPost: PresignedPost!
+	presignedGet: AWSURL!
+}
+
 type ManagedApp implements AppInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
@@ -227,7 +232,19 @@ type NodeResult @aws_cognito_user_pools{
 	scannedCount: Int
 }
 
+type PresignedPost {
+	url: AWSURL
+	fields: AWSJSON
+	expiration: AWSTimestamp
+}
+
+enum ContentEncoding {
+	deflate
+	gzip
+}
+
 type Query @aws_cognito_user_pools{
+	GetLargeMessageStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [LargeMessageStorage!]!
 	GetMessageType(tenant: String!, name: String!): MessageType!
 	GetUsersForTenant(tenant: String!): [UserResult]
 	GetUser(email: AWSEmail): User
