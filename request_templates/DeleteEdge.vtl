@@ -1,9 +1,0 @@
-#set ($sk = "E~$!{ctx.stash.edge.source}|$!{ctx.stash.edge.target}")
-
-{
-  "operation": "DeleteItem",
-  "key": {
-    "pk": $util.dynamodb.toDynamoDBJson("$tenant"),
-    "sk": $util.dynamodb.toDynamoDBJson("$sk")
-  }
-}
