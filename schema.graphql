@@ -20,7 +20,7 @@ interface AppInterface @aws_cognito_user_pools{
 
 type AppResult @aws_cognito_user_pools{
 	items: [App]
-	nextToken: String
+	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
@@ -74,7 +74,7 @@ input EdgeInput {
 
 type EdgeResult @aws_cognito_user_pools{
 	items: [Edge]
-	nextToken: String
+	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
@@ -135,7 +135,7 @@ input KmsKeyInput {
 
 type KmsKeyResult {
 	items: [KmsKey]
-	nextToken: String
+	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
@@ -180,7 +180,7 @@ input MessageTypeInput {
 
 type MessageTypeResult {
 	items: [MessageType]
-	nextToken: String
+	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
@@ -228,7 +228,7 @@ interface NodeInterface @aws_cognito_user_pools{
 
 type NodeResult @aws_cognito_user_pools{
 	items: [Node]
-	nextToken: String
+	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
@@ -254,7 +254,7 @@ type Query @aws_cognito_user_pools{
 		name: String,
 		filter: String,
 		filterValue: String,
-		nextToken: String,
+		startKey: AWSJSON,
 		limit: Int
 	): NodeResult
 	SearchEdges(
@@ -263,7 +263,7 @@ type Query @aws_cognito_user_pools{
 		target: String,
 		filter: String,
 		filterValue: String,
-		nextToken: String,
+		startKey: AWSJSON,
 		limit: Int
 	): EdgeResult
 	SearchApps(
@@ -272,15 +272,19 @@ type Query @aws_cognito_user_pools{
 		name: String,
 		filter: String,
 		filterValue: String,
-		nextToken: String,
+		startKey: AWSJSON,
 		limit: Int
 	): AppResult
 	ListKeys(
 		tenant: String!
 		limit: Int
-		nextToken: String
+		startKey: AWSJSON
 	): KmsKeyResult
-	ListMessageTypes(tenant: String!, nextToken: String, limit: Int): MessageTypeResult
+	ListMessageTypes(
+		tenant: String!,
+		startKey: String,
+		limit: Int
+	): MessageTypeResult
 	ValidateFunction(tenant: String!, messageType: String!, function: String!, args: AWSJSON, kwargs: AWSJSON): ValidateFunctionResult
 }
 
@@ -400,7 +404,7 @@ input UserInput {
 
 type UserResult @aws_cognito_user_pools{
 	items: [User]
-	nextToken: String
+	lastEvaluatedKey: String
 	scannedCount: Int
 }
 
