@@ -189,6 +189,7 @@ type Mutation @aws_cognito_user_pools{
 	DeleteNode(tenant: String!, node: String!): Node
 	DeleteEdge(tenant: String!, edge: String!): Edge
 	DeleteApp(tenant: String!, app: String!): App
+	DeleteMessageType(tenant: String!, name: String!): App
 	EdgeNotification(tenant: String!, name: String!): Notification!
 	NodeNotification(tenant: String!, name: String!): Notification!
 	PutDicomTcpInboundNode(tenant: String!, app: String!, node: NodeInput!, port: Int!): DicomTcpInboundNode!
