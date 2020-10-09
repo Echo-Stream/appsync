@@ -11,26 +11,31 @@ input AppInput {
 	description: String
 }
 
-interface AppInterface @aws_cognito_user_pools{
+interface AppInterface {
 	tenant: Tenant!
 	name: String!
 	description: String
 	config: AWSJSON
 }
 
-type AppResult @aws_cognito_user_pools{
+type AppResult @aws_cognito_user_pools {
 	items: [App]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type CognitoUser @aws_cognito_user_pools{
+type CognitoUser @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	role: String!
 }
 
-type DicomTcpInboundNode implements NodeInterface @aws_cognito_user_pools{
+enum ContentEncoding {
+	deflate
+	gzip
+}
+
+type DicomTcpInboundNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -40,7 +45,7 @@ type DicomTcpInboundNode implements NodeInterface @aws_cognito_user_pools{
 	metadata: AWSJSON
 }
 
-type DicomTcpOutboundNode implements NodeInterface @aws_cognito_user_pools{
+type DicomTcpOutboundNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -51,7 +56,7 @@ type DicomTcpOutboundNode implements NodeInterface @aws_cognito_user_pools{
 	metadata: AWSJSON
 }
 
-type Edge @aws_cognito_user_pools{
+type Edge @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -72,13 +77,13 @@ input EdgeInput {
 	metadata: AWSJSON
 }
 
-type EdgeResult @aws_cognito_user_pools{
+type EdgeResult @aws_cognito_user_pools {
 	items: [Edge]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type ExternalApp implements AppInterface @aws_cognito_user_pools{
+type ExternalApp implements AppInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -88,7 +93,7 @@ type ExternalApp implements AppInterface @aws_cognito_user_pools{
 	config: AWSJSON
 }
 
-type ExternalNode implements NodeInterface @aws_cognito_user_pools{
+type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -100,7 +105,7 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools{
 	metadata: AWSJSON
 }
 
-type Hl7MllpInboundNode implements NodeInterface @aws_cognito_user_pools{
+type Hl7MllpInboundNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -110,7 +115,7 @@ type Hl7MllpInboundNode implements NodeInterface @aws_cognito_user_pools{
 	metadata: AWSJSON
 }
 
-type Hl7MllpOutboundNode implements NodeInterface @aws_cognito_user_pools{
+type Hl7MllpOutboundNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -121,7 +126,7 @@ type Hl7MllpOutboundNode implements NodeInterface @aws_cognito_user_pools{
 	metadata: AWSJSON
 }
 
-type KmsKey @aws_cognito_user_pools{
+type KmsKey @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -144,7 +149,7 @@ type LargeMessageStorage {
 	presignedGet: AWSURL!
 }
 
-type ManagedApp implements AppInterface @aws_cognito_user_pools{
+type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -165,11 +170,6 @@ type MessageType {
 	owner: MessageTypeOwner!
 }
 
-enum MessageTypeOwner {
-	system
-	tenant
-}
-
 input MessageTypeInput {
 	name: String!
 	auditor: String!
@@ -178,13 +178,18 @@ input MessageTypeInput {
 	requirements: [String!]!
 }
 
+enum MessageTypeOwner {
+	system
+	tenant
+}
+
 type MessageTypeResult {
 	items: [MessageType]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type Mutation @aws_cognito_user_pools{
+type Mutation @aws_cognito_user_pools {
 	AppNotification(tenant: String!, name: String!): App!
 	DeleteNode(tenant: String!, node: String!): Node
 	DeleteEdge(tenant: String!, edge: String!): Edge
@@ -192,27 +197,82 @@ type Mutation @aws_cognito_user_pools{
 	DeleteMessageType(tenant: String!, name: String!): App
 	EdgeNotification(tenant: String!, name: String!): Notification!
 	NodeNotification(tenant: String!, name: String!): Notification!
-	PutDicomTcpInboundNode(tenant: String!, app: String!, node: NodeInput!, port: Int!): DicomTcpInboundNode!
-	PutDicomTcpOutboundNode(tenant: String!, app: String!, node: NodeInput!, remoteHost: String!, remotePort: Int!): DicomTcpOutboundNode!
+	PutDicomTcpInboundNode(
+		tenant: String!,
+		app: String!,
+		node: NodeInput!,
+		port: Int!
+	): DicomTcpInboundNode!
+	PutDicomTcpOutboundNode(
+		tenant: String!,
+		app: String!,
+		node: NodeInput!,
+		remoteHost: String!,
+		remotePort: Int!
+	): DicomTcpOutboundNode!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
-	PutExternalApp(tenant: String!, app: AppInput!, authType: AppAuthType!, account: String): ExternalApp!
-	PutExternalNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!): ExternalNode!
-	PutHl7MllpInboundNode(tenant: String!, app: String!,node: NodeInput!, port: Int!): Hl7MllpInboundNode!
-	PutHl7MllpOutboundNode(tenant: String!, app: String!,node: NodeInput!, remoteHost: String!, remotePort: Int!): Hl7MllpOutboundNode!
+	PutExternalApp(
+		tenant: String!,
+		app: AppInput!,
+		authType: AppAuthType!,
+		account: String
+	): ExternalApp!
+	PutExternalNode(
+		tenant: String!,
+		app: String!,
+		node: NodeInput!,
+		receiveMessageType: String!,
+		sendMessageType: String!
+	): ExternalNode!
+	PutHl7MllpInboundNode(
+		tenant: String!,
+		app: String!,
+		node: NodeInput!,
+		port: Int!
+	): Hl7MllpInboundNode!
+	PutHl7MllpOutboundNode(
+		tenant: String!,
+		app: String!,
+		node: NodeInput!,
+		remoteHost: String!,
+		remotePort: Int!
+	): Hl7MllpOutboundNode!
 	PutKmsKey(tenant: String!, key: KmsKeyInput!): KmsKey!
 	PutManagedApp(tenant: String!, app: AppInput!): ManagedApp!
 	PutMessageType(tenant: String!, type: MessageTypeInput!): MessageType!
-	PutRouterNode(tenant: String!, app: String!, node: NodeInput!, messageType: String!, bitmapper: String!, routeTable: AWSJSON!): RouterNode!
+	PutRouterNode(
+		tenant: String!,
+		app: String!,
+		node: NodeInput!,
+		messageType: String!,
+		bitmapper: String!,
+		routeTable: AWSJSON!
+	): RouterNode!
 	PutTenant(tenant: TenantInput!): Tenant!
-	PutTransNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, transformer: String): TransNode!
+	PutTransNode(
+		tenant: String!,
+		app: String!,
+		node: NodeInput!,
+		receiveMessageType: String!,
+		sendMessageType: String!,
+		transformer: String
+	): TransNode!
 	PutXTenantSendingApp(tenant: String!, app: AppInput!, receivingTenant: String!): XTenantSendingApp!
-	PutXTenantSendingNode(tenant: String!, app: String!, node: NodeInput!, receiveMessageType: String!, sendMessageType: String!, transformer: String): XTenantSendingNode!
+	PutXTenantSendingNode(
+		tenant: String!,
+		app: String!,
+		node: NodeInput!,
+		receiveMessageType: String!,
+		sendMessageType: String!,
+		transformer: String
+	): XTenantSendingNode!
 	AddUserToTenant(tenant: String!, user: UserInput!): User!
-	@aws_iam @aws_cognito_user_pools
+		@aws_iam
+@aws_cognito_user_pools
 	ResetAppPassword(tenant: String!, name: String!): App!
 }
 
-union Node =  DicomTcpInboundNode | DicomTcpOutboundNode | ExternalNode | Hl7MllpInboundNode | Hl7MllpOutboundNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
+union Node = DicomTcpInboundNode | DicomTcpOutboundNode | ExternalNode | Hl7MllpInboundNode | Hl7MllpOutboundNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
 
 input NodeInput {
 	name: String!
@@ -220,17 +280,23 @@ input NodeInput {
 	metadata: AWSJSON
 }
 
-interface NodeInterface @aws_cognito_user_pools{
+interface NodeInterface {
 	name: String!
 	description: String
 	tenant: Tenant!
 	metadata: AWSJSON
 }
 
-type NodeResult @aws_cognito_user_pools{
+type NodeResult @aws_cognito_user_pools {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
+}
+
+type Notification {
+	itemType: String!
+	message: AWSJSON!
+	tenant: String!
 }
 
 type PresignedPost {
@@ -239,18 +305,13 @@ type PresignedPost {
 	expiration: AWSTimestamp
 }
 
-enum ContentEncoding {
-	deflate
-	gzip
-}
-
-type Query @aws_cognito_user_pools{
+type Query @aws_cognito_user_pools {
 	GetLargeMessageStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [LargeMessageStorage!]!
 	GetMessageType(tenant: String!, name: String!): MessageType!
 	GetUsersForTenant(tenant: String!): [UserResult]
 	GetUser(email: AWSEmail): User
 	SearchNodes(
-		tenant: String!
+		tenant: String!,
 		partialName: Boolean,
 		name: String,
 		filter: String,
@@ -259,7 +320,7 @@ type Query @aws_cognito_user_pools{
 		limit: Int
 	): NodeResult
 	SearchEdges(
-		tenant: String!
+		tenant: String!,
 		source: String,
 		target: String,
 		filter: String,
@@ -268,7 +329,7 @@ type Query @aws_cognito_user_pools{
 		limit: Int
 	): EdgeResult
 	SearchApps(
-		tenant: String!
+		tenant: String!,
 		partialName: Boolean,
 		name: String,
 		filter: String,
@@ -276,17 +337,14 @@ type Query @aws_cognito_user_pools{
 		startKey: AWSJSON,
 		limit: Int
 	): AppResult
-	ListKeys(
-		tenant: String!
-		limit: Int
-		startKey: AWSJSON
-	): KmsKeyResult
-	ListMessageTypes(
+	ListKeys(tenant: String!, limit: Int, startKey: AWSJSON): KmsKeyResult
+	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
+	ValidateFunction(
 		tenant: String!,
-		startKey: String,
-		limit: Int
-	): MessageTypeResult
-	ValidateFunction(tenant: String!, messageType: String!, function: String!, args: AWSJSON, kwargs: AWSJSON): ValidateFunctionResult
+		messageType: String!,
+		args: AWSJSON,
+		kwargs: AWSJSON
+	): ValidateFunctionResult
 }
 
 enum Region {
@@ -327,47 +385,29 @@ type RouterNode implements NodeInterface {
 	routeTable: AWSJSON!
 }
 
-type Notification {
-	itemType: String!
-	message: AWSJSON!
-	tenant: String!
-}
-
-type Subscription @aws_cognito_user_pools{
+type Subscription @aws_cognito_user_pools {
 	appDeleted(tenant: String!, name: String): Notification
 		@aws_subscribe(mutations: ["DeleteApp"])
 	appUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: [
-			"AppNotification",
-			"PutExternalApp",
-			"PutManagedApp",
-			"ResetAppPassword"
-		])
-	edgeDeleted(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: ["DeleteEdge"])
-	edgeUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: ["EdgeNotification", "PutEdge"])
+		@aws_subscribe(mutations: ["AppNotification","PutExternalApp","PutManagedApp","ResetAppPassword"])
 	nodeDeleted(tenant: String!, name: String): Notification
 		@aws_subscribe(mutations: ["DeleteNode"])
 	nodeUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: [
-			"NodeNotification",
-			"PutDicomTcpInboundNode",
-			"PutDicomTcpOutboundNode",
-			"PutExternalNode",
-			"PutHl7MllpInboundNode",
-			"PutHl7MllpOutboundNode"
-		])
+		@aws_subscribe(mutations: ["NodeNotification","PutDicomTcpInboundNode","PutDicomTcpOutboundNode","PutExternalNode","PutHl7MllpInboundNode","PutHl7MllpOutboundNode"])
+	edgeUpdated(tenant: String!, name: String): Notification
+		@aws_subscribe(mutations: ["EdgeNotification","PutEdge"])
+	edgeDeleted(tenant: String!, name: String): Notification
+		@aws_subscribe(mutations: ["DeleteEdge"])
 }
 
-type Tenant @aws_cognito_user_pools{
+type Tenant @aws_cognito_user_pools {
 	name: String!
 	defaultKmsKey: KmsKey!
 	defaultRegion: Region!
 	billingInfo: AWSJSON
 }
 
-input TenantInput @aws_cognito_user_pools{
+input TenantInput {
 	name: String!
 	defaultRegion: Region!
 	billingInfo: AWSJSON
@@ -385,7 +425,7 @@ type TransNode implements NodeInterface {
 	transformer: String
 }
 
-type User @aws_cognito_user_pools{
+type User @aws_cognito_user_pools {
 	tenant: Tenant!
 	email: AWSEmail!
 	name: String!
@@ -403,7 +443,7 @@ input UserInput {
 	role: UserRole!
 }
 
-type UserResult @aws_cognito_user_pools{
+type UserResult @aws_cognito_user_pools {
 	items: [User]
 	lastEvaluatedKey: String
 	scannedCount: Int
@@ -425,7 +465,7 @@ type ValidateFunctionResult {
 	stdout: String!
 }
 
-type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools{
+type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	sendingTenant: String!
 	name: String!
@@ -434,7 +474,7 @@ type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools{
 	config: AWSJSON
 }
 
-type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools{
+type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -444,7 +484,7 @@ type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools{
 	app: XTenantReceivingApp!
 }
 
-type XTenantSendingApp implements AppInterface @aws_cognito_user_pools{
+type XTenantSendingApp implements AppInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	receivingTenant: String!
 	name: String!
@@ -453,7 +493,7 @@ type XTenantSendingApp implements AppInterface @aws_cognito_user_pools{
 	config: AWSJSON
 }
 
-type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools{
+type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
