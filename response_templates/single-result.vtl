@@ -1,8 +1,0 @@
-#if ($ctx.result.items.size() == 0)
-  null
-#else
-  #if ("$!ctx.result.items[0].type" != "")
-    $util.qr($ctx.result.items[0].put("__typename", $ctx.result.items[0].type))
-  #end
-  $util.toJson($ctx.result.items[0])
-#end
