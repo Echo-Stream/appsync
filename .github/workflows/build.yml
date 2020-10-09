@@ -32,8 +32,5 @@ jobs:
           fi
           echo "REF: ${GITHUB_REF}"
       - name: Upload
-        run: |
-          aws s3 cp request_templates s3://$ARTIFACTS_BUCKET/$S3_PREFIX/appsync/request-templates --recursive --content-type text/plain --sse
-          aws s3 cp response_templates s3://$ARTIFACTS_BUCKET/$S3_PREFIX/appsync/response-templates --recursive --content-type text/plain --sse
-          aws s3 cp schema.graphql s3://$ARTIFACTS_BUCKET/$S3_PREFIX/appsync/ --content-type text/plain --sse
+        run: aws s3 cp schema.graphql s3://$ARTIFACTS_BUCKET/$S3_PREFIX/appsync/ --content-type text/plain --sse
         if: ${{ success() }}
