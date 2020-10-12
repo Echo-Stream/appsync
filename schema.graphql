@@ -198,7 +198,6 @@ type Mutation @aws_cognito_user_pools {
 	EdgeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	NodeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	MessageTypeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
-
 	PutDicomTcpInboundNode(
 		tenant: String!,
 		app: String!,
@@ -304,6 +303,12 @@ type Notification {
 	operation: String!
 }
 
+enum Operations {
+	MODIFY
+	DELETE
+	INSERT
+}
+
 type PresignedPost {
 	url: AWSURL
 	fields: AWSJSON
@@ -314,7 +319,7 @@ type Query @aws_cognito_user_pools {
 	GetLargeMessageStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [LargeMessageStorage!]!
 	GetMessageType(tenant: String!, name: String!): MessageType!
 	GetUsersForTenant(tenant: String!): [UserResult]
-	GetUser(): User
+	GetUser: User
 	GetTenantUser(email: AWSEmail!): User
 	SearchNodes(
 		tenant: String!,
@@ -390,12 +395,6 @@ type RouterNode implements NodeInterface {
 	metadata: AWSJSON
 	bitmapper: String!
 	routeTable: AWSJSON!
-}
-
-enum Operations {
-	MODIFY
-	DELETE
-	INSERT
 }
 
 type Subscription @aws_cognito_user_pools {
