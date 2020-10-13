@@ -300,7 +300,9 @@ type Notification {
 	newItemItem: AWSJSON!
 	tenant: String!
 	modifiedBy: String!
-	operation: String!
+	operation: String!,
+	message: AWSJSON
+	error: AWSJSON
 }
 
 enum Operations {
