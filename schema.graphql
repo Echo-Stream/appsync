@@ -200,13 +200,13 @@ type Mutation @aws_cognito_user_pools {
 	MessageTypeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	PutDicomTcpInboundNode(
 		tenant: String!,
-		app: String!,
+		app: String,
 		node: NodeInput!,
 		port: Int!
 	): DicomTcpInboundNode!
 	PutDicomTcpOutboundNode(
 		tenant: String!,
-		app: String!,
+		app: String,
 		node: NodeInput!,
 		remoteHost: String!,
 		remotePort: Int!
@@ -220,20 +220,20 @@ type Mutation @aws_cognito_user_pools {
 	): ExternalApp!
 	PutExternalNode(
 		tenant: String!,
-		app: String!,
+		app: String,
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String!
 	): ExternalNode!
 	PutHl7MllpInboundNode(
 		tenant: String!,
-		app: String!,
+		app: String,
 		node: NodeInput!,
 		port: Int!
 	): Hl7MllpInboundNode!
 	PutHl7MllpOutboundNode(
 		tenant: String!,
-		app: String!,
+		app: String,
 		node: NodeInput!,
 		remoteHost: String!,
 		remotePort: Int!
@@ -243,7 +243,7 @@ type Mutation @aws_cognito_user_pools {
 	PutMessageType(tenant: String!, type: MessageTypeInput!): MessageType!
 	PutRouterNode(
 		tenant: String!,
-		app: String!,
+		app: String,
 		node: NodeInput!,
 		messageType: String!,
 		bitmapper: String!,
@@ -252,7 +252,7 @@ type Mutation @aws_cognito_user_pools {
 	PutTenant(tenant: TenantInput!): Tenant!
 	PutTransNode(
 		tenant: String!,
-		app: String!,
+		app: String,
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String!,
@@ -261,7 +261,7 @@ type Mutation @aws_cognito_user_pools {
 	PutXTenantSendingApp(tenant: String!, app: AppInput!, receivingTenant: String!): XTenantSendingApp!
 	PutXTenantSendingNode(
 		tenant: String!,
-		app: String!,
+		app: String,
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String!,
@@ -300,7 +300,7 @@ type Notification {
 	newItem: AWSJSON!
 	tenant: String!
 	modifiedBy: String!
-	operation: String!,
+	operation: String!
 	message: AWSJSON
 	error: AWSJSON
 }
