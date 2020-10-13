@@ -167,7 +167,7 @@ type MessageType {
 	transformerTemplate: String!
 	bitmapperTemplate: String!
 	requirements: [String!]!
-	owner: MessageTypeOwner!
+	system: Boolean!
 }
 
 input MessageTypeInput {
@@ -176,11 +176,6 @@ input MessageTypeInput {
 	transformerTemplate: String!
 	bitmapperTemplate: String!
 	requirements: [String!]!
-}
-
-enum MessageTypeOwner {
-	system
-	tenant
 }
 
 type MessageTypeResult {
@@ -255,7 +250,7 @@ type Mutation @aws_cognito_user_pools {
 		app: String,
 		node: NodeInput!,
 		receiveMessageType: String!,
-		sendMessageType: String!,
+		sendMessageType: String,
 		transformer: String
 	): TransNode!
 	PutXTenantSendingApp(tenant: String!, app: AppInput!, receivingTenant: String!): XTenantSendingApp!
@@ -264,7 +259,7 @@ type Mutation @aws_cognito_user_pools {
 		app: String,
 		node: NodeInput!,
 		receiveMessageType: String!,
-		sendMessageType: String!,
+		sendMessageType: String,
 		transformer: String
 	): XTenantSendingNode!
 	AddUserToTenant(tenant: String!, user: UserInput!): User!
@@ -489,7 +484,7 @@ type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	sendEdges: [Edge]
-	messageType: String!
+	sendMessageType: String!
 	metadata: AWSJSON
 	app: XTenantReceivingApp!
 }
@@ -509,7 +504,6 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	description: String
 	receiveEdges: [Edge]
 	receiveMessageType: String!
-	sendMessageType: String!
 	metadata: AWSJSON
 	app: XTenantSendingApp!
 	transformer: String
