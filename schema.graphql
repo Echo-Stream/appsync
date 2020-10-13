@@ -296,8 +296,8 @@ type NodeResult @aws_cognito_user_pools {
 
 type Notification {
 	itemType: String!
-	oldItemItem: AWSJSON!
-	newItemItem: AWSJSON!
+	oldItem: AWSJSON!
+	newItem: AWSJSON!
 	tenant: String!
 	modifiedBy: String!
 	operation: String!,
