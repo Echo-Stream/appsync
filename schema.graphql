@@ -238,7 +238,6 @@ type Mutation @aws_cognito_user_pools {
 	PutMessageType(tenant: String!, type: MessageTypeInput!): MessageType!
 	PutRouterNode(
 		tenant: String!,
-		app: String,
 		node: NodeInput!,
 		messageType: String!,
 		bitmapper: String!,
@@ -247,13 +246,13 @@ type Mutation @aws_cognito_user_pools {
 	PutTenant(tenant: TenantInput!): Tenant!
 	PutTransNode(
 		tenant: String!,
-		app: String,
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String,
 		transformer: String
 	): TransNode!
-	PutXTenantSendingApp(tenant: String!, app: AppInput!, receivingTenant: String!): XTenantSendingApp!
+	PutXTenantReceivingApp(tenant: String!, app: AppInput!, sendingTenant: String!): XTenantReceivingApp!
+	PutXTenantSendingApp(tenant: String!, app: AppInput!, receivingTenant: String!, receivingApp: String!): XTenantSendingApp!
 	PutXTenantSendingNode(
 		tenant: String!,
 		app: String,
@@ -473,6 +472,7 @@ type ValidateFunctionResult {
 type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	sendingTenant: String!
+	sendingApp: String
 	name: String!
 	description: String
 	nodes: [XTenantReceivingNode]
@@ -492,6 +492,7 @@ type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
 type XTenantSendingApp implements AppInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	receivingTenant: String!
+	receivingApp: String!
 	name: String!
 	description: String
 	nodes: [XTenantSendingNode]
