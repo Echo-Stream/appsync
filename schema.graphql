@@ -222,13 +222,13 @@ type Mutation @aws_cognito_user_pools {
 	): ExternalNode!
 	PutHl7MllpInboundNode(
 		tenant: String!,
-		app: String,
+		app: String!,
 		node: NodeInput!,
 		port: Int!
 	): Hl7MllpInboundNode!
 	PutHl7MllpOutboundNode(
 		tenant: String!,
-		app: String,
+		app: String!,
 		node: NodeInput!,
 		remoteHost: String!,
 		remotePort: Int!
