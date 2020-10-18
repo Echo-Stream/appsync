@@ -41,6 +41,7 @@ type DicomTcpInboundNode implements NodeInterface @aws_cognito_user_pools {
 	description: String
 	port: Int!
 	sendEdges: [Edge]
+	sendMessageType: MessageType!
 	app: ManagedApp!
 	metadata: AWSJSON
 }
@@ -52,6 +53,7 @@ type DicomTcpOutboundNode implements NodeInterface @aws_cognito_user_pools {
 	remoteHost: String!
 	remotePort: Int!
 	receiveEdges: [Edge]
+	receiveMessageType: MessageType!
 	app: ManagedApp!
 	metadata: AWSJSON
 }
@@ -98,9 +100,9 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	sendEdges: [Edge]
-	sendMessageType: String!
+	sendMessageType: MessageType!
 	receiveEdges: [Edge]
-	receiveMessageType: String!
+	receiveMessageType: MessageType!
 	app: ExternalApp!
 	metadata: AWSJSON
 }
@@ -111,6 +113,7 @@ type Hl7MllpInboundNode implements NodeInterface @aws_cognito_user_pools {
 	description: String
 	port: Int!
 	sendEdges: [Edge]
+	sendMessageType: MessageType!
 	app: ManagedApp!
 	metadata: AWSJSON
 }
@@ -122,6 +125,7 @@ type Hl7MllpOutboundNode implements NodeInterface @aws_cognito_user_pools {
 	remoteHost: String!
 	remotePort: Int!
 	receiveEdges: [Edge]
+	receiveMessageType: MessageType!
 	app: ManagedApp!
 	metadata: AWSJSON
 }
@@ -348,7 +352,7 @@ type Query @aws_cognito_user_pools {
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
 	ValidateFunction(
 		tenant: String!,
-		messageType: String!,
+		messageType: MessageType!,
 		function: String!,
 		args: AWSJSON,
 		kwargs: AWSJSON
@@ -386,8 +390,9 @@ type RouterNode implements NodeInterface {
 	name: String!
 	description: String
 	sendEdges: [Edge]
-	messageType: String!
+	sendMessageType: MessageType!
 	receiveEdges: [Edge]
+	receiveMessageType: MessageType!
 	metadata: AWSJSON
 	bitmapper: String!
 	routeTable: AWSJSON!
@@ -422,9 +427,9 @@ type TransNode implements NodeInterface {
 	name: String!
 	description: String
 	sendEdges: [Edge]
-	sendMessageType: String!
+	sendMessageType: MessageType!
 	receiveEdges: [Edge]
-	receiveMessageType: String!
+	receiveMessageType: MessageType!
 	metadata: AWSJSON
 	transformer: String
 }
@@ -484,7 +489,7 @@ type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	sendEdges: [Edge]
-	sendMessageType: String!
+	sendMessageType: MessageType!
 	metadata: AWSJSON
 	app: XTenantReceivingApp!
 }
@@ -504,7 +509,7 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	receiveEdges: [Edge]
-	receiveMessageType: String!
+	receiveMessageType: MessageType!
 	metadata: AWSJSON
 	app: XTenantSendingApp!
 	transformer: String
