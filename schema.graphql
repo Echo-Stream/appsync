@@ -256,7 +256,12 @@ type Mutation @aws_cognito_user_pools {
 		transformer: String
 	): TransNode!
 	PutXTenantReceivingApp(tenant: String!, app: AppInput!, sendingTenant: String!): XTenantReceivingApp!
-	PutXTenantSendingApp(tenant: String!, app: AppInput!, receivingTenant: String!, receivingApp: String!): XTenantSendingApp!
+	PutXTenantSendingApp(
+		tenant: String!,
+		app: AppInput!,
+		receivingTenant: String!,
+		receivingApp: String!
+	): XTenantSendingApp!
 	PutXTenantSendingNode(
 		tenant: String!,
 		app: String,
@@ -352,7 +357,7 @@ type Query @aws_cognito_user_pools {
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
 	ValidateFunction(
 		tenant: String!,
-		messageType: MessageType!,
+		messageType: String!,
 		function: String!,
 		args: AWSJSON,
 		kwargs: AWSJSON
