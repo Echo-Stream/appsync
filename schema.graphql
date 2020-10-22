@@ -190,6 +190,7 @@ type MessageTypeResult {
 
 type Mutation @aws_cognito_user_pools {
 	AppNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
+	DeleteTenant(tenant:String!): Tenant
 	DeleteNode(tenant: String!, node: String!): Node
 	DeleteEdge(tenant: String!, edge: String!): Edge
 	DeleteApp(tenant: String!, app: String!): App
