@@ -142,13 +142,13 @@ input KmsKeyInput {
 	description: String
 }
 
-type KmsKeyResult {
+type KmsKeyResult  @aws_cognito_user_pools {
 	items: [KmsKey]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type LargeMessageStorage {
+type LargeMessageStorage  @aws_cognito_user_pools {
 	presignedPost: PresignedPost!
 	presignedGet: AWSURL!
 }
@@ -164,7 +164,7 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools {
 
 union ManagedNode = DicomTcpInboundNode | DicomTcpOutboundNode | Hl7MllpInboundNode | Hl7MllpOutboundNode
 
-type MessageType {
+type MessageType @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	auditor: String!
@@ -182,7 +182,7 @@ input MessageTypeInput {
 	requirements: [String!]!
 }
 
-type MessageTypeResult {
+type MessageTypeResult @aws_cognito_user_pools{
 	items: [MessageType]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
@@ -298,7 +298,7 @@ type NodeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
-type Notification {
+type Notification @aws_cognito_user_pools{
 	itemType: String!
 	oldItem: AWSJSON!
 	newItem: AWSJSON!
@@ -315,7 +315,7 @@ enum Operations {
 	INSERT
 }
 
-type PresignedPost {
+type PresignedPost @aws_cognito_user_pools{
 	url: AWSURL
 	fields: AWSJSON
 	expiration: AWSTimestamp
@@ -391,7 +391,7 @@ enum Region {
 	us_gov_west_1
 }
 
-type RouterNode implements NodeInterface {
+type RouterNode implements NodeInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -428,7 +428,7 @@ input TenantInput {
 	billingInfo: AWSJSON
 }
 
-type TransNode implements NodeInterface {
+type TransNode implements NodeInterface  @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -475,7 +475,7 @@ enum UserStatus {
 	suspended
 }
 
-type ValidateFunctionResult {
+type ValidateFunctionResult  @aws_cognito_user_pools{
 	result: String!
 	stdout: String!
 }
