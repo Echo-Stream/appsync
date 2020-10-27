@@ -336,6 +336,7 @@ type Query @aws_cognito_user_pools {
 		startKey: AWSJSON,
 		limit: Int
 	): NodeResult
+	@aws_cognito_user_pools @aws_iam
 	SearchEdges(
 		tenant: String!,
 		source: String,
@@ -354,6 +355,7 @@ type Query @aws_cognito_user_pools {
 		startKey: AWSJSON,
 		limit: Int
 	): AppResult
+	@aws_cognito_user_pools @aws_iam
 	ListKeys(tenant: String!, limit: Int, startKey: AWSJSON): KmsKeyResult
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
 	ValidateFunction(
