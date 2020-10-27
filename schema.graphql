@@ -248,7 +248,7 @@ type Mutation @aws_cognito_user_pools {
 		bitmapper: String!,
 		routeTable: AWSJSON!
 	): RouterNode!
-	PutTenant(tenant: TenantInput!): Tenant!
+	PutTenant(name: String!, region: Region!, billingInfo: AWSJSON): Tenant!
 	PutTransNode(
 		tenant: String!,
 		node: NodeInput!,
@@ -419,14 +419,7 @@ type Subscription @aws_cognito_user_pools {
 
 type Tenant @aws_cognito_user_pools {
 	name: String!
-	defaultKmsKey: KmsKey!
-	defaultRegion: String!
-	billingInfo: AWSJSON
-}
-
-input TenantInput {
-	name: String!
-	defaultRegion: Region!
+	region: String!
 	billingInfo: AWSJSON
 }
 
