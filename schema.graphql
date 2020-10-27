@@ -420,7 +420,7 @@ type Subscription @aws_cognito_user_pools {
 type Tenant @aws_cognito_user_pools {
 	name: String!
 	defaultKmsKey: KmsKey!
-	defaultRegion: Region!
+	defaultRegion: String!
 	billingInfo: AWSJSON
 }
 
