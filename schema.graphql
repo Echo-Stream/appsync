@@ -60,7 +60,6 @@ type DicomTcpOutboundNode implements NodeInterface @aws_cognito_user_pools {
 
 type Edge @aws_cognito_user_pools {
 	tenant: Tenant!
-	name: String!
 	description: String
 	source: Node!
 	target: Node!
@@ -71,7 +70,6 @@ type Edge @aws_cognito_user_pools {
 }
 
 input EdgeInput {
-	name: String!
 	description: String
 	kmsKey: String
 	source: String!
@@ -212,6 +210,7 @@ type Mutation @aws_cognito_user_pools {
 		remotePort: Int!
 	): DicomTcpOutboundNode!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
+	MoveEdge(tenant: String!, source: String!, target: String!, oldSource: String!, oldTarget: String!): Edge!
 	PutExternalApp(
 		tenant: String!,
 		app: AppInput!,
