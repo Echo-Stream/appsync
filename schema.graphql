@@ -43,7 +43,6 @@ type DicomTcpInboundNode implements NodeInterface @aws_cognito_user_pools {
 	sendEdges: [Edge]
 	sendMessageType: MessageType!
 	app: ManagedApp!
-	storageSopClassUids: [String!]!
 	metadata: AWSJSON
 }
 
@@ -202,7 +201,6 @@ type Mutation @aws_cognito_user_pools {
 		app: String,
 		node: NodeInput!,
 		port: Int!,
-		storageSopClassUids: [String!]!
 	): DicomTcpInboundNode!
 	PutDicomTcpOutboundNode(
 		tenant: String!,
