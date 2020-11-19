@@ -37,19 +37,37 @@ enum ContentEncoding {
 
 type ManagedNodeType {
 	tenant: Tenant!
-	dockerConfig: AWSJSON!
+	dockerConfig: DockerConfig!
 	configTemplate: AWSJSON!
-	portMappings: AWSJSON!
+	portMappingRequirements: [PortMappingRequirement!]
 	sendMessageType: MessageType
 	receiveMessageType: MessageType
+	hostMounts: [String!]
+}
+
+type PortMappingRequirement {
+	description: String!
+	containerPort: Int!
 }
 
 input ManagedNodeTypeInput {
-	dockerfile: String
-	dockerLogin: String
-	dockerImage: String
+	name: String!
+	dockerConfig: DockerConfig!
 	configTemplate: AWSJSON
-	portMappings: AWSJSON
+	hostMounts: [String!]
+	portMappingRequirements: [PortMappingRequirement!]
+}
+
+type DockerConfig {
+	imageUrl: String!
+	username: String
+	password: String
+}
+
+type PortMapping {
+	description: String!
+	hostPort: Int!
+	containerPort: Int!
 }
 
 input ManagedNodeInput {
@@ -57,8 +75,7 @@ input ManagedNodeInput {
 	description: String
 	metadata: AWSJSON
 	config: AWSJSON!
-	portMappings: [AWSJSON]!
-	mount: String
+	portMappings: [PortMapping!]
 	managedNodeType: String!
 	app: String!
 }
@@ -255,7 +272,7 @@ type Mutation @aws_cognito_user_pools {
 	ResetAppPassword(tenant: String!, name: String!): App!
 }
 
-union Node = DicomTcpInboundNode | DicomTcpOutboundNode | ExternalNode | Hl7MllpInboundNode | Hl7MllpOutboundNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
+union Node = ManagedNode | ExternalNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
 
 input NodeInput {
 	name: String!
