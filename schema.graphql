@@ -35,65 +35,16 @@ enum ContentEncoding {
 	gzip
 }
 
-type ManagedNodeType {
-	tenant: Tenant!
-	dockerConfig: DockerConfig!
-	configTemplate: AWSJSON!
-	portMappingRequirements: [PortMappingRequirement!]
-	sendMessageType: MessageType
-	receiveMessageType: MessageType
-	hostMounts: [String!]
-}
-
-type PortMappingRequirement {
-	description: String!
-	containerPort: Int!
-}
-
-input ManagedNodeTypeInput {
-	name: String!
-	dockerConfig: DockerConfig!
-	configTemplate: AWSJSON
-	hostMounts: [String!]
-	portMappingRequirements: [PortMappingRequirement!]
-}
-
-type DockerConfig {
+type DockerConfig @aws_cognito_user_pools {
 	imageUrl: String!
 	username: String
 	password: String
 }
 
-type PortMapping {
-	description: String!
-	hostPort: Int!
-	containerPort: Int!
-}
-
-input ManagedNodeInput {
-	name: String!
-	description: String
-	metadata: AWSJSON
-	config: AWSJSON!
-	portMappings: [PortMapping!]
-	managedNodeType: String!
-	app: String!
-}
-
-type ManagedNode implements NodeInterface @aws_cognito_user_pools{
-	tenant: Tenant!
-	name: String!
-	description: String
-	config:  AWSJSON!
-	portMappings: AWSJSON!
-	mount: String
-	sendEdges: [Edge]
-	receiveEdges: [Edge]
-	sendMessageType: MessageType
-	receiveMessageType: MessageType
-	managedNodeType: ManagedNodeType!
-	app: ManagedApp!
-	metadata: AWSJSON
+input DockerConfigInput {
+	username: String
+	password: String
+	imageUrl: String!
 }
 
 type Edge @aws_cognito_user_pools {
@@ -155,13 +106,13 @@ input KmsKeyInput {
 	description: String
 }
 
-type KmsKeyResult  @aws_cognito_user_pools {
+type KmsKeyResult @aws_cognito_user_pools {
 	items: [KmsKey]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type LargeMessageStorage  @aws_cognito_user_pools {
+type LargeMessageStorage @aws_cognito_user_pools {
 	presignedPost: PresignedPost!
 	presignedGet: AWSURL!
 }
@@ -175,7 +126,48 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	config: AWSJSON
 }
 
-type MessageType @aws_cognito_user_pools{
+type ManagedNode implements NodeInterface @aws_cognito_user_pools {
+	tenant: Tenant!
+	name: String!
+	description: String
+	config: AWSJSON!
+	portMappings: [PortMapping!]
+	mount: String
+	sendEdges: [Edge]
+	receiveEdges: [Edge]
+	sendMessageType: MessageType
+	receiveMessageType: MessageType
+	managedNodeType: ManagedNodeType!
+	app: ManagedApp!
+	metadata: AWSJSON
+}
+
+type ManagedNodeType @aws_cognito_user_pools {
+	tenant: Tenant!
+	name: String!
+	metadata: AWSJSON
+	description: String
+	dockerConfig: DockerConfig!
+	configTemplate: AWSJSON!
+	portMappingRequirements: [PortMappingRequirement!]
+	sendMessageType: MessageType
+	receiveMessageType: MessageType
+	hostMounts: [String!]
+}
+
+input ManagedNodeTypeInput {
+	name: String!
+	description: String
+	metadata: AWSJSON
+	dockerConfig: DockerConfigInput!
+	configTemplate: AWSJSON
+	hostMounts: [String!]
+	portMappingRequirements: [PortMappingRequirementInput!]
+	sendMessageType: String
+	receiveMessageType: String
+}
+
+type MessageType @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	auditor: String!
@@ -193,7 +185,7 @@ input MessageTypeInput {
 	requirements: [String!]!
 }
 
-type MessageTypeResult @aws_cognito_user_pools{
+type MessageTypeResult @aws_cognito_user_pools {
 	items: [MessageType]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
@@ -201,7 +193,7 @@ type MessageTypeResult @aws_cognito_user_pools{
 
 type Mutation @aws_cognito_user_pools {
 	AppNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
-	DeleteTenant(tenant:String!): Tenant
+	DeleteTenant(tenant: String!): Tenant
 	DeleteNode(tenant: String!, node: String!): Node
 	DeleteEdge(tenant: String!, edge: String!): Edge
 	DeleteApp(tenant: String!, app: String!): App
@@ -211,15 +203,21 @@ type Mutation @aws_cognito_user_pools {
 	MessageTypeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	PutManagedNode(
 		tenant: String!,
-		app: String!
-		node: ManagedNodeInput!
+		app: String!,
+		node: NodeInput!,
+		config: AWSJSON!,
+		portMappings: [PortMappingInput!],
+		managedNodeType: String!
 	): ManagedNode!
-	PutManagedNodeType(
-		tenant: String!,
-		type: ManagedNodeTypeInput!
-	): ManagedNodeType!
+	PutManagedNodeType(tenant: String!, type: ManagedNodeTypeInput!): ManagedNodeType!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
-	MoveEdge(tenant: String!, source: String!, target: String!, oldSource: String!, oldTarget: String!): Edge!
+	MoveEdge(
+		tenant: String!,
+		source: String!,
+		target: String!,
+		oldSource: String!,
+		oldTarget: String!
+	): Edge!
 	PutExternalApp(
 		tenant: String!,
 		app: AppInput!,
@@ -293,7 +291,7 @@ type NodeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
-type Notification @aws_cognito_user_pools{
+type Notification @aws_cognito_user_pools {
 	itemType: String!
 	oldItem: AWSJSON!
 	newItem: AWSJSON!
@@ -310,7 +308,28 @@ enum Operations {
 	INSERT
 }
 
-type PresignedPost @aws_cognito_user_pools{
+type PortMapping @aws_cognito_user_pools {
+	description: String!
+	hostPort: Int!
+	containerPort: Int!
+}
+
+input PortMappingInput {
+	hostPort: Int!
+	containerPort: Int!
+}
+
+type PortMappingRequirement @aws_cognito_user_pools {
+	description: String!
+	containerPort: Int!
+}
+
+input PortMappingRequirementInput {
+	containerPort: Int!
+	description: String!
+}
+
+type PresignedPost @aws_cognito_user_pools {
 	url: AWSURL
 	fields: AWSJSON
 	expiration: AWSTimestamp
@@ -331,7 +350,8 @@ type Query @aws_cognito_user_pools {
 		startKey: AWSJSON,
 		limit: Int
 	): NodeResult
-	@aws_cognito_user_pools @aws_iam
+		@aws_cognito_user_pools
+@aws_iam
 	SearchEdges(
 		tenant: String!,
 		source: String,
@@ -350,7 +370,8 @@ type Query @aws_cognito_user_pools {
 		startKey: AWSJSON,
 		limit: Int
 	): AppResult
-	@aws_cognito_user_pools @aws_iam
+		@aws_cognito_user_pools
+@aws_iam
 	ListKeys(tenant: String!, limit: Int, startKey: AWSJSON): KmsKeyResult
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
 	ValidateFunction(
@@ -388,7 +409,7 @@ enum Region {
 	us_gov_west_1
 }
 
-type RouterNode implements NodeInterface @aws_cognito_user_pools{
+type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -418,7 +439,7 @@ type Tenant @aws_cognito_user_pools {
 	billingInfo: AWSJSON
 }
 
-type TransNode implements NodeInterface  @aws_cognito_user_pools{
+type TransNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -465,7 +486,7 @@ enum UserStatus {
 	suspended
 }
 
-type ValidateFunctionResult  @aws_cognito_user_pools{
+type ValidateFunctionResult @aws_cognito_user_pools {
 	result: String!
 	stdout: String!
 }
