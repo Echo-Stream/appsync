@@ -35,25 +35,46 @@ enum ContentEncoding {
 	gzip
 }
 
-type DicomTcpInboundNode implements NodeInterface @aws_cognito_user_pools {
+type ManagedNodeType {
 	tenant: Tenant!
-	name: String!
-	description: String
-	port: Int!
-	sendEdges: [Edge]
-	sendMessageType: MessageType!
-	app: ManagedApp!
-	metadata: AWSJSON
+	dockerConfig: AWSJSON!
+	configTemplate: AWSJSON!
+	portMappings: AWSJSON!
+	sendMessageType: MessageType
+	receiveMessageType: MessageType
 }
 
-type DicomTcpOutboundNode implements NodeInterface @aws_cognito_user_pools {
+input ManagedNodeTypeInput {
+	dockerfile: String
+	dockerLogin: String
+	dockerImage: String
+	configTemplate: AWSJSON
+	portMappings: AWSJSON
+}
+
+input ManagedNodeInput {
+	name: String!
+	description: String
+	metadata: AWSJSON
+	config: AWSJSON!
+	portMappings: [AWSJSON]!
+	mount: String
+	managedNodeType: String!
+	app: String!
+}
+
+type ManagedNode implements NodeInterface @aws_cognito_user_pools{
 	tenant: Tenant!
 	name: String!
 	description: String
-	remoteHost: String!
-	remotePort: Int!
+	config:  AWSJSON!
+	portMappings: AWSJSON!
+	mount: String
+	sendEdges: [Edge]
 	receiveEdges: [Edge]
-	receiveMessageType: MessageType!
+	sendMessageType: MessageType
+	receiveMessageType: MessageType
+	managedNodeType: ManagedNodeType!
 	app: ManagedApp!
 	metadata: AWSJSON
 }
@@ -105,29 +126,6 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 }
 
-type Hl7MllpInboundNode implements NodeInterface @aws_cognito_user_pools {
-	tenant: Tenant!
-	name: String!
-	description: String
-	port: Int!
-	sendEdges: [Edge]
-	sendMessageType: MessageType!
-	app: ManagedApp!
-	metadata: AWSJSON
-}
-
-type Hl7MllpOutboundNode implements NodeInterface @aws_cognito_user_pools {
-	tenant: Tenant!
-	name: String!
-	description: String
-	remoteHost: String!
-	remotePort: Int!
-	receiveEdges: [Edge]
-	receiveMessageType: MessageType!
-	app: ManagedApp!
-	metadata: AWSJSON
-}
-
 type KmsKey @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
@@ -159,8 +157,6 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	iso: String!
 	config: AWSJSON
 }
-
-union ManagedNode = DicomTcpInboundNode | DicomTcpOutboundNode | Hl7MllpInboundNode | Hl7MllpOutboundNode
 
 type MessageType @aws_cognito_user_pools{
 	tenant: Tenant!
@@ -196,19 +192,15 @@ type Mutation @aws_cognito_user_pools {
 	EdgeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	NodeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	MessageTypeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
-	PutDicomTcpInboundNode(
+	PutManagedNode(
 		tenant: String!,
-		app: String,
-		node: NodeInput!,
-		port: Int!
-	): DicomTcpInboundNode!
-	PutDicomTcpOutboundNode(
+		app: String!
+		node: ManagedNodeInput!
+	): ManagedNode!
+	PutManagedNodeType(
 		tenant: String!,
-		app: String,
-		node: NodeInput!,
-		remoteHost: String!,
-		remotePort: Int!
-	): DicomTcpOutboundNode!
+		type: ManagedNodeTypeInput!
+	): ManagedNodeType!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
 	MoveEdge(tenant: String!, source: String!, target: String!, oldSource: String!, oldTarget: String!): Edge!
 	PutExternalApp(
@@ -224,19 +216,6 @@ type Mutation @aws_cognito_user_pools {
 		receiveMessageType: String!,
 		sendMessageType: String!
 	): ExternalNode!
-	PutHl7MllpInboundNode(
-		tenant: String!,
-		app: String!,
-		node: NodeInput!,
-		port: Int!
-	): Hl7MllpInboundNode!
-	PutHl7MllpOutboundNode(
-		tenant: String!,
-		app: String!,
-		node: NodeInput!,
-		remoteHost: String!,
-		remotePort: Int!
-	): Hl7MllpOutboundNode!
 	PutKmsKey(tenant: String!, key: KmsKeyInput!): KmsKey!
 	PutManagedApp(tenant: String!, app: AppInput!): ManagedApp!
 	PutMessageType(tenant: String!, type: MessageTypeInput!): MessageType!
