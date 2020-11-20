@@ -191,6 +191,12 @@ type MessageTypeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+type ManagedNodeTypeResult @aws_cognito_user_pools {
+	items: [ManagedNodeType]
+	lastEvaluatedKey: AWSJSON
+	scannedCount: Int
+}
+
 type Mutation @aws_cognito_user_pools {
 	AppNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	DeleteTenant(tenant: String!): Tenant
@@ -375,6 +381,7 @@ type Query @aws_cognito_user_pools {
 @aws_iam
 	ListKeys(tenant: String!, limit: Int, startKey: AWSJSON): KmsKeyResult
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
+	ListManagedNodeTypes(tenant: String!, startKey: String, limit: Int): ManagedNodeTypeResult
 	ValidateFunction(
 		tenant: String!,
 		messageType: String!,
