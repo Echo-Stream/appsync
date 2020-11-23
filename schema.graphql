@@ -145,7 +145,6 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 type ManagedNodeType @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
-	metadata: AWSJSON
 	description: String
 	dockerConfig: DockerConfig!
 	configTemplate: AWSJSON!
