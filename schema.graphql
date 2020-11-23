@@ -204,7 +204,7 @@ type Mutation @aws_cognito_user_pools {
 	DeleteEdge(tenant: String!, edge: String!): Edge
 	DeleteApp(tenant: String!, app: String!): App
 	DeleteMessageType(tenant: String!, name: String!): App
-	DeleteManagedNodeType(tenant: String!, name: String!)
+	DeleteManagedNodeType(tenant: String!, name: String!): MananagedNode!
 	EdgeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	NodeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	MessageTypeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
