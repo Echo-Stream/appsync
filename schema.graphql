@@ -344,7 +344,7 @@ type PresignedPost @aws_cognito_user_pools {
 type Query @aws_cognito_user_pools {
 	GetLargeMessageStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [LargeMessageStorage!]!
 	GetMessageType(tenant: String!, name: String!): MessageType!
-	GetUsersForTenant(tenant: String!): [UserResult]
+	GetUsersForTenant(tenant: String!): [User]
 	GetUser: User
 	GetTenantUser(email: AWSEmail!): User
 	SearchNodes(
