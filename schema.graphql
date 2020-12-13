@@ -486,6 +486,7 @@ type UserResult @aws_cognito_user_pools {
 enum UserRole {
 	admin
 	user
+	owner
 }
 
 enum UserStatus {
