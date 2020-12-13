@@ -465,7 +465,7 @@ type User @aws_cognito_user_pools {
 	lastName: String!
 	role: UserRole!
 	status: UserStatus!
-	invitationToken: String!
+	invitationToken: String
 	activeDate: String
 	invitationDate: String
 }
