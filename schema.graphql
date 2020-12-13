@@ -130,7 +130,7 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
-	config: AWSJSON!
+	config: AWSJSON
 	portMappings: [PortMapping!]
 	mount: String
 	sendEdges: [Edge]
@@ -147,7 +147,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	name: String!
 	description: String
 	dockerConfig: DockerConfig!
-	configTemplate: AWSJSON!
+	configTemplate: AWSJSON
 	portMappingRequirements: [PortMappingRequirement!]
 	sendMessageType: MessageType
 	receiveMessageType: MessageType
@@ -461,7 +461,8 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 type User @aws_cognito_user_pools {
 	tenant: Tenant!
 	email: AWSEmail!
-	name: String!
+	firstName: String!
+	lastName: String!
 	role: UserRole!
 	status: UserStatus!
 	invitationToken: String!
