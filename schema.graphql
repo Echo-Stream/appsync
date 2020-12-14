@@ -52,7 +52,7 @@ type Edge @aws_cognito_user_pools {
 	description: String
 	source: Node!
 	target: Node!
-	messageType: String!
+	messageType: MessageType!
 	metadata: AWSJSON
 	kmsKey: KmsKey!
 	queue: AWSURL!
