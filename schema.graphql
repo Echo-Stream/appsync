@@ -346,6 +346,7 @@ type Query @aws_cognito_user_pools {
 	GetMessageType(tenant: String!, name: String!): MessageType!
 	GetUsersForTenant(tenant: String!): [User]
 	GetUser: User
+	GetTenant: Tenant!
 	GetTenantUser(email: AWSEmail!): User
 	SearchNodes(
 		tenant: String!,
