@@ -445,6 +445,7 @@ type Tenant @aws_cognito_user_pools {
 	name: String!
 	region: String!
 	billingInfo: AWSJSON
+	snsTopicArn: String!
 }
 
 type TransNode implements NodeInterface @aws_cognito_user_pools {
