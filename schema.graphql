@@ -166,6 +166,12 @@ input ManagedNodeTypeInput {
 	receiveMessageType: String
 }
 
+type ManagedNodeTypeResult @aws_cognito_user_pools {
+	items: [ManagedNodeType]
+	lastEvaluatedKey: AWSJSON
+	scannedCount: Int
+}
+
 type MessageType @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
@@ -190,13 +196,10 @@ type MessageTypeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
-type ManagedNodeTypeResult @aws_cognito_user_pools {
-	items: [ManagedNodeType]
-	lastEvaluatedKey: AWSJSON
-	scannedCount: Int
-}
-
 type Mutation @aws_cognito_user_pools {
+	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
+	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
+	ConfirmSnsSubscription(tenant: String!, token: String!): SnsSubscription!
 	AppNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	DeleteTenant(tenant: String!): Tenant
 	DeleteNode(tenant: String!, node: String!): Node
@@ -382,6 +385,7 @@ type Query @aws_cognito_user_pools {
 	ListKeys(tenant: String!, limit: Int, startKey: AWSJSON): KmsKeyResult
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
 	ListManagedNodeTypes(tenant: String!, startKey: String, limit: Int): ManagedNodeTypeResult
+	ListSnsSubscriptions(tenant: String!): [SnsSubscription]!
 	ValidateFunction(
 		tenant: String!,
 		messageType: String!,
@@ -428,6 +432,22 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 	bitmapper: String!
 	routeTable: AWSJSON!
+}
+
+type SnsSubscription @aws_cognito_user_pools {
+	protocol: SnsSubscriptionProtocol!
+	endpoint: String!
+	arn: String!
+	tenant: Tenant!
+}
+
+enum SnsSubscriptionProtocol {
+	https
+}
+
+enum SnsSubscriptionStatus {
+	PendingConfirmation
+	Confirmed
 }
 
 type Subscription @aws_cognito_user_pools {
