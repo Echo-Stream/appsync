@@ -443,6 +443,8 @@ type SnsSubscription @aws_cognito_user_pools {
 
 enum SnsSubscriptionProtocol {
 	https
+	email
+	http
 }
 
 enum SnsSubscriptionStatus {
