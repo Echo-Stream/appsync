@@ -444,7 +444,7 @@ type SnsSubscription @aws_cognito_user_pools {
 enum SnsSubscriptionProtocol {
 	https
 	email
-	email-json
+	email_json
 }
 
 enum SnsSubscriptionStatus {
