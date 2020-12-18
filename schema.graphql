@@ -199,7 +199,7 @@ type MessageTypeResult @aws_cognito_user_pools {
 type Mutation @aws_cognito_user_pools {
 	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
 	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
-	ConfirmSnsSubscription(tenant: String!, token: String!): SnsSubscription!
+	ConfirmSnsSubscription(tenant: String!, token: String!, endpoint: String!): SnsSubscription!
 	AppNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	DeleteTenant(tenant: String!): Tenant
 	DeleteNode(tenant: String!, node: String!): Node
@@ -444,7 +444,7 @@ type SnsSubscription @aws_cognito_user_pools {
 enum SnsSubscriptionProtocol {
 	https
 	email
-	http
+	email-json
 }
 
 enum SnsSubscriptionStatus {
