@@ -388,8 +388,8 @@ type Query @aws_cognito_user_pools {
 	ListSnsSubscriptions(tenant: String!): [SnsSubscription]!
 	ValidateFunction(
 		tenant: String!,
-		messageType: String!,
-		function: String!,
+		sourceMessageType: String!,
+		targetMessageType: String!,
 		args: AWSJSON,
 		kwargs: AWSJSON
 	): ValidateFunctionResult
@@ -432,6 +432,7 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 	bitmapper: String!
 	routeTable: AWSJSON!
+	enableLogRetrieval: Boolean!
 }
 
 type SnsSubscription @aws_cognito_user_pools {
@@ -480,6 +481,7 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType!
 	metadata: AWSJSON
 	transformer: String
+	enableLogRetrieval: Boolean!
 }
 
 type User @aws_cognito_user_pools {
@@ -563,4 +565,5 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 	app: XTenantSendingApp!
 	transformer: String
+	enableLogRetrieval: Boolean!
 }
