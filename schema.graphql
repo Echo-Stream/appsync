@@ -248,7 +248,8 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		messageType: String!,
 		bitmapper: String!,
-		routeTable: AWSJSON!
+		routeTable: AWSJSON!,
+		enableLogRetrieval: Boolean
 	): RouterNode!
 	PutTenant(name: String!, region: Region!, billingInfo: AWSJSON): Tenant!
 	PutTransNode(
@@ -256,7 +257,8 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String,
-		transformer: String
+		transformer: String,
+		enableLogRetrieval: Boolean
 	): TransNode!
 	PutXTenantReceivingApp(tenant: String!, app: AppInput!, sendingTenant: String!): XTenantReceivingApp!
 	PutXTenantSendingApp(
@@ -271,7 +273,8 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String,
-		transformer: String
+		transformer: String,
+		enableLogRetrieval: Boolean
 	): XTenantSendingNode!
 	AddUserToTenant(tenant: String!, user: UserInput!): User!
 		@aws_iam
@@ -393,6 +396,24 @@ type Query @aws_cognito_user_pools {
 		args: AWSJSON,
 		kwargs: AWSJSON
 	): ValidateFunctionResult
+	GetNodeLogs(
+		tenant: String!,
+		startTime: Int!,
+		endTime:Int,
+		node: String!,
+		limit: Int,
+		nextToken: String): NodeLogResult!
+}
+
+type NodeLog {
+	timestamp: Int!
+	message: String!
+	ingestionTime: Int!
+}
+
+type NodeLogResult{
+	items: [NodeLog]!
+	nextToken: String
 }
 
 enum Region {
