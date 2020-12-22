@@ -399,6 +399,8 @@ type Query @aws_cognito_user_pools {
 	ListSnsSubscriptions(tenant: String!): [SnsSubscription]!
 	ValidateFunction(
 		tenant: String!,
+		function: String!,
+		loggingLevel: LogLevel,
 		sourceMessageType: String!,
 		targetMessageType: String!,
 		args: AWSJSON,
@@ -412,6 +414,13 @@ type Query @aws_cognito_user_pools {
 		limit: Int,
 		nextToken: String
 	): NodeCallableLogResult!
+}
+
+enum LogLevel {
+	DEBUG
+	INFO
+	WARNING
+	ERROR
 }
 
 enum Region {
