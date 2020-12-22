@@ -248,7 +248,7 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		messageType: String!,
 		bitmapper: String!,
-		routeTable: AWSJSON!,
+		routeTable: AWSJSON!
 	): RouterNode!
 	PutTenant(name: String!, region: Region!, billingInfo: AWSJSON): Tenant!
 	PutTransNode(
@@ -256,7 +256,7 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String,
-		transformer: String,
+		transformer: String
 	): TransNode!
 	PutXTenantReceivingApp(tenant: String!, app: AppInput!, sendingTenant: String!): XTenantReceivingApp!
 	PutXTenantSendingApp(
@@ -280,6 +280,17 @@ type Mutation @aws_cognito_user_pools {
 }
 
 union Node = ManagedNode | ExternalNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
+
+type NodeCallableLogLine {
+	timestamp: Int!
+	message: String!
+	ingestionTime: Int!
+}
+
+type NodeCallableLogResult {
+	items: [NodeCallableLogLine]!
+	nextToken: String
+}
 
 input NodeInput {
 	name: String!
@@ -396,21 +407,11 @@ type Query @aws_cognito_user_pools {
 	GetNodeCallableLogs(
 		tenant: String!,
 		startTime: Int!,
-		endTime:Int,
+		endTime: Int,
 		node: String!,
 		limit: Int,
-		nextToken: String): NodeCallableLogResult!
-}
-
-type NodeCallableLogLine {
-	timestamp: Int!
-	message: String!
-	ingestionTime: Int!
-}
-
-type NodeCallableLogResult{
-	items: [NodeLog]!
-	nextToken: String
+		nextToken: String
+	): NodeCallableLogResult!
 }
 
 enum Region {
