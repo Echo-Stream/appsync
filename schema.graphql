@@ -249,7 +249,6 @@ type Mutation @aws_cognito_user_pools {
 		messageType: String!,
 		bitmapper: String!,
 		routeTable: AWSJSON!,
-		enableLogRetrieval: Boolean
 	): RouterNode!
 	PutTenant(name: String!, region: Region!, billingInfo: AWSJSON): Tenant!
 	PutTransNode(
@@ -258,7 +257,6 @@ type Mutation @aws_cognito_user_pools {
 		receiveMessageType: String!,
 		sendMessageType: String,
 		transformer: String,
-		enableLogRetrieval: Boolean
 	): TransNode!
 	PutXTenantReceivingApp(tenant: String!, app: AppInput!, sendingTenant: String!): XTenantReceivingApp!
 	PutXTenantSendingApp(
@@ -273,8 +271,7 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String,
-		transformer: String,
-		enableLogRetrieval: Boolean
+		transformer: String
 	): XTenantSendingNode!
 	AddUserToTenant(tenant: String!, user: UserInput!): User!
 		@aws_iam
@@ -396,22 +393,22 @@ type Query @aws_cognito_user_pools {
 		args: AWSJSON,
 		kwargs: AWSJSON
 	): ValidateFunctionResult
-	GetNodeLogs(
+	GetNodeCallableLogs(
 		tenant: String!,
 		startTime: Int!,
 		endTime:Int,
 		node: String!,
 		limit: Int,
-		nextToken: String): NodeLogResult!
+		nextToken: String): NodeCallableLogResult!
 }
 
-type NodeLog {
+type NodeCallableLogLine {
 	timestamp: Int!
 	message: String!
 	ingestionTime: Int!
 }
 
-type NodeLogResult{
+type NodeCallableLogResult{
 	items: [NodeLog]!
 	nextToken: String
 }
@@ -453,7 +450,6 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 	bitmapper: String!
 	routeTable: AWSJSON!
-	enableLogRetrieval: Boolean!
 }
 
 type SnsSubscription @aws_cognito_user_pools {
@@ -502,7 +498,6 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType!
 	metadata: AWSJSON
 	transformer: String
-	enableLogRetrieval: Boolean!
 }
 
 type User @aws_cognito_user_pools {
@@ -586,5 +581,4 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 	app: XTenantSendingApp!
 	transformer: String
-	enableLogRetrieval: Boolean!
 }
