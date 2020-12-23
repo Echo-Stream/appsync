@@ -24,6 +24,10 @@ type AppResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+enum AvailableIntegrations {
+	alert_to_clickup_task
+}
+
 type CognitoUser @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
@@ -94,6 +98,21 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 }
 
+type Integration {
+	name: AvailableIntegrations!
+	description: String!
+	config: AWSJSON!
+	enabled: Boolean!
+}
+
+type IntegrationDefinition {
+	configTemplate: AWSJSON!
+	name: AvailableIntegrations!
+	description: String!
+	form: AWSJSON
+	icon: AWSURL
+}
+
 type KmsKey @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
@@ -115,6 +134,13 @@ type KmsKeyResult @aws_cognito_user_pools {
 type LargeMessageStorage @aws_cognito_user_pools {
 	presignedPost: PresignedPost!
 	presignedGet: AWSURL!
+}
+
+enum LogLevel {
+	DEBUG
+	INFO
+	WARNING
+	ERROR
 }
 
 type ManagedApp implements AppInterface @aws_cognito_user_pools {
@@ -277,6 +303,8 @@ type Mutation @aws_cognito_user_pools {
 		@aws_iam
 @aws_cognito_user_pools
 	ResetAppPassword(tenant: String!, name: String!): App!
+	PutIntegration(config: AWSJSON!, name: AvailableIntegrations!, enabled: Boolean!): Integration!
+	RemoveIntegration(tenant: String!, name: AvailableIntegrations!): Integration!
 }
 
 union Node = ManagedNode | ExternalNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
@@ -414,13 +442,10 @@ type Query @aws_cognito_user_pools {
 		limit: Int,
 		nextToken: String
 	): NodeCallableLogResult!
-}
-
-enum LogLevel {
-	DEBUG
-	INFO
-	WARNING
-	ERROR
+	GetInstalledIntegration(tenant: String!, name: AvailableIntegrations!): Integration
+	ListInstalledIntegrations(tenant: String!): [Integration!]
+	GetIntegrationDefinition(tenant: String!, name: AvailableIntegrations): IntegrationDefinition!
+	ListAvailableIntegrations(tenant: String!): [AvailableIntegrations]!
 }
 
 enum Region {
