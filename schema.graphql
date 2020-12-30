@@ -18,6 +18,18 @@ interface AppInterface {
 	config: AWSJSON
 }
 
+type AppNotification @aws_cognito_user_pools
+@aws_iam {
+	itemType: String!
+	oldItem: AWSJSON
+	newItem: AWSJSON
+	tenant: String!
+	operation: String!
+	message: AWSJSON
+	error: AWSJSON
+	app: String!
+}
+
 type AppResult @aws_cognito_user_pools {
 	items: [App]
 	lastEvaluatedKey: AWSJSON
@@ -37,6 +49,12 @@ type CognitoUser @aws_cognito_user_pools {
 enum ContentEncoding {
 	deflate
 	gzip
+}
+
+enum DbOperation {
+	MODIFY
+	CREATE
+	DELETE
 }
 
 type DockerConfig @aws_cognito_user_pools {
@@ -222,12 +240,6 @@ type MessageTypeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
-enum DbOperation {
-	MODIFY
-	CREATE
-	DELETE
-}
-
 type Mutation @aws_cognito_user_pools {
 	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
 	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
@@ -243,12 +255,12 @@ type Mutation @aws_cognito_user_pools {
 		oldItem: AWSJSON,
 		newItem: AWSJSON,
 		operation: DbOperation!,
-		app: String!
+		app: String!,
 		message: AWSJSON,
-		error: AWSJSON
+		error: AWSJSON,
 		itemType: String!
 	): AppNotification!
-	@aws_iam
+		@aws_iam
 	PutManagedNode(
 		tenant: String!,
 		app: String!,
@@ -350,17 +362,6 @@ type NodeResult @aws_cognito_user_pools {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
-}
-
-type AppNotification @aws_cognito_user_pools {
-	itemType: String!
-	oldItem: AWSJSON
-	newItem: AWSJSON
-	tenant: String!
-	operation: String!
-	message: AWSJSON
-	error: AWSJSON
-	app: String!
 }
 
 enum Operations {
