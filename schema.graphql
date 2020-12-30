@@ -222,20 +222,33 @@ type MessageTypeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+enum DbOperation {
+	MODIFY
+	CREATE
+	DELETE
+}
+
 type Mutation @aws_cognito_user_pools {
 	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
 	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
 	ConfirmSnsSubscription(tenant: String!, token: String!, endpoint: String!): SnsSubscription!
-	AppNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	DeleteTenant(tenant: String!): Tenant
 	DeleteNode(tenant: String!, node: String!): Node
 	DeleteEdge(tenant: String!, source: String!, target: String!): Edge
 	DeleteApp(tenant: String!, app: String!): App
 	DeleteMessageType(tenant: String!, name: String!): App
 	DeleteManagedNodeType(tenant: String!, name: String!): ManagedNode!
-	EdgeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
-	NodeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
-	MessageTypeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
+	NotifyApp(
+		tenant: String!,
+		oldItem: AWSJSON,
+		newItem: AWSJSON,
+		operation: DbOperation!,
+		app: String!
+		message: AWSJSON,
+		error: AWSJSON
+		itemType: String!
+	): AppNotification!
+	@aws_iam
 	PutManagedNode(
 		tenant: String!,
 		app: String!,
@@ -339,15 +352,15 @@ type NodeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
-type Notification @aws_cognito_user_pools {
+type AppNotification @aws_cognito_user_pools {
 	itemType: String!
-	oldItem: AWSJSON!
-	newItem: AWSJSON!
+	oldItem: AWSJSON
+	newItem: AWSJSON
 	tenant: String!
-	modifiedBy: String!
 	operation: String!
 	message: AWSJSON
 	error: AWSJSON
+	app: String!
 }
 
 enum Operations {
@@ -506,14 +519,8 @@ enum SnsSubscriptionStatus {
 }
 
 type Subscription @aws_cognito_user_pools {
-	appUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: ["AppNotification"])
-	nodeUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: ["NodeNotification"])
-	edgeUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: ["EdgeNotification"])
-	messageTypeUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: ["MessageTypeNotification"])
+	appNotifications(tenant: String!, app: String!): AppNotification
+		@aws_subscribe(mutations: ["NotifyApp"])
 }
 
 type Tenant @aws_cognito_user_pools {
