@@ -21,12 +21,8 @@ interface AppInterface {
 type AppNotification @aws_cognito_user_pools
 @aws_iam {
 	itemType: String!
-	oldItem: AWSJSON
-	newItem: AWSJSON
 	tenant: String!
 	operation: String!
-	message: AWSJSON
-	error: AWSJSON
 	app: String!
 }
 
@@ -252,12 +248,8 @@ type Mutation @aws_cognito_user_pools {
 	DeleteManagedNodeType(tenant: String!, name: String!): ManagedNode!
 	NotifyApp(
 		tenant: String!,
-		oldItem: AWSJSON,
-		newItem: AWSJSON,
 		operation: DbOperation!,
 		app: String!,
-		message: AWSJSON,
-		error: AWSJSON,
 		itemType: String!
 	): AppNotification!
 		@aws_iam
