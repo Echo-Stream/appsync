@@ -26,14 +26,6 @@ type AppNotification @aws_cognito_user_pools
 	app: String!
 }
 
-type UINotification @aws_cognito_user_pools
-@aws_iam {
-	itemType: String!
-	tenant: String!
-	operation: String!
-	modifiedBy: String!
-}
-
 type AppResult @aws_cognito_user_pools {
 	items: [App]
 	lastEvaluatedKey: AWSJSON
@@ -552,6 +544,14 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType!
 	metadata: AWSJSON
 	transformer: String
+}
+
+type UINotification @aws_cognito_user_pools
+@aws_iam {
+	itemType: String!
+	tenant: String!
+	operation: String!
+	modifiedBy: String!
 }
 
 type User @aws_cognito_user_pools {
