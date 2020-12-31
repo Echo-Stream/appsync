@@ -26,6 +26,14 @@ type AppNotification @aws_cognito_user_pools
 	app: String!
 }
 
+type UINotification @aws_cognito_user_pools
+@aws_iam {
+	itemType: String!
+	tenant: String!
+	operation: String!
+	modifiedBy: String!
+}
+
 type AppResult @aws_cognito_user_pools {
 	items: [App]
 	lastEvaluatedKey: AWSJSON
@@ -252,6 +260,13 @@ type Mutation @aws_cognito_user_pools {
 		app: String!,
 		itemType: String!
 	): AppNotification!
+		@aws_iam
+	NotifyUI(
+		tenant: String!,
+		operation: DbOperation!,
+		modifiedBy: String!,
+		itemType: String!
+	): UINotification!
 		@aws_iam
 	PurgeQueue(tenant: String!, source: String!, target: String!): Edge!
 	PutManagedNode(
@@ -515,6 +530,8 @@ enum SnsSubscriptionStatus {
 type Subscription @aws_cognito_user_pools {
 	appNotifications(tenant: String!, app: String!): AppNotification
 		@aws_subscribe(mutations: ["NotifyApp"])
+	uiNotifications(tenant: String!, app: String!): UINotification
+		@aws_subscribe(mutations: ["NotifyUI"])
 }
 
 type Tenant @aws_cognito_user_pools {
