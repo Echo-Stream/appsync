@@ -522,7 +522,7 @@ enum SnsSubscriptionStatus {
 type Subscription @aws_cognito_user_pools {
 	appNotifications(tenant: String!, app: String!): AppNotification
 		@aws_subscribe(mutations: ["NotifyApp"])
-	uiNotifications(tenant: String!, app: String!): UINotification
+	uiNotifications(tenant: String!): UINotification
 		@aws_subscribe(mutations: ["NotifyUI"])
 }
 
