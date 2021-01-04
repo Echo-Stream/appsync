@@ -50,7 +50,7 @@ enum ContentEncoding {
 enum DbOperation {
 	MODIFY
 	CREATE
-	DELETE
+	REMOVE
 }
 
 type DockerConfig @aws_cognito_user_pools {
@@ -380,12 +380,6 @@ type NodeResult @aws_cognito_user_pools {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
-}
-
-enum Operations {
-	MODIFY
-	DELETE
-	INSERT
 }
 
 type PortMapping @aws_cognito_user_pools {
