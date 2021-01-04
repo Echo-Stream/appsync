@@ -74,6 +74,8 @@ type Edge @aws_cognito_user_pools {
 	metadata: AWSJSON
 	kmsKey: KmsKey!
 	queue: AWSURL!
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 input EdgeInput {
@@ -98,6 +100,8 @@ type ExternalApp implements AppInterface @aws_cognito_user_pools {
 	account: String
 	authType: AppAuthType!
 	config: AWSJSON
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type ExternalNode implements NodeInterface @aws_cognito_user_pools {
@@ -110,6 +114,8 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType!
 	app: ExternalApp!
 	metadata: AWSJSON
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type Integration {
@@ -132,6 +138,8 @@ type KmsKey @aws_cognito_user_pools {
 	name: String!
 	description: String
 	arn: String!
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 input KmsKeyInput {
@@ -164,6 +172,8 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	nodes: [ManagedNode]
 	iso: String!
 	config: AWSJSON
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type ManagedNode implements NodeInterface @aws_cognito_user_pools {
@@ -180,6 +190,8 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 	managedNodeType: ManagedNodeType!
 	app: ManagedApp!
 	metadata: AWSJSON
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type ManagedNodeType @aws_cognito_user_pools {
@@ -192,6 +204,8 @@ type ManagedNodeType @aws_cognito_user_pools {
 	sendMessageType: MessageType
 	receiveMessageType: MessageType
 	hostMounts: [String!]
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 input ManagedNodeTypeInput {
@@ -220,6 +234,8 @@ type MessageType @aws_cognito_user_pools {
 	bitmapperTemplate: String!
 	requirements: [String!]!
 	system: Boolean!
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 input MessageTypeInput {
@@ -356,6 +372,8 @@ interface NodeInterface {
 	description: String
 	tenant: Tenant!
 	metadata: AWSJSON
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type NodeResult @aws_cognito_user_pools {
@@ -499,6 +517,8 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 	bitmapper: String!
 	routeTable: AWSJSON!
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type SnsSubscription @aws_cognito_user_pools {
@@ -532,6 +552,8 @@ type Tenant @aws_cognito_user_pools {
 	billingInfo: AWSJSON
 	snsTopicArn: String!
 	integrations: [Integration]
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type TransNode implements NodeInterface @aws_cognito_user_pools {
@@ -544,6 +566,8 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType!
 	metadata: AWSJSON
 	transformer: String
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type UINotification @aws_cognito_user_pools
@@ -564,6 +588,8 @@ type User @aws_cognito_user_pools {
 	invitationToken: String
 	activeDate: String
 	invitationDate: String
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 input UserInput {
@@ -604,6 +630,8 @@ type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools {
 	description: String
 	nodes: [XTenantReceivingNode]
 	config: AWSJSON
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
@@ -614,6 +642,8 @@ type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
 	sendMessageType: MessageType!
 	metadata: AWSJSON
 	app: XTenantReceivingApp!
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type XTenantSendingApp implements AppInterface @aws_cognito_user_pools {
@@ -624,6 +654,8 @@ type XTenantSendingApp implements AppInterface @aws_cognito_user_pools {
 	description: String
 	nodes: [XTenantSendingNode]
 	config: AWSJSON
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
 
 type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
@@ -635,4 +667,6 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 	app: XTenantSendingApp!
 	transformer: String
+	lastModifiedBy: String
+	lastModifiedAt: String
 }
