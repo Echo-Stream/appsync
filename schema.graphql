@@ -18,10 +18,22 @@ interface AppInterface {
 	config: AWSJSON
 }
 
+type AppNotification @aws_cognito_user_pools
+@aws_iam {
+	itemType: String!
+	tenant: String!
+	operation: String!
+	app: String!
+}
+
 type AppResult @aws_cognito_user_pools {
 	items: [App]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
+}
+
+enum AvailableIntegrations {
+	alert_to_clickup_task
 }
 
 type CognitoUser @aws_cognito_user_pools {
@@ -33,6 +45,12 @@ type CognitoUser @aws_cognito_user_pools {
 enum ContentEncoding {
 	deflate
 	gzip
+}
+
+enum DbOperation {
+	MODIFY
+	CREATE
+	DELETE
 }
 
 type DockerConfig @aws_cognito_user_pools {
@@ -94,6 +112,21 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 }
 
+type Integration {
+	name: AvailableIntegrations!
+	description: String!
+	config: AWSJSON!
+	enabled: Boolean!
+}
+
+type IntegrationDefinition {
+	configTemplate: AWSJSON!
+	name: AvailableIntegrations!
+	description: String!
+	form: AWSJSON
+	icon: AWSURL
+}
+
 type KmsKey @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
@@ -115,6 +148,13 @@ type KmsKeyResult @aws_cognito_user_pools {
 type LargeMessageStorage @aws_cognito_user_pools {
 	presignedPost: PresignedPost!
 	presignedGet: AWSURL!
+}
+
+enum LogLevel {
+	DEBUG
+	INFO
+	WARNING
+	ERROR
 }
 
 type ManagedApp implements AppInterface @aws_cognito_user_pools {
@@ -200,16 +240,27 @@ type Mutation @aws_cognito_user_pools {
 	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
 	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
 	ConfirmSnsSubscription(tenant: String!, token: String!, endpoint: String!): SnsSubscription!
-	AppNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
 	DeleteTenant(tenant: String!): Tenant
 	DeleteNode(tenant: String!, node: String!): Node
 	DeleteEdge(tenant: String!, source: String!, target: String!): Edge
 	DeleteApp(tenant: String!, app: String!): App
 	DeleteMessageType(tenant: String!, name: String!): App
 	DeleteManagedNodeType(tenant: String!, name: String!): ManagedNode!
-	EdgeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
-	NodeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
-	MessageTypeNotification(tenant: String!, oldItem: AWSJSON, newItem: AWSJSON): Notification!
+	NotifyApp(
+		tenant: String!,
+		operation: DbOperation!,
+		app: String!,
+		itemType: String!
+	): AppNotification!
+		@aws_iam
+	NotifyUI(
+		tenant: String!,
+		operation: DbOperation!,
+		modifiedBy: String!,
+		itemType: String!
+	): UINotification!
+		@aws_iam
+	PurgeQueue(tenant: String!, source: String!, target: String!): Edge!
 	PutManagedNode(
 		tenant: String!,
 		app: String!,
@@ -277,6 +328,8 @@ type Mutation @aws_cognito_user_pools {
 		@aws_iam
 @aws_cognito_user_pools
 	ResetAppPassword(tenant: String!, name: String!): App!
+	PutIntegration(config: AWSJSON!, name: AvailableIntegrations!, enabled: Boolean!): Integration!
+	RemoveIntegration(tenant: String!, name: AvailableIntegrations!): Integration!
 }
 
 union Node = ManagedNode | ExternalNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
@@ -309,17 +362,6 @@ type NodeResult @aws_cognito_user_pools {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
-}
-
-type Notification @aws_cognito_user_pools {
-	itemType: String!
-	oldItem: AWSJSON!
-	newItem: AWSJSON!
-	tenant: String!
-	modifiedBy: String!
-	operation: String!
-	message: AWSJSON
-	error: AWSJSON
 }
 
 enum Operations {
@@ -399,6 +441,8 @@ type Query @aws_cognito_user_pools {
 	ListSnsSubscriptions(tenant: String!): [SnsSubscription]!
 	ValidateFunction(
 		tenant: String!,
+		function: String!,
+		loggingLevel: LogLevel,
 		sourceMessageType: String!,
 		targetMessageType: String!,
 		args: AWSJSON,
@@ -412,6 +456,10 @@ type Query @aws_cognito_user_pools {
 		limit: Int,
 		nextToken: String
 	): NodeCallableLogResult!
+	GetInstalledIntegration(tenant: String!, name: AvailableIntegrations!): Integration
+	ListInstalledIntegrations(tenant: String!): [Integration!]
+	GetIntegrationDefinition(tenant: String!, name: AvailableIntegrations): IntegrationDefinition!
+	ListAvailableIntegrations(tenant: String!): [AvailableIntegrations]!
 }
 
 enum Region {
@@ -472,14 +520,10 @@ enum SnsSubscriptionStatus {
 }
 
 type Subscription @aws_cognito_user_pools {
-	appUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: ["AppNotification"])
-	nodeUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: ["NodeNotification"])
-	edgeUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: ["EdgeNotification"])
-	messageTypeUpdated(tenant: String!, name: String): Notification
-		@aws_subscribe(mutations: ["MessageTypeNotification"])
+	appNotifications(tenant: String!, app: String!): AppNotification
+		@aws_subscribe(mutations: ["NotifyApp"])
+	uiNotifications(tenant: String!): UINotification
+		@aws_subscribe(mutations: ["NotifyUI"])
 }
 
 type Tenant @aws_cognito_user_pools {
@@ -487,6 +531,7 @@ type Tenant @aws_cognito_user_pools {
 	region: String!
 	billingInfo: AWSJSON
 	snsTopicArn: String!
+	integrations: [Integration]
 }
 
 type TransNode implements NodeInterface @aws_cognito_user_pools {
@@ -499,6 +544,14 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType!
 	metadata: AWSJSON
 	transformer: String
+}
+
+type UINotification @aws_cognito_user_pools
+@aws_iam {
+	itemType: String!
+	tenant: String!
+	operation: String!
+	modifiedBy: String!
 }
 
 type User @aws_cognito_user_pools {
