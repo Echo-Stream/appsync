@@ -20,9 +20,10 @@ interface AppInterface {
 
 type AppNotification @aws_cognito_user_pools
 @aws_iam {
-	itemType: String!
+	itemType: ItemType!
 	tenant: String!
-	operation: String!
+	operation: DbOperation!
+	node: String
 	app: String!
 }
 
@@ -131,6 +132,18 @@ type IntegrationDefinition {
 	description: String!
 	form: AWSJSON
 	icon: AWSURL
+}
+
+enum ItemType {
+	node
+	edge
+	app
+	messageType
+	user
+	tenant
+	kmsKey
+	managedNodeType
+	integration
 }
 
 type KmsKey @aws_cognito_user_pools {
@@ -566,9 +579,9 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 
 type UINotification @aws_cognito_user_pools
 @aws_iam {
-	itemType: String!
+	itemType: ItemType!
 	tenant: String!
-	operation: String!
+	operation: DbOperation!
 	modifiedBy: String!
 }
 
