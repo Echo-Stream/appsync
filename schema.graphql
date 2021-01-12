@@ -119,14 +119,26 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	lastModifiedAt: String
 }
 
-type HostMount {
-	target: String!
-	name: String!
+type HostMount @aws_cognito_user_pools {
+	containerDirectory: String!
+	hostDirectory: String!
+	description: String!
 }
 
 input HostMountInput {
-	name: String!
-	target: String!
+	containerDirectory: String!
+	hostDirectory: String!
+	description: String!
+}
+
+type HostMountRequirement @aws_cognito_user_pools {
+	containerDirectory: String!
+	description: String!
+}
+
+input HostMountRequirementInput {
+	containerDirectory: String!
+	description: String!
 }
 
 type Integration {
@@ -212,6 +224,7 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 	managedNodeType: ManagedNodeType!
 	app: ManagedApp!
 	metadata: AWSJSON
+	hostMounts: [HostMount!]
 	logGroupName: String!
 	lastModifiedBy: String
 	lastModifiedAt: String
@@ -226,7 +239,8 @@ type ManagedNodeType @aws_cognito_user_pools {
 	portMappingRequirements: [PortMappingRequirement!]
 	sendMessageType: MessageType
 	receiveMessageType: MessageType
-	hostMounts: [HostMount!]
+	hostMountRequirements: [HostMountRequirement!]
+	volumes: [String!]
 	system: Boolean!
 	lastModifiedBy: String
 	lastModifiedAt: String
@@ -238,7 +252,7 @@ input ManagedNodeTypeInput {
 	metadata: AWSJSON
 	dockerConfig: DockerConfigInput!
 	configTemplate: AWSJSON
-	hostMounts: [String!]
+	hostMountRequirements: [HostMountRequirementInput!]
 	portMappingRequirements: [PortMappingRequirementInput!]
 	sendMessageType: String
 	receiveMessageType: String
@@ -308,7 +322,7 @@ type Mutation @aws_cognito_user_pools {
 		config: AWSJSON!,
 		portMappings: [PortMappingInput!],
 		managedNodeType: String!,
-		hostMounts: [HostMountInput]
+		hostMounts: [HostMountInput!]
 	): ManagedNode!
 	PutManagedNodeType(tenant: String!, type: ManagedNodeTypeInput!): ManagedNodeType!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
