@@ -119,6 +119,16 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	lastModifiedAt: String
 }
 
+type HostMount {
+	target: String!
+	name: String!
+}
+
+input HostMountInput {
+	name: String!
+	target: String!
+}
+
 type Integration {
 	name: AvailableIntegrations!
 	description: String!
@@ -195,7 +205,6 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 	description: String
 	config: AWSJSON
 	portMappings: [PortMapping!]
-	mount: String
 	sendEdges: [Edge]
 	receiveEdges: [Edge]
 	sendMessageType: MessageType
@@ -203,6 +212,7 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 	managedNodeType: ManagedNodeType!
 	app: ManagedApp!
 	metadata: AWSJSON
+	logGroupName: String!
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
@@ -216,7 +226,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	portMappingRequirements: [PortMappingRequirement!]
 	sendMessageType: MessageType
 	receiveMessageType: MessageType
-	hostMounts: [String!]
+	hostMounts: [HostMount!]
 	system: Boolean!
 	lastModifiedBy: String
 	lastModifiedAt: String
@@ -297,7 +307,8 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		config: AWSJSON!,
 		portMappings: [PortMappingInput!],
-		managedNodeType: String!
+		managedNodeType: String!,
+		hostMounts: [HostMountInput]
 	): ManagedNode!
 	PutManagedNodeType(tenant: String!, type: ManagedNodeTypeInput!): ManagedNodeType!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
@@ -558,7 +569,7 @@ type Tenant @aws_cognito_user_pools {
 	name: String!
 	region: String!
 	billingInfo: AWSJSON
-	snsTopicArn: String!
+	alertSnsTopic: String!
 	integrations: [Integration]
 	lastModifiedBy: String
 	lastModifiedAt: String
