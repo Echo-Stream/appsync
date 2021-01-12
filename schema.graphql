@@ -217,6 +217,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	sendMessageType: MessageType
 	receiveMessageType: MessageType
 	hostMounts: [String!]
+	system: Boolean!
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
