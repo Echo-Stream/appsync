@@ -122,33 +122,33 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 type HostMount @aws_cognito_user_pools {
 	containerPath: String!
 	hostPath: String!
-	description: String!
+	description: String
 }
 
-input HostMountInput {
+input HostMountInput @aws_cognito_user_pools {
 	containerPath: String!
 	hostPath: String!
-	description: String!
+	description: String
 }
 
 type HostMountRequirement @aws_cognito_user_pools {
 	containerPath: String!
-	description: String!
+	description: String
 }
 
-input HostMountRequirementInput {
+input HostMountRequirementInput @aws_cognito_user_pools {
 	containerPath: String!
-	description: String!
+	description: String
 }
 
-type Integration {
+type Integration @aws_cognito_user_pools @aws_iam {
 	name: AvailableIntegrations!
 	description: String!
 	config: AWSJSON!
 	enabled: Boolean!
 }
 
-type IntegrationDefinition {
+type IntegrationDefinition @aws_cognito_user_pools @aws_iam {
 	configTemplate: AWSJSON!
 	name: AvailableIntegrations!
 	description: String!
