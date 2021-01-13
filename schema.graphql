@@ -120,24 +120,24 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 }
 
 type HostMount @aws_cognito_user_pools {
-	containerDirectory: String!
-	hostDirectory: String!
+	containerPath: String!
+	hostPath: String!
 	description: String!
 }
 
 input HostMountInput {
-	containerDirectory: String!
-	hostDirectory: String!
+	containerPath: String!
+	hostPath: String!
 	description: String!
 }
 
 type HostMountRequirement @aws_cognito_user_pools {
-	containerDirectory: String!
+	containerPath: String!
 	description: String!
 }
 
 input HostMountRequirementInput {
-	containerDirectory: String!
+	containerPath: String!
 	description: String!
 }
 
