@@ -254,6 +254,7 @@ input ManagedNodeTypeInput {
 	configTemplate: AWSJSON
 	hostMountRequirements: [HostMountRequirementInput!]
 	portMappingRequirements: [PortMappingRequirementInput!]
+	volumes: [String!]
 	sendMessageType: String
 	receiveMessageType: String
 }
