@@ -127,7 +127,7 @@ type Healthcheck @aws_cognito_user_pools {
 	start_period: String!
 }
 
-type HealthcheckInput {
+input HealthcheckInput {
 	test: String!
 	interval: String!
 	timeout: String!
