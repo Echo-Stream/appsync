@@ -119,6 +119,22 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	lastModifiedAt: String
 }
 
+type Healthcheck @aws_cognito_user_pools {
+	test: String!
+	interval: String!
+	timeout: String!
+	retries: Int!
+	start_period: String!
+}
+
+type HealthcheckInput {
+	test: String!
+	interval: String!
+	timeout: String!
+	retries: Int!
+	start_period: String!
+}
+
 type HostMount @aws_cognito_user_pools {
 	containerPath: String!
 	hostPath: String!
@@ -244,6 +260,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	system: Boolean!
 	lastModifiedBy: String
 	lastModifiedAt: String
+	healthcheck: Healthcheck
 }
 
 input ManagedNodeTypeInput {
@@ -257,6 +274,7 @@ input ManagedNodeTypeInput {
 	volumes: [String!]
 	sendMessageType: String
 	receiveMessageType: String
+	healthcheck: HealthcheckInput
 }
 
 type ManagedNodeTypeResult @aws_cognito_user_pools {
