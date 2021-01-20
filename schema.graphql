@@ -119,7 +119,7 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	lastModifiedAt: String
 }
 
-type Function @aws_cognito_user_pools {
+type Function @aws_cognito_user_pools @aws_iam {
 	tenant: Tenant!
 	name: String!
 	code: String!
