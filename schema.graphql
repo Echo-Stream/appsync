@@ -119,6 +119,37 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	lastModifiedAt: String
 }
 
+type Function @aws_cognito_user_pools {
+	tenant: Tenant!
+	name: String!
+	code: String!
+	description: String!
+	argumentMessageType: MessageType!
+	resultMessageType: MessageType!
+	system: Boolean!
+	type: FunctionType!
+}
+
+input FunctionInput {
+	name: String!
+	code: String!
+	description: String!
+	argumentMessageType: String!
+	resultMessageType: String!
+	type: FunctionType!
+}
+
+type FucntionResult @aws_cognito_user_pools {
+	items: [Function]
+	lastEvaluatedKey: AWSJSON
+	scannedCount: Int
+}
+
+enum FunctionType {
+	bitmapper
+	transformer
+}
+
 type Healthcheck @aws_cognito_user_pools {
 	test: String!
 	interval: String!
@@ -316,6 +347,7 @@ type Mutation @aws_cognito_user_pools {
 	DeleteTenant(tenant: String!): Tenant
 	DeleteNode(tenant: String!, node: String!): Node
 	DeleteEdge(tenant: String!, source: String!, target: String!): Edge
+	DeleteFunction(tenant: String!, name: String!): Function
 	DeleteApp(tenant: String!, app: String!): App
 	DeleteMessageType(tenant: String!, name: String!): App
 	DeleteManagedNodeType(tenant: String!, name: String!): ManagedNode!
@@ -334,6 +366,7 @@ type Mutation @aws_cognito_user_pools {
 	): UINotification!
 		@aws_iam
 	PurgeQueue(tenant: String!, source: String!, target: String!): Edge!
+	PutFunction(tenant: String!, function: FunctionInput!): Function!
 	PutManagedNode(
 		tenant: String!,
 		app: String!,
@@ -372,8 +405,9 @@ type Mutation @aws_cognito_user_pools {
 		tenant: String!,
 		node: NodeInput!,
 		messageType: String!,
-		bitmapper: String!,
-		routeTable: AWSJSON!
+		bitmapper: String,
+		routeTable: AWSJSON!,
+		bitmapperFunction: String
 	): RouterNode!
 	PutTenant(name: String!, region: Region!, billingInfo: AWSJSON): Tenant!
 	PutTransNode(
@@ -381,7 +415,8 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String,
-		transformer: String
+		transformer: String,
+		transformerFunction: String
 	): TransNode!
 	PutXTenantReceivingApp(tenant: String!, app: AppInput!, sendingTenant: String!): XTenantReceivingApp!
 	PutXTenantSendingApp(
@@ -396,7 +431,8 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String,
-		transformer: String
+		transformer: String,
+		transformerFunction: String
 	): XTenantSendingNode!
 	AddUserToTenant(tenant: String!, user: UserInput!): User!
 		@aws_iam
@@ -504,7 +540,8 @@ type Query @aws_cognito_user_pools {
 		limit: Int
 	): AppResult
 		@aws_cognito_user_pools
-@aws_iam
+		@aws_iam
+	ListFunctions(tenant: String!, limit: Int, startKey: AWSJSON): FucntionResult
 	ListKeys(tenant: String!, limit: Int, startKey: AWSJSON): KmsKeyResult
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
 	ListManagedNodeTypes(tenant: String!, startKey: String, limit: Int): ManagedNodeTypeResult
@@ -569,6 +606,7 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 	bitmapper: String!
 	routeTable: AWSJSON!
+	bitmapperFunction: Function
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
@@ -618,6 +656,7 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType!
 	metadata: AWSJSON
 	transformer: String
+	transformerFunction: Function
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
@@ -719,6 +758,7 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	metadata: AWSJSON
 	app: XTenantSendingApp!
 	transformer: String
+	transformerFunction: Function
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
