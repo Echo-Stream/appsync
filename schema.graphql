@@ -223,6 +223,7 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	nodes: [ManagedNode]
 	iso: String!
 	config: AWSJSON
+	instances: AWSJSON!
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
@@ -319,6 +320,8 @@ type Mutation @aws_cognito_user_pools {
 	DeleteApp(tenant: String!, app: String!): App
 	DeleteMessageType(tenant: String!, name: String!): App
 	DeleteManagedNodeType(tenant: String!, name: String!): ManagedNode!
+	RegenerateAppIso(tenant: String!, app: String!): ManagedApp!
+	DeregisterManagedAppInstance(tenant: String!, instance: String!): String!
 	NotifyApp(
 		tenant: String!,
 		operation: DbOperation!,
