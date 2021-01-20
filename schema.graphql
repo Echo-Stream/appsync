@@ -345,12 +345,12 @@ type Mutation @aws_cognito_user_pools {
 	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
 	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
 	ConfirmSnsSubscription(tenant: String!, token: String!, endpoint: String!): SnsSubscription!
-	DeleteTenant(tenant: String!): Tenant
-	DeleteNode(tenant: String!, node: String!): Node
-	DeleteEdge(tenant: String!, source: String!, target: String!): Edge
-	DeleteFunction(tenant: String!, name: String!): Function
-	DeleteApp(tenant: String!, app: String!): App
-	DeleteMessageType(tenant: String!, name: String!): App
+	DeleteTenant(tenant: String!): Tenant!
+	DeleteNode(tenant: String!, node: String!): Node!
+	DeleteEdge(tenant: String!, source: String!, target: String!): Edge!
+	DeleteFunction(tenant: String!, name: String!): Function!
+	DeleteApp(tenant: String!, app: String!): App!
+	DeleteMessageType(tenant: String!, name: String!): MessageType!
 	DeleteManagedNodeType(tenant: String!, name: String!): ManagedNode!
 	RegenerateAppIso(tenant: String!, app: String!): ManagedApp!
 	DeregisterManagedAppInstance(tenant: String!, instance: String!): String!
