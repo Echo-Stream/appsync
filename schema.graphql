@@ -139,7 +139,7 @@ input FunctionInput {
 	type: FunctionType!
 }
 
-type FucntionResult @aws_cognito_user_pools {
+type FunctionResult @aws_cognito_user_pools {
 	items: [Function]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
@@ -541,7 +541,7 @@ type Query @aws_cognito_user_pools {
 	): AppResult
 		@aws_cognito_user_pools
 		@aws_iam
-	ListFunctions(tenant: String!, limit: Int, startKey: AWSJSON): FucntionResult
+	ListFunctions(tenant: String!, limit: Int, startKey: AWSJSON): FunctionResult
 	ListKeys(tenant: String!, limit: Int, startKey: AWSJSON): KmsKeyResult
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
 	ListManagedNodeTypes(tenant: String!, startKey: String, limit: Int): ManagedNodeTypeResult
