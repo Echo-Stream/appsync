@@ -155,7 +155,7 @@ type Healthcheck @aws_cognito_user_pools {
 	interval: String!
 	timeout: String!
 	retries: Int!
-	start_period: String!
+	startPeriod: String!
 }
 
 input HealthcheckInput {
@@ -163,7 +163,7 @@ input HealthcheckInput {
 	interval: String!
 	timeout: String!
 	retries: Int!
-	start_period: String!
+	startPeriod: String!
 }
 
 type HostMount @aws_cognito_user_pools {
