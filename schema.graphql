@@ -119,7 +119,8 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	lastModifiedAt: String
 }
 
-type Function @aws_cognito_user_pools @aws_iam {
+type Function @aws_cognito_user_pools
+@aws_iam {
 	tenant: Tenant!
 	name: String!
 	code: String!
@@ -172,7 +173,7 @@ type HostMount @aws_cognito_user_pools {
 	description: String
 }
 
-input HostMountInput @aws_cognito_user_pools {
+input HostMountInput {
 	containerPath: String!
 	hostPath: String!
 	description: String
@@ -183,19 +184,21 @@ type HostMountRequirement @aws_cognito_user_pools {
 	description: String
 }
 
-input HostMountRequirementInput @aws_cognito_user_pools {
+input HostMountRequirementInput {
 	containerPath: String!
 	description: String
 }
 
-type Integration @aws_cognito_user_pools @aws_iam {
+type Integration @aws_cognito_user_pools
+@aws_iam {
 	name: AvailableIntegrations!
 	description: String!
 	config: AWSJSON!
 	enabled: Boolean!
 }
 
-type IntegrationDefinition @aws_cognito_user_pools @aws_iam {
+type IntegrationDefinition @aws_cognito_user_pools
+@aws_iam {
 	configTemplate: AWSJSON!
 	name: AvailableIntegrations!
 	description: String!
@@ -510,9 +513,9 @@ type Query @aws_cognito_user_pools {
 	GetLargeMessageStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [LargeMessageStorage!]!
 	GetMessageType(tenant: String!, name: String!): MessageType!
 	GetUsersForTenant(tenant: String!): [User]
-	GetUser: User
-	GetTenant: Tenant!
-	GetTenantUser(email: AWSEmail!): User
+	GetUser(tenant: String): User!
+	GetTenant(tenant: String!): Tenant!
+	GetTenantUser(tenant: String!, email: AWSEmail!): User
 	SearchNodes(
 		tenant: String!,
 		partialName: Boolean,
@@ -543,7 +546,7 @@ type Query @aws_cognito_user_pools {
 		limit: Int
 	): AppResult
 		@aws_cognito_user_pools
-		@aws_iam
+@aws_iam
 	ListFunctions(tenant: String!, limit: Int, startKey: AWSJSON): FunctionResult
 	ListKeys(tenant: String!, limit: Int, startKey: AWSJSON): KmsKeyResult
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
@@ -673,7 +676,7 @@ type UINotification @aws_cognito_user_pools
 }
 
 type User @aws_cognito_user_pools {
-	tenant: Tenant!
+	tenants: [Tenant!]
 	email: AWSEmail!
 	firstName: String!
 	lastName: String!
