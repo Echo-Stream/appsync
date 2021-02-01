@@ -446,10 +446,7 @@ type Mutation @aws_cognito_user_pools {
 		role: UserRole,
 		status: UserStatus
 	): User!
-	RemoveTenantUser(
-		tenant: String!,
-		user: AWSEmail!
-	): User!
+	RemoveTenantUser(tenant: String!, user: AWSEmail!): User!
 	AddUserToTenant(tenant: String!, user: UserInput!): User!
 		@aws_iam
 @aws_cognito_user_pools
@@ -662,6 +659,17 @@ type Tenant @aws_cognito_user_pools {
 	lastModifiedAt: String
 }
 
+type TenantInfo @aws_cognito_user_pools {
+	tenant: Tenant!
+	role: UserRole!
+	status: UserStatus!
+	invitationToken: String
+	invitationDate: String
+	activeDate: String
+	lastModifiedBy: String
+	lastModifiedAt: String
+}
+
 type TransNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
@@ -683,17 +691,6 @@ type UINotification @aws_cognito_user_pools
 	tenant: String!
 	operation: DbOperation!
 	modifiedBy: String!
-}
-
-type TenantInfo @aws_cognito_user_pools {
-	tenant: Tenant!
-	role: UserRole!
-	status: UserStatus!
-	invitationToken: String
-	invitationDate: String
-	activeDate: String
-	lastModifiedBy: String
-	lastModifiedAt: String
 }
 
 type User @aws_cognito_user_pools {
