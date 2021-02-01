@@ -447,7 +447,7 @@ type Mutation @aws_cognito_user_pools {
 		status: UserStatus
 	): User!
 	RemoveTenantUser(tenant: String!, user: AWSEmail!): User!
-	AddUserToTenant(tenant: String!, user: UserInput!): User!
+	AddUserToTenant(tenant: String!, user: UserInput!): TenantInfo!
 		@aws_iam
 @aws_cognito_user_pools
 	ResetAppPassword(tenant: String!, name: String!): App!
