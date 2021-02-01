@@ -685,8 +685,8 @@ type UINotification @aws_cognito_user_pools
 	modifiedBy: String!
 }
 
-type TenantUser @aws_cognito_user_pools {
-	tenant: String!
+type TenantInfo @aws_cognito_user_pools {
+	tenant: Tenant!
 	role: UserRole!
 	status: UserStatus!
 	invitationToken: String
@@ -697,7 +697,7 @@ type TenantUser @aws_cognito_user_pools {
 }
 
 type User @aws_cognito_user_pools {
-	tenantData: [TenantData!]
+	tenantInfo: [TenantInfo!]
 	email: AWSEmail!
 	firstName: String!
 	lastName: String!
