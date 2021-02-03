@@ -1,3 +1,19 @@
+type ApiUser @aws_cognito_user_pools {
+	tenant: Tenant!
+	config: AWSJSON!
+	role: ApiUserRole!
+	username: String!
+	description: String
+}
+
+enum ApiUserRole {
+	user
+	admin
+	api_admin
+	admin_read_only
+	read_only
+}
+
 union App = ManagedApp | ExternalApp | XTenantReceivingApp | XTenantSendingApp
 
 enum AppAuthType {
@@ -35,12 +51,6 @@ type AppResult @aws_cognito_user_pools {
 
 enum AvailableIntegrations {
 	alert_to_clickup_task
-}
-
-type CognitoUser @aws_cognito_user_pools {
-	tenant: Tenant!
-	name: String!
-	role: String!
 }
 
 enum ContentEncoding {
@@ -345,6 +355,8 @@ type MessageTypeResult @aws_cognito_user_pools {
 }
 
 type Mutation @aws_cognito_user_pools {
+	PutApiUser(tenant: String!, role: ApiUserRole!, description: String): ApiUser!
+	DeleteApiUser(tenant: String!, username: String!): ApiUser!
 	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
 	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
 	ConfirmSnsSubscription(tenant: String!, token: String!, endpoint: String!): SnsSubscription!
@@ -401,8 +413,8 @@ type Mutation @aws_cognito_user_pools {
 		tenant: String!,
 		app: String,
 		node: NodeInput!,
-		receiveMessageType: String!,
-		sendMessageType: String!
+		receiveMessageType: String,
+		sendMessageType: String
 	): ExternalNode!
 	PutKmsKey(tenant: String!, key: KmsKeyInput!): KmsKey!
 	PutManagedApp(tenant: String!, app: AppInput!): ManagedApp!
@@ -410,7 +422,8 @@ type Mutation @aws_cognito_user_pools {
 	PutRouterNode(
 		tenant: String!,
 		node: NodeInput!,
-		messageType: String!,
+		receiveMessageType: String!,
+		sendMessageType: String,
 		bitmapper: String,
 		routeTable: AWSJSON!,
 		bitmapperFunction: String
@@ -522,7 +535,7 @@ type Query @aws_cognito_user_pools {
 	GetUsersForTenant(tenant: String!): [User!]
 	GetUser: User!
 	GetTenant(tenant: String!): Tenant!
-	GetTenantUser(tenant: String!, email: AWSEmail!): User!
+	GetTenantUser(tenant: String!, email: AWSEmail!): TenantInfo!
 	SearchNodes(
 		tenant: String!,
 		partialName: Boolean,
@@ -559,6 +572,7 @@ type Query @aws_cognito_user_pools {
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
 	ListManagedNodeTypes(tenant: String!, startKey: String, limit: Int): ManagedNodeTypeResult
 	ListSnsSubscriptions(tenant: String!): [SnsSubscription]!
+	ListApiUsers(tenant: String!): [ApiUser!]
 	ValidateFunction(
 		tenant: String!,
 		function: String!,
@@ -661,6 +675,9 @@ type Tenant @aws_cognito_user_pools {
 
 type TenantInfo @aws_cognito_user_pools {
 	tenant: Tenant!
+	email: AWSEmail!
+	firstName: String!
+	lastName: String!
 	role: UserRole!
 	status: UserStatus!
 	invitationToken: String
@@ -721,6 +738,7 @@ enum UserRole {
 	user
 	owner
 	read_only
+	admin_read_only
 }
 
 enum UserStatus {
