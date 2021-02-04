@@ -260,6 +260,15 @@ enum LogLevel {
 	ERROR
 }
 
+type ManagedInstance @aws_cognito_user_pools @aws_iam{
+	ipAddress: AWSIPAddress
+	hostname: String!
+	activationId: String!
+	registrationDate: String!
+	pingStatus: String
+	lastPingTime: String!
+}
+
 type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
@@ -267,7 +276,7 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	nodes: [ManagedNode]
 	iso: String!
 	config: AWSJSON
-	instances: AWSJSON!
+	instances: [ManagedInstance]
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
