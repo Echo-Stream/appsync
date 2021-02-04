@@ -120,9 +120,9 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	sendEdges: [Edge]
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 	receiveEdges: [Edge]
-	receiveMessageType: MessageType!
+	receiveMessageType: MessageType
 	app: ExternalApp!
 	metadata: AWSJSON
 	lastModifiedBy: String
