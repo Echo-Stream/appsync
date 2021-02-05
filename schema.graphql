@@ -420,7 +420,7 @@ type Mutation @aws_cognito_user_pools {
 	): ExternalApp!
 	PutExternalNode(
 		tenant: String!,
-		app: String,
+		app: String!,
 		node: NodeInput!,
 		receiveMessageType: String,
 		sendMessageType: String
@@ -454,7 +454,7 @@ type Mutation @aws_cognito_user_pools {
 	): XTenantSendingApp!
 	PutXTenantSendingNode(
 		tenant: String!,
-		app: String,
+		app: String!,
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String,
@@ -540,10 +540,10 @@ type PresignedPost @aws_cognito_user_pools {
 type Query @aws_cognito_user_pools {
 	GetLargeMessageStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [LargeMessageStorage!]!
 	GetMessageType(tenant: String!, name: String!): MessageType!
-	GetUsersForTenant(tenant: String!): [User!]
+	GetUsersForTenant(tenant: String!): [TenantUser!]
 	GetUser: User!
 	GetTenant(tenant: String!): Tenant!
-	GetTenantUser(tenant: String!, email: AWSEmail!): TenantInfo!
+	GetTenantUser(tenant: String!, email: AWSEmail!): TenantUser!
 	SearchNodes(
 		tenant: String!,
 		partialName: Boolean,
@@ -673,6 +673,7 @@ type Subscription @aws_cognito_user_pools {
 type Tenant @aws_cognito_user_pools {
 	name: String!
 	region: String!
+	users: [TenantUser!]
 	billingInfo: AWSJSON
 	alertSnsTopic: String!
 	integrations: [Integration]
@@ -681,14 +682,36 @@ type Tenant @aws_cognito_user_pools {
 }
 
 type TenantInfo @aws_cognito_user_pools {
-	tenant: Tenant!
-	email: AWSEmail!
-	firstName: String!
-	lastName: String!
+	name: String!
+	region: Region!
 	role: UserRole!
 	status: UserStatus!
 	invitationToken: String
 	invitationDate: String
+	activeDate: String
+	lastModifiedBy: String
+	lastModifiedAt: String
+}
+
+type TenantUser {
+	tenant: Tenant!
+	role: UserRole!
+	status: UserStatus!
+	email: AWSEmail!
+	firstName: String!
+	lastName: String!
+	invitationToken: String
+	invitationDate: String
+	activeDate: String
+	lastModifiedBy: String
+	lastModifiedAt: String
+}
+
+type User @aws_cognito_user_pools {
+	tenants: [TenantInfo!]
+	email: AWSEmail!
+	firstName: String!
+	lastName: String!
 	activeDate: String
 	lastModifiedBy: String
 	lastModifiedAt: String
@@ -715,16 +738,6 @@ type UINotification @aws_cognito_user_pools
 	tenant: String!
 	operation: DbOperation!
 	modifiedBy: String!
-}
-
-type User @aws_cognito_user_pools {
-	tenantInfo: [TenantInfo!]
-	email: AWSEmail!
-	firstName: String!
-	lastName: String!
-	activeDate: String
-	lastModifiedBy: String
-	lastModifiedAt: String
 }
 
 input UserInput {
