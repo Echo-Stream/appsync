@@ -636,7 +636,7 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	description: String
 	sendEdges: [Edge]
 	receiveEdges: [Edge]
-	receiveMessageType: MessageType!
+	receiveMessageType: MessageType
 	metadata: AWSJSON
 	bitmapper: String!
 	routeTable: AWSJSON!
@@ -722,9 +722,9 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	sendEdges: [Edge]
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 	receiveEdges: [Edge]
-	receiveMessageType: MessageType!
+	receiveMessageType: MessageType
 	metadata: AWSJSON
 	transformer: String
 	transformerFunction: Function
@@ -789,7 +789,7 @@ type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	sendEdges: [Edge]
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 	metadata: AWSJSON
 	app: XTenantReceivingApp!
 	lastModifiedBy: String
@@ -813,7 +813,7 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	receiveEdges: [Edge]
-	receiveMessageType: MessageType!
+	receiveMessageType: MessageType
 	metadata: AWSJSON
 	app: XTenantSendingApp!
 	transformer: String
