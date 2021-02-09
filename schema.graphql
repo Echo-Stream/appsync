@@ -635,6 +635,7 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	sendEdges: [Edge]
+	sendMessageType: MessageType
 	receiveEdges: [Edge]
 	receiveMessageType: MessageType
 	metadata: AWSJSON
