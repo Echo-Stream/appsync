@@ -365,19 +365,19 @@ type MessageTypeResult @aws_cognito_user_pools {
 
 type Mutation @aws_cognito_user_pools {
 	PutApiUser(tenant: String!, role: ApiUserRole!, description: String): ApiUser!
-	DeleteApiUser(tenant: String!, username: String!): ApiUser!
+	DeleteApiUser(tenant: String!, username: String!): Boolean!
 	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
 	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
 	ConfirmSnsSubscription(tenant: String!, token: String!, endpoint: String!): SnsSubscription!
-	DeleteTenant(tenant: String!): Tenant!
-	DeleteNode(tenant: String!, node: String!): Node!
-	DeleteEdge(tenant: String!, source: String!, target: String!): Edge!
-	DeleteFunction(tenant: String!, name: String!): Function!
-	DeleteApp(tenant: String!, app: String!): App!
-	DeleteMessageType(tenant: String!, name: String!): MessageType!
-	DeleteManagedNodeType(tenant: String!, name: String!): ManagedNode!
+	DeleteTenant(tenant: String!): Boolean!
+	DeleteNode(tenant: String!, node: String!): Boolean!
+	DeleteEdge(tenant: String!, source: String!, target: String!): Boolean!
+	DeleteFunction(tenant: String!, name: String!): Boolean!
+	DeleteApp(tenant: String!, app: String!): Boolean!
+	DeleteMessageType(tenant: String!, name: String!): Boolean!
+	DeleteManagedNodeType(tenant: String!, name: String!): Boolean!
 	RegenerateAppIso(tenant: String!, app: String!): ManagedApp!
-	DeregisterManagedAppInstance(tenant: String!, instance: String!): String!
+	DeregisterManagedAppInstance(tenant: String!, instance: String!): Boolean!
 	NotifyApp(
 		tenant: String!,
 		operation: DbOperation!,
@@ -392,7 +392,7 @@ type Mutation @aws_cognito_user_pools {
 		itemType: String!
 	): UINotification!
 		@aws_iam
-	PurgeQueue(tenant: String!, source: String!, target: String!): Edge!
+	PurgeEdge(tenant: String!, source: String!, target: String!): Boolean!
 	PutFunction(tenant: String!, function: FunctionInput!): Function!
 	PutManagedNode(
 		tenant: String!,
@@ -467,13 +467,13 @@ type Mutation @aws_cognito_user_pools {
 		role: UserRole,
 		status: UserStatus
 	): User!
-	RemoveTenantUser(tenant: String!, user: AWSEmail!): User!
+	RemoveTenantUser(tenant: String!, user: AWSEmail!): Boolean!
 	AddUserToTenant(tenant: String!, user: UserInput!): TenantInfo!
 		@aws_iam
 @aws_cognito_user_pools
 	ResetAppPassword(tenant: String!, name: String!): App!
 	PutIntegration(config: AWSJSON!, name: AvailableIntegrations!, enabled: Boolean!): Integration!
-	RemoveIntegration(tenant: String!, name: AvailableIntegrations!): Integration!
+	RemoveIntegration(tenant: String!, name: AvailableIntegrations!): Boolean!
 }
 
 union Node = ManagedNode | ExternalNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
