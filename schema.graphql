@@ -370,8 +370,8 @@ type Mutation @aws_cognito_user_pools {
 	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
 	ConfirmSnsSubscription(tenant: String!, token: String!, endpoint: String!): SnsSubscription!
 	DeleteTenant(tenant: String!): Boolean!
-	DeleteNode(tenant: String!, node: String!): Boolean!
-	DeleteEdge(tenant: String!, source: String!, target: String!): Boolean!
+	DeleteNode(tenant: String!, node: String!, drainEdges: Boolean): Boolean!
+	DeleteEdge(tenant: String!, source: String!, target: String!, drain: Boolean): Boolean!
 	DeleteFunction(tenant: String!, name: String!): Boolean!
 	DeleteApp(tenant: String!, app: String!): Boolean!
 	DeleteMessageType(tenant: String!, name: String!): Boolean!
