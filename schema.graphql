@@ -388,6 +388,7 @@ type Mutation @aws_cognito_user_pools {
 	NotifyUI(
 		tenant: String!,
 		operation: DbOperation!,
+		name: String!,
 		modifiedBy: String!,
 		itemType: String!
 	): UINotification!
@@ -738,6 +739,7 @@ type UINotification @aws_cognito_user_pools
 	itemType: ItemType!
 	tenant: String!
 	operation: DbOperation!
+	name: String!
 	modifiedBy: String!
 }
 
