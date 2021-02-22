@@ -135,8 +135,8 @@ type Function @aws_cognito_user_pools
 	name: String!
 	code: String!
 	description: String!
-	argumentMessageType: MessageType!
-	resultMessageType: MessageType!
+	argumentMessageType: MessageType
+	resultMessageType: MessageType
 	system: Boolean!
 	type: FunctionType!
 }
