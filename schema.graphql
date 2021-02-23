@@ -135,8 +135,8 @@ type Function @aws_cognito_user_pools
 	name: String!
 	code: String!
 	description: String!
-	argumentMessageType: MessageType!
-	resultMessageType: MessageType!
+	argumentMessageType: MessageType
+	resultMessageType: MessageType
 	system: Boolean!
 	type: FunctionType!
 }
@@ -159,6 +159,8 @@ type FunctionResult @aws_cognito_user_pools {
 enum FunctionType {
 	bitmapper
 	transformer
+	message2object
+	object2message
 }
 
 type Healthcheck @aws_cognito_user_pools {
@@ -298,6 +300,8 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 	logGroupName: String!
 	lastModifiedBy: String
 	lastModifiedAt: String
+	inlineFunction: String
+	managedFunction: Function
 }
 
 type ManagedNodeType @aws_cognito_user_pools {
@@ -315,6 +319,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	lastModifiedBy: String
 	lastModifiedAt: String
 	healthcheck: Healthcheck
+	functionType: FunctionType
 }
 
 input ManagedNodeTypeInput {
@@ -329,6 +334,7 @@ input ManagedNodeTypeInput {
 	sendMessageType: String
 	receiveMessageType: String
 	healthcheck: HealthcheckInput
+	functionType: FunctionType
 }
 
 type ManagedNodeTypeResult @aws_cognito_user_pools {
@@ -402,7 +408,9 @@ type Mutation @aws_cognito_user_pools {
 		config: AWSJSON!,
 		portMappings: [PortMappingInput!],
 		managedNodeType: String!,
-		hostMounts: [HostMountInput!]
+		hostMounts: [HostMountInput!],
+		inlineFunction: String,
+		managedFunction: Function
 	): ManagedNode!
 	PutManagedNodeType(tenant: String!, type: ManagedNodeTypeInput!): ManagedNodeType!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
@@ -433,9 +441,9 @@ type Mutation @aws_cognito_user_pools {
 		tenant: String!,
 		node: NodeInput!,
 		receiveMessageType: String!,
-		bitmapper: String,
+		inlineBitmapper: String,
 		routeTable: AWSJSON!,
-		bitmapperFunction: String
+		managedBitmapper: String
 	): RouterNode!
 	PutTenant(name: String!, region: Region!, billingInfo: AWSJSON): Tenant!
 	PutTransNode(
@@ -443,8 +451,8 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String,
-		transformer: String,
-		transformerFunction: String
+		inlineTransformer: String,
+		managedTransformer: String
 	): TransNode!
 	PutXTenantReceivingApp(tenant: String!, app: AppInput!, sendingTenant: String!): XTenantReceivingApp!
 	PutXTenantSendingApp(
@@ -459,8 +467,8 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		receiveMessageType: String!,
 		sendMessageType: String,
-		transformer: String,
-		transformerFunction: String
+		inlineTransformer: String,
+		managedTransformer: String
 	): XTenantSendingNode!
 	UpdateTenantUser(
 		tenant: String!,
@@ -640,9 +648,9 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	receiveEdges: [Edge]
 	receiveMessageType: MessageType
 	metadata: AWSJSON
-	bitmapper: String!
+	inlineBitmapper: String
 	routeTable: AWSJSON!
-	bitmapperFunction: Function
+	managedBitmapper: Function
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
@@ -728,8 +736,8 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	receiveEdges: [Edge]
 	receiveMessageType: MessageType
 	metadata: AWSJSON
-	transformer: String
-	transformerFunction: Function
+	inlineTransformer: String
+	managedTransformer: Function
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
@@ -819,8 +827,8 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType
 	metadata: AWSJSON
 	app: XTenantSendingApp!
-	transformer: String
-	transformerFunction: Function
+	inlineTransformer: String
+	managedTransformer: Function
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
