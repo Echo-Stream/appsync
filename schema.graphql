@@ -379,7 +379,7 @@ type Mutation @aws_cognito_user_pools {
 	DeleteNode(tenant: String!, node: String!, drainEdges: Boolean): Boolean!
 	DeleteEdge(tenant: String!, source: String!, target: String!, drain: Boolean): Boolean!
 	DeleteFunction(tenant: String!, name: String!): Boolean!
-	DeleteApp(tenant: String!, app: String!): Boolean!
+	DeleteApp(tenant: String!, app: String!, drainEdges:Boolean): Boolean!
 	DeleteMessageType(tenant: String!, name: String!): Boolean!
 	DeleteManagedNodeType(tenant: String!, name: String!): Boolean!
 	RegenerateAppIso(tenant: String!, app: String!): ManagedApp!
