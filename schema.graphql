@@ -160,7 +160,7 @@ enum FunctionType {
 	bitmapper
 	transformer
 	message2object
-	object2message
+	object2messages
 }
 
 type Healthcheck @aws_cognito_user_pools {
