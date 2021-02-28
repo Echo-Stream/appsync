@@ -6,6 +6,12 @@ type ApiUser @aws_cognito_user_pools {
 	description: String
 }
 
+type ApiUserResult @aws_cognito_user_pools {
+	items: [ApiUser]
+	lastEvaluatedKey: AWSJSON
+	scannedCount: Int
+}
+
 enum ApiUserRole {
 	user
 	admin
@@ -589,7 +595,7 @@ type Query @aws_cognito_user_pools {
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
 	ListManagedNodeTypes(tenant: String!, startKey: String, limit: Int): ManagedNodeTypeResult
 	ListSnsSubscriptions(tenant: String!): [SnsSubscription]!
-	ListApiUsers(tenant: String!): [ApiUser!]
+	ListApiUsers(tenant: String!, limit: Int, startKey: AWSJSON): ApiUserResult
 	ValidateFunction(
 		tenant: String!,
 		function: String!,
