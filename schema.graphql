@@ -709,7 +709,7 @@ type TenantInfo @aws_cognito_user_pools {
 	lastModifiedAt: String
 }
 
-type TenantUser {
+type TenantUser @aws_cognito_user_pools {
 	tenant: Tenant!
 	role: UserRole!
 	status: UserStatus!
