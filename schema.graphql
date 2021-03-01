@@ -699,7 +699,7 @@ type Tenant @aws_cognito_user_pools {
 
 type TenantInfo @aws_cognito_user_pools {
 	name: String!
-	region: Region!
+	region: String!
 	role: UserRole!
 	status: UserStatus!
 	invitationToken: String
