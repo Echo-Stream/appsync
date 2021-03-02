@@ -355,7 +355,7 @@ type MessageType @aws_cognito_user_pools {
 	auditor: String!
 	transformerTemplate: String!
 	bitmapperTemplate: String!
-	requirements: [String!]!
+	requirements: [String]!
 	system: Boolean!
 	lastModifiedBy: String
 	lastModifiedAt: String
@@ -366,7 +366,7 @@ input MessageTypeInput {
 	auditor: String!
 	transformerTemplate: String!
 	bitmapperTemplate: String!
-	requirements: [String!]!
+	requirements: [String]!
 }
 
 type MessageTypeResult @aws_cognito_user_pools {
