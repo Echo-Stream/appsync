@@ -151,8 +151,8 @@ input FunctionInput {
 	name: String!
 	code: String!
 	description: String!
-	argumentMessageType: String!
-	resultMessageType: String!
+	argumentMessageType: String
+	resultMessageType: String
 	type: FunctionType!
 }
 
