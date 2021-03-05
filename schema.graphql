@@ -283,7 +283,6 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	description: String
 	nodes: [ManagedNode]
 	iso: String!
-	config: AWSJSON
 	instances: [ManagedInstance]
 	lastModifiedBy: String
 	lastModifiedAt: String
