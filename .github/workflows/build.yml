@@ -21,7 +21,7 @@ jobs:
 
           if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
             echo "S3_PREFIX=${{ secrets.ECHOSTREAM_VERSION }}-dev" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF}" =~ ^refs/heads/v[0-9].*; then
+          elif [[ "${GITHUB_REF}" =~ ^refs/heads/v[0-9].* ]]; then
             echo "S3_PREFIX=$VERSION" >> $GITHUB_ENV
           else
             echo "REF: ${GITHUB_REF}"
