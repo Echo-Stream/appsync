@@ -3,9 +3,8 @@ name: Upload Appsync API
 on:
   push:
     branches:
-      - master
-      - develop
-      - "release/**"
+      - 'main'
+      - 'v[0-9].[0-9]+'
 
 jobs:
   build:
@@ -14,17 +13,16 @@ jobs:
       - uses: actions/checkout@v2
       - name: Set env vars
         run: |
+          echo "VERSION=${GITHUB_REF##*/v}" >> $GITHUB_ENV
           echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=${{ secrets.ARTIFACTS_PIPELINES_ACCESS_KEY  }}" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.ARTIFACTS_PIPELINES_SECRET_KEY }}" >> $GITHUB_ENV
           echo "ARTIFACTS_BUCKET=${{ secrets.ARTIFACTS_S3 }}" >> $GITHUB_ENV
 
-          if [ "${GITHUB_REF}" = "refs/heads/develop" ]; then
+          if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
             echo "S3_PREFIX=${{ secrets.ECHOSTREAM_VERSION }}-dev" >> $GITHUB_ENV
-          elif [ "${GITHUB_REF}" = "refs/heads/master" ]; then
-            echo "S3_PREFIX=${{ secrets.ECHOSTREAM_VERSION }}" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF}" =~ ^refs/heads/release/([0-9]+\.)+[0-9]$ ]]; then
-            echo "S3_PREFIX=${{ secrets.ECHOSTREAM_VERSION }}-stage" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF}" =~ ^refs/heads/v[0-9].*; then
+            echo "S3_PREFIX=$VERSION" >> $GITHUB_ENV
           else
             echo "REF: ${GITHUB_REF}"
             echo "Not a buildable branch. Exiting"
