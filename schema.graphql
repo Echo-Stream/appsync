@@ -381,6 +381,7 @@ type Mutation @aws_cognito_user_pools {
 	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
 	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
 	ConfirmSnsSubscription(tenant: String!, token: String!, endpoint: String!): SnsSubscription!
+    DeleteKmsKey(tenant: String!, name: String!): Boolean!
 	DeleteTenant(tenant: String!): Boolean!
 	DeleteNode(tenant: String!, node: String!, drainEdges: Boolean): Boolean!
 	DeleteEdge(tenant: String!, source: String!, target: String!, drain: Boolean): Boolean!
