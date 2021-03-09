@@ -21,14 +21,16 @@ jobs:
 
           if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
             echo "S3_PREFIX=${{ secrets.ECHOSTREAM_VERSION }}-dev" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF}" =~ ^refs/heads/v[0-9].[0.9]+ ]]; then
+          elif [[ "${GITHUB_REF}" =~ ^refs/heads/v([0-9]+\.)+[0.9]$ ]]; then
+            echo "i am here"
             echo "S3_PREFIX=$VERSION" >> $GITHUB_ENV
           else
+            echo "i am not here"
             echo "REF: ${GITHUB_REF}"
             echo "Not a buildable branch. Exiting"
             exit 1
           fi
           echo "REF: ${GITHUB_REF}"
-      - name: Upload
-        run: aws s3 cp schema.graphql s3://$ARTIFACTS_BUCKET/$S3_PREFIX/appsync/ --content-type text/plain --sse
-        if: ${{ success() }}
+      # - name: Upload
+      #   run: aws s3 cp schema.graphql s3://$ARTIFACTS_BUCKET/$S3_PREFIX/appsync/ --content-type text/plain --sse
+      #   if: ${{ success() }}
