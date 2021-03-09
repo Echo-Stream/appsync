@@ -4,7 +4,8 @@ on:
   push:
     branches:
       - 'main'
-      - 'v[0-9].[0-9]+'
+      - 'v[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 jobs:
   build:
@@ -13,7 +14,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Set env vars
         run: |
-          echo "VERSION=${GITHUB_REF##*/v}" >> $GITHUB_ENV
           echo "AWS_DEFAULT_REGION=us-east-1" >> $GITHUB_ENV
           echo "AWS_ACCESS_KEY_ID=${{ secrets.ARTIFACTS_PIPELINES_ACCESS_KEY  }}" >> $GITHUB_ENV
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.ARTIFACTS_PIPELINES_SECRET_KEY }}" >> $GITHUB_ENV
@@ -21,9 +21,10 @@ jobs:
 
           if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
             echo "S3_PREFIX=${{ secrets.ECHOSTREAM_VERSION }}-dev" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF}" =~ ^refs/heads/v([0-9]+\.)+[0.9]+$ ]]; then
-            echo "i am here"
-            echo "S3_PREFIX=${GITHUB_REF##*/v}" >> $GITHUB_ENV
+          elif [[ "${GITHUB_REF}" =~ ^refs\/heads\/v([0-9])+\.([0-9])+ ]]; then
+            VERSION=`echo "${GITHUB_REF##*/v}" | cut -d'.' -f1-2`
+            echo $VERSION
+            echo "S3_PREFIX=$VERSION" >> $GITHUB_ENV
           else
             echo "i am not here"
             echo "REF: ${GITHUB_REF}"
