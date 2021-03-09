@@ -21,7 +21,7 @@ jobs:
 
           if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
             echo "S3_PREFIX=${{ secrets.ECHOSTREAM_VERSION }}-dev" >> $GITHUB_ENV
-          elif [[ "${GITHUB_REF}" =~ ^refs/heads/v[0-9].* ]]; then
+          elif [[ "${GITHUB_REF}" =~ ^refs/heads/v[0-9].[0.9]+ ]]; then
             echo "S3_PREFIX=$VERSION" >> $GITHUB_ENV
           else
             echo "REF: ${GITHUB_REF}"
@@ -29,6 +29,6 @@ jobs:
             exit 1
           fi
           echo "REF: ${GITHUB_REF}"
-      - name: test
-        run: echo ${GITHUB_REF##*/v}
+      - name: Upload
+        run: aws s3 cp schema.graphql s3://$ARTIFACTS_BUCKET/$S3_PREFIX/appsync/ --content-type text/plain --sse
         if: ${{ success() }}
