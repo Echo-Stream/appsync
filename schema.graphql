@@ -600,9 +600,11 @@ type Query @aws_cognito_user_pools {
 	ValidateFunction(
 		tenant: String!,
 		function: String!,
-		loggingLevel: LogLevel,
 		sourceMessageType: String!,
 		targetMessageType: String!,
+		node: String,
+		sourceNode: String,
+		loggingLevel: LogLevel,
 		args: AWSJSON,
 		kwargs: AWSJSON
 	): ValidateFunctionResult
