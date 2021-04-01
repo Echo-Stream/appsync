@@ -88,7 +88,6 @@ type Edge @aws_cognito_user_pools {
 	source: Node!
 	target: Node!
 	messageType: MessageType!
-	metadata: AWSJSON
 	kmsKey: KmsKey!
 	queue: AWSURL!
 	lastModifiedBy: String
@@ -100,7 +99,6 @@ input EdgeInput {
 	kmsKey: String
 	source: String!
 	target: String!
-	metadata: AWSJSON
 }
 
 type EdgeResult @aws_cognito_user_pools {
@@ -130,7 +128,7 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	receiveEdges: [Edge]
 	receiveMessageType: MessageType
 	app: ExternalApp!
-	metadata: AWSJSON
+	config: AWSJSON
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
@@ -301,7 +299,7 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType
 	managedNodeType: ManagedNodeType!
 	app: ManagedApp!
-	metadata: AWSJSON
+	config: AWSJSON
 	hostMounts: [HostMount!]
 	logGroupName: String!
 	lastModifiedBy: String
@@ -331,7 +329,6 @@ type ManagedNodeType @aws_cognito_user_pools {
 input ManagedNodeTypeInput {
 	name: String!
 	description: String
-	metadata: AWSJSON
 	dockerConfig: DockerConfigInput!
 	configTemplate: AWSJSON
 	hostMountRequirements: [HostMountRequirementInput!]
@@ -508,14 +505,14 @@ type NodeCallableLogResult {
 input NodeInput {
 	name: String!
 	description: String
-	metadata: AWSJSON
+	config: AWSJSON
 }
 
 interface NodeInterface {
 	name: String!
 	description: String
 	tenant: Tenant!
-	metadata: AWSJSON
+	config: AWSJSON
 	lastModifiedBy: String
 	lastModifiedAt: String
 }
@@ -656,7 +653,7 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	sendMessageType: MessageType
 	receiveEdges: [Edge]
 	receiveMessageType: MessageType
-	metadata: AWSJSON
+	config: AWSJSON
 	inlineBitmapper: String
 	routeTable: AWSJSON!
 	managedBitmapper: Function
@@ -744,7 +741,7 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	sendMessageType: MessageType
 	receiveEdges: [Edge]
 	receiveMessageType: MessageType
-	metadata: AWSJSON
+	config: AWSJSON
 	inlineTransformer: String
 	managedTransformer: Function
 	lastModifiedBy: String
@@ -811,7 +808,6 @@ type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
 	description: String
 	sendEdges: [Edge]
 	sendMessageType: MessageType
-	metadata: AWSJSON
 	app: XTenantReceivingApp!
 	lastModifiedBy: String
 	lastModifiedAt: String
@@ -835,7 +831,7 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	description: String
 	receiveEdges: [Edge]
 	receiveMessageType: MessageType
-	metadata: AWSJSON
+	config: AWSJSON
 	app: XTenantSendingApp!
 	inlineTransformer: String
 	managedTransformer: Function
