@@ -163,8 +163,6 @@ type FunctionResult @aws_cognito_user_pools {
 enum FunctionType {
 	bitmapper
 	transformer
-	message2object
-	object2messages
 }
 
 type Healthcheck @aws_cognito_user_pools {
@@ -303,8 +301,6 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 	logGroupName: String!
 	lastModifiedBy: String
 	lastModifiedAt: String
-	inlineFunction: String
-	managedFunction: Function
 }
 
 type ManagedNodeType @aws_cognito_user_pools {
@@ -322,7 +318,6 @@ type ManagedNodeType @aws_cognito_user_pools {
 	lastModifiedBy: String
 	lastModifiedAt: String
 	healthcheck: Healthcheck
-	functionType: FunctionType
 }
 
 input ManagedNodeTypeInput {
@@ -336,7 +331,6 @@ input ManagedNodeTypeInput {
 	sendMessageType: String
 	receiveMessageType: String
 	healthcheck: HealthcheckInput
-	functionType: FunctionType
 }
 
 type ManagedNodeTypeResult @aws_cognito_user_pools {
@@ -410,9 +404,7 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		portMappings: [PortMappingInput!],
 		managedNodeType: String!,
-		hostMounts: [HostMountInput!],
-		inlineFunction: String,
-		managedFunction: String
+		hostMounts: [HostMountInput!]
 	): ManagedNode!
 	PutManagedNodeType(tenant: String!, type: ManagedNodeTypeInput!): ManagedNodeType!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
