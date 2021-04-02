@@ -404,9 +404,7 @@ type Mutation @aws_cognito_user_pools {
 		node: NodeInput!,
 		portMappings: [PortMappingInput!],
 		managedNodeType: String!,
-		hostMounts: [HostMountInput!],
-		inlineFunction: String,
-		managedFunction: String
+		hostMounts: [HostMountInput!]
 	): ManagedNode!
 	PutManagedNodeType(tenant: String!, type: ManagedNodeTypeInput!): ManagedNodeType!
 	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
