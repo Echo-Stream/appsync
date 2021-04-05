@@ -446,7 +446,8 @@ type Mutation @aws_cognito_user_pools {
 		receiveMessageType: String!,
 		sendMessageType: String,
 		inlineTransformer: String,
-		managedTransformer: String
+		managedTransformer: String,
+		sequentialProcessing: Boolean
 	): TransNode!
 	PutXTenantReceivingApp(tenant: String!, app: AppInput!, sendingTenant: String!): XTenantReceivingApp!
 	PutXTenantSendingApp(
@@ -462,7 +463,8 @@ type Mutation @aws_cognito_user_pools {
 		receiveMessageType: String!,
 		sendMessageType: String,
 		inlineTransformer: String,
-		managedTransformer: String
+		managedTransformer: String,
+		sequentialProcessing: Boolean
 	): XTenantSendingNode!
 	UpdateTenantUser(
 		tenant: String!,
@@ -736,6 +738,7 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	managedTransformer: Function
 	lastModifiedBy: String
 	lastModifiedAt: String
+	sequentialProcessing: Boolean
 }
 
 type UINotification @aws_cognito_user_pools
@@ -827,4 +830,5 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	managedTransformer: Function
 	lastModifiedBy: String
 	lastModifiedAt: String
+	sequentialProcessing: Boolean
 }
