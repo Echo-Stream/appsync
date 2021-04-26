@@ -90,8 +90,7 @@ type Edge @aws_cognito_user_pools {
 	messageType: MessageType!
 	kmsKey: KmsKey!
 	queue: AWSURL!
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 input EdgeInput {
@@ -115,8 +114,7 @@ type ExternalApp implements AppInterface @aws_cognito_user_pools {
 	account: String
 	authType: AppAuthType!
 	config: AWSJSON
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type ExternalNode implements NodeInterface @aws_cognito_user_pools {
@@ -129,8 +127,7 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType
 	app: ExternalApp!
 	config: AWSJSON
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type Function @aws_cognito_user_pools
@@ -237,8 +234,7 @@ type KmsKey @aws_cognito_user_pools {
 	name: String!
 	description: String
 	arn: String!
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 input KmsKeyInput {
@@ -255,6 +251,11 @@ type KmsKeyResult @aws_cognito_user_pools {
 type LargeMessageStorage @aws_cognito_user_pools {
 	presignedPost: PresignedPost!
 	presignedGet: AWSURL!
+}
+
+type LastModified @aws_cognito_user_pools {
+	at: AWSDateTime
+	by: String
 }
 
 enum LogLevel {
@@ -281,8 +282,7 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	iso: String!
 	config: AWSJSON
 	instances: [ManagedInstance]
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type ManagedNode implements NodeInterface @aws_cognito_user_pools {
@@ -299,8 +299,7 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 	app: ManagedApp!
 	hostMounts: [HostMount!]
 	logGroupName: String!
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type ManagedNodeType @aws_cognito_user_pools {
@@ -315,8 +314,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	hostMountRequirements: [HostMountRequirement!]
 	volumes: [String!]
 	system: Boolean!
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 	healthcheck: Healthcheck
 }
 
@@ -347,8 +345,7 @@ type MessageType @aws_cognito_user_pools {
 	bitmapperTemplate: String!
 	requirements: [String]!
 	system: Boolean!
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 input MessageTypeInput {
@@ -505,8 +502,7 @@ interface NodeInterface {
 	description: String
 	tenant: Tenant!
 	config: AWSJSON
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type NodeResult @aws_cognito_user_pools {
@@ -649,8 +645,7 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	inlineBitmapper: String
 	routeTable: AWSJSON!
 	managedBitmapper: Function
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type SnsSubscription @aws_cognito_user_pools {
@@ -685,8 +680,7 @@ type Tenant @aws_cognito_user_pools {
 	billingInfo: AWSJSON
 	alertSnsTopic: String!
 	integrations: [Integration]
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type TenantInfo @aws_cognito_user_pools {
@@ -697,8 +691,7 @@ type TenantInfo @aws_cognito_user_pools {
 	invitationToken: String
 	invitationDate: String
 	activeDate: String
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type TenantUser @aws_cognito_user_pools {
@@ -711,8 +704,7 @@ type TenantUser @aws_cognito_user_pools {
 	invitationToken: String
 	invitationDate: String
 	activeDate: String
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type User @aws_cognito_user_pools {
@@ -721,8 +713,7 @@ type User @aws_cognito_user_pools {
 	firstName: String!
 	lastName: String!
 	activeDate: String
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type TransNode implements NodeInterface @aws_cognito_user_pools {
@@ -736,8 +727,7 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	config: AWSJSON
 	inlineTransformer: String
 	managedTransformer: Function
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 	sequentialProcessing: Boolean
 }
 
@@ -791,8 +781,7 @@ type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools {
 	description: String
 	nodes: [XTenantReceivingNode]
 	config: AWSJSON
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
@@ -802,8 +791,7 @@ type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
 	sendEdges: [Edge]
 	sendMessageType: MessageType
 	app: XTenantReceivingApp!
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type XTenantSendingApp implements AppInterface @aws_cognito_user_pools {
@@ -814,8 +802,7 @@ type XTenantSendingApp implements AppInterface @aws_cognito_user_pools {
 	description: String
 	nodes: [XTenantSendingNode]
 	config: AWSJSON
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 }
 
 type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
@@ -828,7 +815,6 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	app: XTenantSendingApp!
 	inlineTransformer: String
 	managedTransformer: Function
-	lastModifiedBy: String
-	lastModifiedAt: String
+	lastModified: LastModified
 	sequentialProcessing: Boolean
 }
