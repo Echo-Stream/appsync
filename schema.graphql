@@ -27,17 +27,10 @@ enum AppAuthType {
 	cognito
 }
 
-input AppInput {
-	name: String!
-	config: AWSJSON
-	description: String
-}
-
 interface AppInterface {
 	tenant: Tenant!
 	name: String!
 	description: String
-	config: AWSJSON
 }
 
 type AppNotification @aws_cognito_user_pools
@@ -93,13 +86,6 @@ type Edge @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-input EdgeInput {
-	description: String
-	kmsKey: String
-	source: String!
-	target: String!
-}
-
 type EdgeResult @aws_cognito_user_pools {
 	items: [Edge]
 	lastEvaluatedKey: AWSJSON
@@ -109,6 +95,7 @@ type EdgeResult @aws_cognito_user_pools {
 type ExternalApp implements AppInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
+	config: AWSJSON
 	description: String
 	nodes: [ExternalNode]
 	account: String
@@ -132,23 +119,13 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 
 type Function @aws_cognito_user_pools
 @aws_iam {
-	tenant: Tenant!
+	tenant: Tenant
 	name: String!
 	code: String!
 	description: String!
 	argumentMessageType: MessageType
 	resultMessageType: MessageType
 	system: Boolean!
-	type: FunctionType!
-	requirements: [String!]
-}
-
-input FunctionInput {
-	name: String!
-	code: String!
-	description: String!
-	argumentMessageType: String
-	resultMessageType: String
 	type: FunctionType!
 	requirements: [String!]
 }
@@ -239,11 +216,6 @@ type KmsKey @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-input KmsKeyInput {
-	name: String!
-	description: String
-}
-
 type KmsKeyResult @aws_cognito_user_pools {
 	items: [KmsKey]
 	lastEvaluatedKey: AWSJSON
@@ -279,6 +251,7 @@ type ManagedInstance @aws_cognito_user_pools @aws_iam{
 type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
+	config: AWSJSON
 	description: String
 	nodes: [ManagedNode]
 	iso: String!
@@ -305,7 +278,7 @@ type ManagedNode implements NodeInterface @aws_cognito_user_pools {
 }
 
 type ManagedNodeType @aws_cognito_user_pools {
-	tenant: Tenant!
+	tenant: Tenant
 	name: String!
 	description: String
 	dockerConfig: DockerConfig!
@@ -320,19 +293,6 @@ type ManagedNodeType @aws_cognito_user_pools {
 	healthcheck: Healthcheck
 }
 
-input ManagedNodeTypeInput {
-	name: String!
-	description: String
-	dockerConfig: DockerConfigInput!
-	configTemplate: AWSJSON
-	hostMountRequirements: [HostMountRequirementInput!]
-	portMappingRequirements: [PortMappingRequirementInput!]
-	volumes: [String!]
-	sendMessageType: String
-	receiveMessageType: String
-	healthcheck: HealthcheckInput
-}
-
 type ManagedNodeTypeResult @aws_cognito_user_pools {
 	items: [ManagedNodeType]
 	lastEvaluatedKey: AWSJSON
@@ -340,7 +300,7 @@ type ManagedNodeTypeResult @aws_cognito_user_pools {
 }
 
 type MessageType @aws_cognito_user_pools {
-	tenant: Tenant!
+	tenant: Tenant
 	name: String!
 	auditor: String!
 	transformerTemplate: String!
@@ -348,14 +308,6 @@ type MessageType @aws_cognito_user_pools {
 	requirements: [String!]
 	system: Boolean!
 	lastModified: LastModified
-}
-
-input MessageTypeInput {
-	name: String!
-	auditor: String!
-	transformerTemplate: String!
-	bitmapperTemplate: String!
-	requirements: [String!]
 }
 
 type MessageTypeResult @aws_cognito_user_pools {
@@ -370,7 +322,7 @@ type Mutation @aws_cognito_user_pools {
 	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
 	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
 	ConfirmSnsSubscription(tenant: String!, token: String!, endpoint: String!): SnsSubscription!
-    DeleteKmsKey(tenant: String!, name: String!): Boolean!
+  DeleteKmsKey(tenant: String!, name: String!): Boolean!
 	DeleteTenant(tenant: String!): Boolean!
 	DeleteNode(tenant: String!, node: String!, drainEdges: Boolean): Boolean!
 	DeleteEdge(tenant: String!, source: String!, target: String!, drain: Boolean): Boolean!
@@ -396,17 +348,46 @@ type Mutation @aws_cognito_user_pools {
 	): UINotification!
 		@aws_iam
 	PurgeEdge(tenant: String!, source: String!, target: String!): Boolean!
-	PutFunction(tenant: String!, function: FunctionInput!): Function!
+	PutFunction(
+		tenant: String!,
+		name: String!,
+		code: String!,
+		description: String!,
+		type: FunctionType!,
+		argumentMessageType: String,
+		resultMessageType: String,
+		requirements: [String!]
+	): Function!
 	PutManagedNode(
 		tenant: String!,
 		app: String!,
-		node: NodeInput!,
-		portMappings: [PortMappingInput!],
+		name: String!,
 		managedNodeType: String!,
+		description: String,
+		config: AWSJSON,
+		portMappings: [PortMappingInput!],
 		hostMounts: [HostMountInput!]
 	): ManagedNode!
-	PutManagedNodeType(tenant: String!, type: ManagedNodeTypeInput!): ManagedNodeType!
-	PutEdge(tenant: String!, edge: EdgeInput!): Edge!
+	PutManagedNodeType(
+		tenant: String!, 
+		name: String!,
+		description: String,
+		dockerConfig: DockerConfigInput!,
+		configTemplate: AWSJSON,
+		hostMountRequirements: [HostMountRequirementInput!],
+		portMappingRequirements: [PortMappingRequirementInput!],
+		volumes: [String!],
+		sendMessageType: String,
+		receiveMessageType: String,
+		healthcheck: HealthcheckInput
+	): ManagedNodeType!
+	PutEdge(
+		tenant: String!, 
+		source: String!, 
+		target: String!, 
+		kmsKey: String, 
+		description: String
+	): Edge!
 	MoveEdge(
 		tenant: String!,
 		source: String!,
@@ -416,50 +397,72 @@ type Mutation @aws_cognito_user_pools {
 	): Edge!
 	PutExternalApp(
 		tenant: String!,
-		app: AppInput!,
+		name: String!,
+		description: String,
 		authType: AppAuthType!,
 		account: String
 	): ExternalApp!
 	PutExternalNode(
 		tenant: String!,
 		app: String!,
-		node: NodeInput!,
+		name: String!,
 		receiveMessageType: String,
 		sendMessageType: String
+		description: String,
+		config: AWSJSON,
 	): ExternalNode!
-	PutKmsKey(tenant: String!, key: KmsKeyInput!): KmsKey!
-	PutManagedApp(tenant: String!, app: AppInput!): ManagedApp!
-	PutMessageType(tenant: String!, type: MessageTypeInput!): MessageType!
+	PutKmsKey(tenant: String!, 	name: String!, description: String): KmsKey!
+	PutManagedApp(tenant: String!, 	name: String!, description: String): ManagedApp!
+	PutMessageType(
+		tenant: String!, 
+		name: String!,
+		auditor: String!,
+		transformerTemplate: String!,
+		bitmapperTemplate: String!,
+		requirements: [String!]
+	): MessageType!
 	PutRouterNode(
 		tenant: String!,
-		node: NodeInput!,
+		name: String!,
 		receiveMessageType: String!,
 		inlineBitmapper: String,
 		routeTable: AWSJSON!,
 		managedBitmapper: String
+		description: String,
+		config: AWSJSON,
 	): RouterNode!
 	PutTenant(name: String!, region: Region!, billingInfo: AWSJSON): Tenant!
 	PutTransNode(
 		tenant: String!,
-		node: NodeInput!,
+		name: String!,
 		receiveMessageType: String!,
+		description: String,
+		config: AWSJSON,
 		sendMessageType: String,
 		inlineTransformer: String,
 		managedTransformer: String,
 		sequentialProcessing: Boolean
 	): TransNode!
-	PutXTenantReceivingApp(tenant: String!, app: AppInput!, sendingTenant: String!): XTenantReceivingApp!
+	PutXTenantReceivingApp(
+		tenant: String!, 
+		name: String!, 
+		sendingTenant: String!, 
+		description: String
+	): XTenantReceivingApp!
 	PutXTenantSendingApp(
 		tenant: String!,
-		app: AppInput!,
+		name: String!,
+		description: String,
 		receivingTenant: String!,
 		receivingApp: String!
 	): XTenantSendingApp!
 	PutXTenantSendingNode(
 		tenant: String!,
 		app: String!,
-		node: NodeInput!,
+		name: String!,
 		receiveMessageType: String!,
+		description: String,
+		config: AWSJSON,
 		sendMessageType: String,
 		inlineTransformer: String,
 		managedTransformer: String,
@@ -472,9 +475,14 @@ type Mutation @aws_cognito_user_pools {
 		status: UserStatus
 	): User!
 	RemoveTenantUser(tenant: String!, user: AWSEmail!): Boolean!
-	AddUserToTenant(tenant: String!, user: UserInput!): TenantUser!
-		@aws_iam
-@aws_cognito_user_pools
+	AddUserToTenant(
+		tenant: String!, 
+		firstName: String!,
+		lastName: String!,
+		email: String!,
+		role: UserRole!
+	): TenantUser!
+	@aws_iam @aws_cognito_user_pools
 	ResetAppPassword(tenant: String!, app: String!): App!
 	PutIntegration(config: AWSJSON!, name: AvailableIntegrations!, enabled: Boolean!): Integration!
 	RemoveIntegration(tenant: String!, name: AvailableIntegrations!): Boolean!
@@ -493,17 +501,10 @@ type NodeCallableLogResult {
 	nextToken: String
 }
 
-input NodeInput {
-	name: String!
-	description: String
-	config: AWSJSON
-}
-
 interface NodeInterface {
 	name: String!
 	description: String
 	tenant: Tenant!
-	config: AWSJSON
 	lastModified: LastModified
 }
 
@@ -587,7 +588,10 @@ type Query @aws_cognito_user_pools {
 	Validate(
 		tenant: String!,
 		validatable: String!,
-		input: ValidateInput!
+		code: String!,
+		args: AWSJSON,
+		kwargs: AWSJSON,
+		loggingLevel: LogLevel
 	): ValidateResult!
 	GetNodeCallableLogs(
 		tenant: String!,
@@ -736,13 +740,6 @@ type UINotification @aws_cognito_user_pools
 	modifiedBy: String!
 }
 
-input UserInput {
-	firstName: String!
-	lastName: String!
-	email: String!
-	role: UserRole!
-}
-
 type UserResult @aws_cognito_user_pools {
 	items: [User]
 	lastEvaluatedKey: String
@@ -761,13 +758,6 @@ enum UserStatus {
 	active
 	invited
 	suspended
-}
-
-input ValidateInput {
-		code: String!,
-		args: AWSJSON,
-		kwargs: AWSJSON,
-		loggingLevel: LogLevel
 }
 
 type ValidateResult @aws_cognito_user_pools {
