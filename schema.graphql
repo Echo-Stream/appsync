@@ -100,7 +100,6 @@ type ExternalApp implements AppInterface @aws_cognito_user_pools {
 	nodes: [ExternalNode]
 	account: String
 	authType: AppAuthType!
-	config: AWSJSON
 	lastModified: LastModified
 }
 
@@ -160,7 +159,7 @@ input HealthcheckInput {
 type HostMount @aws_cognito_user_pools {
 	containerPath: String!
 	hostPath: String!
-	description: String
+	description: String!
 }
 
 input HostMountInput {
@@ -171,12 +170,12 @@ input HostMountInput {
 
 type HostMountRequirement @aws_cognito_user_pools {
 	containerPath: String!
-	description: String
+	description: String!
 }
 
 input HostMountRequirementInput {
 	containerPath: String!
-	description: String
+	description: String!
 }
 
 type Integration @aws_cognito_user_pools
@@ -255,7 +254,6 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	description: String
 	nodes: [ManagedNode]
 	iso: String!
-	config: AWSJSON
 	instances: [ManagedInstance]
 	lastModified: LastModified
 }
@@ -431,7 +429,7 @@ type Mutation @aws_cognito_user_pools {
 		description: String,
 		config: AWSJSON,
 	): RouterNode!
-	PutTenant(name: String!, region: Region!, billingInfo: AWSJSON): Tenant!
+	PutTenant(name: String!, region: Region!, config: AWJSON): Tenant!
 	PutTransNode(
 		tenant: String!,
 		name: String!,
@@ -557,8 +555,7 @@ type Query @aws_cognito_user_pools {
 		startKey: AWSJSON,
 		limit: Int
 	): NodeResult
-		@aws_cognito_user_pools
-@aws_iam
+	@aws_cognito_user_pools @aws_iam
 	SearchEdges(
 		tenant: String!,
 		source: String,
@@ -577,14 +574,14 @@ type Query @aws_cognito_user_pools {
 		startKey: AWSJSON,
 		limit: Int
 	): AppResult
-		@aws_cognito_user_pools
-@aws_iam
+	@aws_cognito_user_pools @aws_iam
 	ListFunctions(tenant: String!, limit: Int, startKey: AWSJSON): FunctionResult
 	ListKeys(tenant: String!, limit: Int, startKey: AWSJSON): KmsKeyResult
 	ListMessageTypes(tenant: String!, startKey: String, limit: Int): MessageTypeResult
 	ListManagedNodeTypes(tenant: String!, startKey: String, limit: Int): ManagedNodeTypeResult
 	ListSnsSubscriptions(tenant: String!): [SnsSubscription]!
 	ListApiUsers(tenant: String!, limit: Int, startKey: AWSJSON): ApiUserResult
+	ListTenants: [Tenant!]
 	Validate(
 		tenant: String!,
 		validatable: String!,
@@ -677,8 +674,8 @@ type Tenant @aws_cognito_user_pools {
 	name: String!
 	region: String!
 	users: [TenantUser!]
-	billingInfo: AWSJSON
 	alertSnsTopic: String!
+	config: AWSJSON
 	integrations: [Integration]
 	lastModified: LastModified
 }
@@ -773,7 +770,6 @@ type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	nodes: [XTenantReceivingNode]
-	config: AWSJSON
 	lastModified: LastModified
 }
 
@@ -794,7 +790,6 @@ type XTenantSendingApp implements AppInterface @aws_cognito_user_pools {
 	name: String!
 	description: String
 	nodes: [XTenantSendingNode]
-	config: AWSJSON
 	lastModified: LastModified
 }
 
