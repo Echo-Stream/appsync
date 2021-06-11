@@ -20,12 +20,7 @@ enum ApiUserRole {
 	read_only
 }
 
-union App = ManagedApp | ExternalApp | XTenantReceivingApp | XTenantSendingApp
-
-enum AppAuthType {
-	x_account
-	cognito
-}
+union App = CrossAccountApp | ExternalApp | ManagedApp | XTenantReceivingApp | XTenantSendingApp
 
 interface AppInterface {
 	tenant: Tenant!
@@ -55,6 +50,16 @@ enum AvailableIntegrations {
 enum ContentEncoding {
 	deflate
 	gzip
+}
+
+type CrossAccountApp implements AppInterface @aws_cognito_user_pools {
+	tenant: Tenant!
+	name: String!
+	config: AWSJSON
+	description: String
+	nodes: [ExternalNode]
+	account: String
+	lastModified: LastModified
 }
 
 enum DbOperation {
@@ -98,8 +103,6 @@ type ExternalApp implements AppInterface @aws_cognito_user_pools {
 	config: AWSJSON
 	description: String
 	nodes: [ExternalNode]
-	account: String
-	authType: AppAuthType!
 	lastModified: LastModified
 }
 
@@ -126,7 +129,7 @@ type Function @aws_cognito_user_pools
 	resultMessageType: MessageType
 	system: Boolean!
 	type: FunctionType!
-	requirements: [String!]
+	requirements: [Requirement!]
 }
 
 type FunctionResult @aws_cognito_user_pools {
@@ -303,7 +306,7 @@ type MessageType @aws_cognito_user_pools {
 	auditor: String!
 	transformerTemplate: String!
 	bitmapperTemplate: String!
-	requirements: [String!]
+	requirements: [Requirement!]
 	system: Boolean!
 	lastModified: LastModified
 }
@@ -354,7 +357,7 @@ type Mutation @aws_cognito_user_pools {
 		type: FunctionType!,
 		argumentMessageType: String,
 		resultMessageType: String,
-		requirements: [String!]
+		requirements: [RequirementInput!]
 	): Function!
 	PutManagedNode(
 		tenant: String!,
@@ -393,12 +396,16 @@ type Mutation @aws_cognito_user_pools {
 		oldSource: String!,
 		oldTarget: String!
 	): Edge!
+	PutCrossAccountApp(
+		tenant: String!,
+		name: String!,
+		description: String,
+		account: String!
+	): ExternalApp!
 	PutExternalApp(
 		tenant: String!,
 		name: String!,
 		description: String,
-		authType: AppAuthType!,
-		account: String
 	): ExternalApp!
 	PutExternalNode(
 		tenant: String!,
@@ -417,7 +424,7 @@ type Mutation @aws_cognito_user_pools {
 		auditor: String!,
 		transformerTemplate: String!,
 		bitmapperTemplate: String!,
-		requirements: [String!]
+		requirements: [RequirementInput!]
 	): MessageType!
 	PutRouterNode(
 		tenant: String!,
@@ -428,6 +435,7 @@ type Mutation @aws_cognito_user_pools {
 		managedBitmapper: String
 		description: String,
 		config: AWSJSON,
+		requirements: [RequirementInput!]
 	): RouterNode!
 	PutTenant(name: String!, region: Region!, config: AWJSON): Tenant!
 	PutTransNode(
@@ -439,7 +447,8 @@ type Mutation @aws_cognito_user_pools {
 		sendMessageType: String,
 		inlineTransformer: String,
 		managedTransformer: String,
-		sequentialProcessing: Boolean
+		sequentialProcessing: Boolean,
+		requirements: [RequirementInput!]
 	): TransNode!
 	PutXTenantReceivingApp(
 		tenant: String!, 
@@ -464,7 +473,8 @@ type Mutation @aws_cognito_user_pools {
 		sendMessageType: String,
 		inlineTransformer: String,
 		managedTransformer: String,
-		sequentialProcessing: Boolean
+		sequentialProcessing: Boolean,
+		requirements: [RequirementInput!]
 	): XTenantSendingNode!
 	UpdateTenantUser(
 		tenant: String!,
@@ -486,7 +496,7 @@ type Mutation @aws_cognito_user_pools {
 	RemoveIntegration(tenant: String!, name: AvailableIntegrations!): Boolean!
 }
 
-union Node = ManagedNode | ExternalNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
+union Node = ExternalNode | ManagedNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
 
 type NodeCallableLogLine {
 	timestamp: Int!
@@ -510,6 +520,16 @@ type NodeResult @aws_cognito_user_pools {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
+}
+
+type PipRequirement @aws_cognito_user_pools {
+	package: String!
+	version: String!
+}
+
+input PipRequirementInput {
+	package: String!
+	version: String!
 }
 
 type PortMapping @aws_cognito_user_pools {
@@ -630,6 +650,13 @@ enum Region {
 	us_gov_west_1
 }
 
+union Requirement = PipRequirement | AWSURL
+
+input RequirementInput {
+	pipRequirement: PipRequirementInput
+	packageUrl: AWSURL
+}
+
 type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
@@ -643,6 +670,7 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	routeTable: AWSJSON!
 	managedBitmapper: Function
 	lastModified: LastModified
+	requirements: [Requirement!]
 }
 
 type SnsSubscription @aws_cognito_user_pools {
@@ -726,6 +754,7 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	managedTransformer: Function
 	lastModified: LastModified
 	sequentialProcessing: Boolean
+	requirements: [Requirement!]
 }
 
 type UINotification @aws_cognito_user_pools
@@ -805,4 +834,5 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	managedTransformer: Function
 	lastModified: LastModified
 	sequentialProcessing: Boolean
+	requirements: [Requirement!]
 }
