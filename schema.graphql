@@ -129,7 +129,7 @@ type Function @aws_cognito_user_pools
 	resultMessageType: MessageType
 	system: Boolean!
 	type: FunctionType!
-	requirements: [Requirement!]
+	requirements: [String!]
 }
 
 type FunctionResult @aws_cognito_user_pools {
@@ -306,7 +306,7 @@ type MessageType @aws_cognito_user_pools {
 	auditor: String!
 	transformerTemplate: String!
 	bitmapperTemplate: String!
-	requirements: [Requirement!]
+	requirements: [String!]
 	system: Boolean!
 	lastModified: LastModified
 }
@@ -357,7 +357,7 @@ type Mutation @aws_cognito_user_pools {
 		type: FunctionType!,
 		argumentMessageType: String,
 		resultMessageType: String,
-		requirements: [RequirementInput!]
+		requirements: [String!]
 	): Function!
 	PutManagedNode(
 		tenant: String!,
@@ -424,7 +424,7 @@ type Mutation @aws_cognito_user_pools {
 		auditor: String!,
 		transformerTemplate: String!,
 		bitmapperTemplate: String!,
-		requirements: [RequirementInput!]
+		requirements: [String!]
 	): MessageType!
 	PutRouterNode(
 		tenant: String!,
@@ -435,7 +435,7 @@ type Mutation @aws_cognito_user_pools {
 		managedBitmapper: String
 		description: String,
 		config: AWSJSON,
-		requirements: [RequirementInput!]
+		requirements: [String!]
 	): RouterNode!
 	PutTenant(name: String!, region: Region!, config: AWJSON): Tenant!
 	PutTransNode(
@@ -448,7 +448,7 @@ type Mutation @aws_cognito_user_pools {
 		inlineTransformer: String,
 		managedTransformer: String,
 		sequentialProcessing: Boolean,
-		requirements: [RequirementInput!]
+		requirements: [String!]
 	): TransNode!
 	PutXTenantReceivingApp(
 		tenant: String!, 
@@ -474,7 +474,7 @@ type Mutation @aws_cognito_user_pools {
 		inlineTransformer: String,
 		managedTransformer: String,
 		sequentialProcessing: Boolean,
-		requirements: [RequirementInput!]
+		requirements: [String!]
 	): XTenantSendingNode!
 	UpdateTenantUser(
 		tenant: String!,
@@ -520,16 +520,6 @@ type NodeResult @aws_cognito_user_pools {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
-}
-
-type PipRequirement @aws_cognito_user_pools {
-	package: String!
-	version: String!
-}
-
-input PipRequirementInput {
-	package: String!
-	version: String!
 }
 
 type PortMapping @aws_cognito_user_pools {
@@ -650,13 +640,6 @@ enum Region {
 	us_gov_west_1
 }
 
-union Requirement = PipRequirement | AWSURL
-
-input RequirementInput {
-	pipRequirement: PipRequirementInput
-	packageUrl: AWSURL
-}
-
 type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
@@ -670,7 +653,7 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	routeTable: AWSJSON!
 	managedBitmapper: Function
 	lastModified: LastModified
-	requirements: [Requirement!]
+	requirements: [String!]
 }
 
 type SnsSubscription @aws_cognito_user_pools {
@@ -754,7 +737,7 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	managedTransformer: Function
 	lastModified: LastModified
 	sequentialProcessing: Boolean
-	requirements: [Requirement!]
+	requirements: [String!]
 }
 
 type UINotification @aws_cognito_user_pools
@@ -834,5 +817,5 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	managedTransformer: Function
 	lastModified: LastModified
 	sequentialProcessing: Boolean
-	requirements: [Requirement!]
+	requirements: [String!]
 }
