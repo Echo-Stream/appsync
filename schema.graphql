@@ -119,28 +119,42 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-type Function @aws_cognito_user_pools
-@aws_iam {
-	tenant: Tenant
-	name: String!
+interface FunctionInterface {
 	code: String!
 	description: String!
-	argumentMessageType: MessageType
-	resultMessageType: MessageType
-	system: Boolean!
-	type: FunctionType!
+	name: String!
 	requirements: [String!]
+	system: Boolean!
+	tenant: Tenant
 }
+
+type BitmapperFunction implements FunctionInterface @aws_cognito_user_pool @aws_iam {
+	argumentMessageType: MessageType!
+	code: String!
+	description: String!
+	name: String!
+	requirements: [String!]
+	resultMessageType: MessageType!
+	system: Boolean!
+	tenant: Tenant
+}
+
+type TransformerFunction implements FunctionInterface @aws_cognito_user_pool @aws_iam {
+	argumentMessageType: MessageType!
+	code: String!
+	description: String!
+	name: String!
+	requirements: [String!]
+	system: Boolean!
+	tenant: Tenant
+}
+
+union Function = BitmapperFunction | TransformerFunction
 
 type FunctionResult @aws_cognito_user_pools {
 	items: [Function]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
-}
-
-enum FunctionType {
-	bitmapper
-	transformer
 }
 
 type Healthcheck @aws_cognito_user_pools {
@@ -349,16 +363,25 @@ type Mutation @aws_cognito_user_pools {
 	): UINotification!
 		@aws_iam
 	PurgeEdge(tenant: String!, source: String!, target: String!): Boolean!
-	PutFunction(
+	PutBitmapperFunction(
 		tenant: String!,
 		name: String!,
 		code: String!,
 		description: String!,
 		type: FunctionType!,
-		argumentMessageType: String,
-		resultMessageType: String,
+		argumentMessageType: String!,
 		requirements: [String!]
-	): Function!
+	): BitmapperFunction!
+	PutTransformerFunction(
+		tenant: String!,
+		name: String!,
+		code: String!,
+		description: String!,
+		type: FunctionType!,
+		argumentMessageType: String!,
+		resultMessageType: String!,
+		requirements: [String!]
+	): TransformerFunction!
 	PutManagedNode(
 		tenant: String!,
 		app: String!,
@@ -438,7 +461,7 @@ type Mutation @aws_cognito_user_pools {
 		requirements: [String!]
 	): RouterNode!
 	PutTenant(name: String!, region: Region!, config: AWJSON): Tenant!
-	PutTransNode(
+	PutTransformerNode(
 		tenant: String!,
 		name: String!,
 		receiveMessageType: String!,
@@ -449,7 +472,7 @@ type Mutation @aws_cognito_user_pools {
 		managedTransformer: String,
 		sequentialProcessing: Boolean,
 		requirements: [String!]
-	): TransNode!
+	): TransformerNode!
 	PutXTenantReceivingApp(
 		tenant: String!, 
 		name: String!, 
@@ -481,7 +504,7 @@ type Mutation @aws_cognito_user_pools {
 		user: AWSEmail!,
 		role: UserRole,
 		status: UserStatus
-	): User!
+	): TenantUser!
 	RemoveTenantUser(tenant: String!, user: AWSEmail!): Boolean!
 	AddUserToTenant(
 		tenant: String!, 
@@ -496,7 +519,7 @@ type Mutation @aws_cognito_user_pools {
 	RemoveIntegration(tenant: String!, name: AvailableIntegrations!): Boolean!
 }
 
-union Node = ExternalNode | ManagedNode | RouterNode | TransNode | XTenantReceivingNode | XTenantSendingNode
+union Node = ExternalNode | ManagedNode | RouterNode | TransformerNode | XTenantReceivingNode | XTenantSendingNode
 
 type NodeCallableLogLine {
 	timestamp: Int!
@@ -510,10 +533,10 @@ type NodeCallableLogResult {
 }
 
 interface NodeInterface {
-	name: String!
 	description: String
-	tenant: Tenant!
 	lastModified: LastModified
+	name: String!
+	tenant: Tenant!
 }
 
 type NodeResult @aws_cognito_user_pools {
@@ -553,7 +576,7 @@ type Query @aws_cognito_user_pools {
 	GetLargeMessageStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [LargeMessageStorage!]!
 	GetMessageType(tenant: String!, name: String!): MessageType!
 	GetUsersForTenant(tenant: String!): [TenantUser!]
-	GetUser: User!
+	GetUser: LoginUser!
 	GetTenant(tenant: String!): Tenant!
 	GetTenantUser(tenant: String!, email: AWSEmail!): TenantUser!
 	SearchNodes(
@@ -651,7 +674,7 @@ type RouterNode implements NodeInterface @aws_cognito_user_pools {
 	config: AWSJSON
 	inlineBitmapper: String
 	routeTable: AWSJSON!
-	managedBitmapper: Function
+	managedBitmapper: BitmapperFunction
 	lastModified: LastModified
 	requirements: [String!]
 }
@@ -691,17 +714,6 @@ type Tenant @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-type TenantInfo @aws_cognito_user_pools {
-	name: String!
-	region: String!
-	role: UserRole!
-	status: UserStatus!
-	invitationToken: String
-	invitationDate: String
-	activeDate: String
-	lastModified: LastModified
-}
-
 type TenantUser @aws_cognito_user_pools {
 	tenant: Tenant!
 	role: UserRole!
@@ -715,8 +727,8 @@ type TenantUser @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-type User @aws_cognito_user_pools {
-	tenants: [TenantInfo!]
+type LoginUser @aws_cognito_user_pools {
+	tenantUsers: [TenantUser!]
 	email: AWSEmail!
 	firstName: String!
 	lastName: String!
@@ -724,7 +736,7 @@ type User @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-type TransNode implements NodeInterface @aws_cognito_user_pools {
+type TransformerNode implements NodeInterface @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -734,7 +746,7 @@ type TransNode implements NodeInterface @aws_cognito_user_pools {
 	receiveMessageType: MessageType
 	config: AWSJSON
 	inlineTransformer: String
-	managedTransformer: Function
+	managedTransformer: TransformerFunction
 	lastModified: LastModified
 	sequentialProcessing: Boolean
 	requirements: [String!]
@@ -749,30 +761,23 @@ type UINotification @aws_cognito_user_pools
 	modifiedBy: String!
 }
 
-type UserResult @aws_cognito_user_pools {
-	items: [User]
-	lastEvaluatedKey: String
-	scannedCount: Int
-}
-
 enum UserRole {
 	admin
-	user
 	owner
 	read_only
-	admin_read_only
+	user
 }
 
 enum UserStatus {
 	active
+	inactive
 	invited
-	suspended
+	pending
 }
 
 type ValidateResult @aws_cognito_user_pools {
-	functionCreated: Boolean!
-	result: String
-	stdout: String
+	result: String!
+	stdout: String!
 }
 
 type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools {
@@ -814,7 +819,7 @@ type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
 	config: AWSJSON
 	app: XTenantSendingApp!
 	inlineTransformer: String
-	managedTransformer: Function
+	managedTransformer: Tran
 	lastModified: LastModified
 	sequentialProcessing: Boolean
 	requirements: [String!]
