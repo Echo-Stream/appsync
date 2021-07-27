@@ -256,12 +256,13 @@ enum LogLevel {
 }
 
 type ManagedInstance @aws_cognito_user_pools @aws_iam{
-	ipAddress: AWSIPAddress
-	hostname: String!
 	activationId: String!
-	registrationDate: String!
-	pingStatus: String
-	lastPingTime: String!
+	hostname: String!
+	instanceId: String!
+	ipAddress: AWSIPAddress!
+	lastPingDateTime: AWSDateTime!
+	pingStatus: PingStatus!
+	registrationDate: AWSDateTime!
 }
 
 type ManagedApp implements AppInterface @aws_cognito_user_pools {
@@ -346,7 +347,7 @@ type Mutation @aws_cognito_user_pools {
 	DeleteMessageType(tenant: String!, name: String!): Boolean!
 	DeleteManagedNodeType(tenant: String!, name: String!): Boolean!
 	RegenerateAppIso(tenant: String!, app: String!): ManagedApp!
-	DeregisterManagedAppInstance(tenant: String!, instance: String!): Boolean!
+	DeregisterManagedInstance(tenant: String!, instanceId: String!): Boolean!
 	NotifyApp(
 		tenant: String!,
 		operation: DbOperation!,
@@ -440,7 +441,7 @@ type Mutation @aws_cognito_user_pools {
 		config: AWSJSON,
 	): ExternalNode!
 	PutKmsKey(tenant: String!, 	name: String!, description: String): KmsKey!
-	PutManagedApp(tenant: String!, 	name: String!, description: String): ManagedApp!
+	PutManagedApp(tenant: String!, name: String!, description: String): ManagedApp!
 	PutMessageType(
 		tenant: String!, 
 		name: String!,
@@ -543,6 +544,12 @@ type NodeResult @aws_cognito_user_pools {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
+}
+
+enum PingStatus {
+	Online
+	ConnectionLost
+	Inactive
 }
 
 type PortMapping @aws_cognito_user_pools {
