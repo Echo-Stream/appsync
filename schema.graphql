@@ -20,9 +20,8 @@ enum ApiUserRole {
 	read_only
 }
 
-union App = CrossAccountApp | ExternalApp | ManagedApp | XTenantReceivingApp | XTenantSendingApp
 
-interface AppInterface {
+interface App {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -52,7 +51,7 @@ enum ContentEncoding {
 	gzip
 }
 
-type CrossAccountApp implements AppInterface @aws_cognito_user_pools {
+type CrossAccountApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	config: AWSJSON
@@ -97,7 +96,7 @@ type EdgeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
-type ExternalApp implements AppInterface @aws_cognito_user_pools {
+type ExternalApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	config: AWSJSON
@@ -106,7 +105,7 @@ type ExternalApp implements AppInterface @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-type ExternalNode implements NodeInterface @aws_cognito_user_pools {
+type ExternalNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -119,7 +118,7 @@ type ExternalNode implements NodeInterface @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-interface FunctionInterface {
+interface Function {
 	code: String!
 	description: String!
 	name: String!
@@ -128,7 +127,7 @@ interface FunctionInterface {
 	tenant: Tenant
 }
 
-type BitmapperFunction implements FunctionInterface @aws_cognito_user_pool @aws_iam {
+type BitmapperFunction implements Function @aws_cognito_user_pool @aws_iam {
 	argumentMessageType: MessageType!
 	code: String!
 	description: String!
@@ -139,7 +138,7 @@ type BitmapperFunction implements FunctionInterface @aws_cognito_user_pool @aws_
 	tenant: Tenant
 }
 
-type TransformerFunction implements FunctionInterface @aws_cognito_user_pool @aws_iam {
+type TransformerFunction implements Function @aws_cognito_user_pool @aws_iam {
 	argumentMessageType: MessageType!
 	code: String!
 	description: String!
@@ -148,8 +147,6 @@ type TransformerFunction implements FunctionInterface @aws_cognito_user_pool @aw
 	system: Boolean!
 	tenant: Tenant
 }
-
-union Function = BitmapperFunction | TransformerFunction
 
 type FunctionResult @aws_cognito_user_pools {
 	items: [Function]
@@ -265,7 +262,7 @@ type ManagedInstance @aws_cognito_user_pools @aws_iam{
 	registrationDate: AWSDateTime!
 }
 
-type ManagedApp implements AppInterface @aws_cognito_user_pools {
+type ManagedApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	config: AWSJSON
@@ -276,7 +273,7 @@ type ManagedApp implements AppInterface @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-type ManagedNode implements NodeInterface @aws_cognito_user_pools {
+type ManagedNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -333,6 +330,8 @@ type MessageTypeResult @aws_cognito_user_pools {
 }
 
 type Mutation @aws_cognito_user_pools {
+	CreateNotification(old: AWSJSON, new: AWSJSON): Notification!
+	@aws_iam
 	PutApiUser(tenant: String!, role: ApiUserRole!, description: String): ApiUser!
 	DeleteApiUser(tenant: String!, username: String!): Boolean!
 	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
@@ -348,21 +347,6 @@ type Mutation @aws_cognito_user_pools {
 	DeleteManagedNodeType(tenant: String!, name: String!): Boolean!
 	RegenerateAppIso(tenant: String!, app: String!): ManagedApp!
 	DeregisterManagedInstance(tenant: String!, instanceId: String!): Boolean!
-	NotifyApp(
-		tenant: String!,
-		operation: DbOperation!,
-		app: String!,
-		itemType: String!
-	): AppNotification!
-		@aws_iam
-	NotifyUI(
-		tenant: String!,
-		operation: DbOperation!,
-		name: String!,
-		modifiedBy: String!,
-		itemType: String!
-	): UINotification!
-		@aws_iam
 	PurgeEdge(tenant: String!, source: String!, target: String!): Boolean!
 	PutBitmapperFunction(
 		tenant: String!,
@@ -520,7 +504,12 @@ type Mutation @aws_cognito_user_pools {
 	RemoveIntegration(tenant: String!, name: AvailableIntegrations!): Boolean!
 }
 
-union Node = ExternalNode | ManagedNode | RouterNode | TransformerNode | XTenantReceivingNode | XTenantSendingNode
+interface Node {
+	description: String
+	lastModified: LastModified
+	name: String!
+	tenant: Tenant!
+}
 
 type NodeCallableLogLine {
 	timestamp: Int!
@@ -533,17 +522,19 @@ type NodeCallableLogResult {
 	nextToken: String
 }
 
-interface NodeInterface {
-	description: String
-	lastModified: LastModified
-	name: String!
-	tenant: Tenant!
-}
-
 type NodeResult @aws_cognito_user_pools {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
+}
+
+union Notifiable = Tenant | KmsKey | MessageType | ManagedNodeType | BitmapperFunction | TransformerFunction | CrossAccountApp | ExternalApp | ManagedApp | XTenantReceivingApp | XTenantSendingApp | ExternalNode | ManagedNode | RouterNode | TransformerNode | XTenantReceivingNode | XTenantSendingNode
+
+type Notification @aws_cognito_user_pools {
+	tenant: String!,
+	app: String,
+	old: Notifiable,
+	new: Notifiable
 }
 
 enum PingStatus {
@@ -670,7 +661,7 @@ enum Region {
 	us_gov_west_1
 }
 
-type RouterNode implements NodeInterface @aws_cognito_user_pools {
+type RouterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -705,10 +696,8 @@ enum SnsSubscriptionStatus {
 }
 
 type Subscription @aws_cognito_user_pools {
-	appNotifications(tenant: String!, app: String!): AppNotification
-		@aws_subscribe(mutations: ["NotifyApp"])
-	uiNotifications(tenant: String!): UINotification
-		@aws_subscribe(mutations: ["NotifyUI"])
+	onNotification(tenant: String!, app: String): Notification
+	@aws_subscribe(mutations: ["createNotification"])
 }
 
 type Tenant @aws_cognito_user_pools {
@@ -743,7 +732,7 @@ type LoginUser @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-type TransformerNode implements NodeInterface @aws_cognito_user_pools {
+type TransformerNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -787,7 +776,7 @@ type ValidateResult @aws_cognito_user_pools {
 	stdout: String!
 }
 
-type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools {
+type XTenantReceivingApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 	sendingTenant: String!
 	sendingApp: String
@@ -797,7 +786,7 @@ type XTenantReceivingApp implements AppInterface @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
+type XTenantReceivingNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
@@ -807,7 +796,7 @@ type XTenantReceivingNode implements NodeInterface @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-type XTenantSendingApp implements AppInterface @aws_cognito_user_pools {
+type XTenantSendingApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 	receivingTenant: String!
 	receivingApp: String!
@@ -817,7 +806,7 @@ type XTenantSendingApp implements AppInterface @aws_cognito_user_pools {
 	lastModified: LastModified
 }
 
-type XTenantSendingNode implements NodeInterface @aws_cognito_user_pools {
+type XTenantSendingNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 	name: String!
 	description: String
