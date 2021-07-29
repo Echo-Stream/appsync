@@ -507,9 +507,6 @@ type Mutation {
 	): XTenantSendingNode!
 
 
-	SubscribeToSns(tenant: String!, endpoint: String!, protocol: SnsSubscriptionProtocol!): SnsSubscription!
-	UnsubscribeFromSns(tenant: String, arn: String!): SnsSubscription!
-	ConfirmSnsSubscription(tenant: String!, token: String!, endpoint: String!): SnsSubscription!
 	PutIntegration(config: AWSJSON!, name: AvailableIntegrations!, enabled: Boolean!): Integration!
 	RemoveIntegration(tenant: String!, name: AvailableIntegrations!): Boolean!
 }
@@ -597,7 +594,6 @@ type Query {
 	ListTenantUsers(tenant: String!, limit: Int, startKey: AWSJSON): TenantUserResult
 
 
-	ListSnsSubscriptions(tenant: String!): [SnsSubscription]!
 	GetInstalledIntegration(tenant: String!, name: AvailableIntegrations!): Integration
 	ListInstalledIntegrations(tenant: String!): [Integration!]
 	GetIntegrationDefinition(tenant: String!, name: AvailableIntegrations): IntegrationDefinition!
@@ -652,31 +648,12 @@ type RouterNode implements Node {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidateResult!
 }
 
-type SnsSubscription {
-	arn: String!
-	endpoint: String!
-	protocol: SnsSubscriptionProtocol!
-	tenant: Tenant!
-}
-
-enum SnsSubscriptionProtocol {
-	email
-	email_json
-	https
-}
-
-enum SnsSubscriptionStatus {
-	Confirmed
-	PendingConfirmation
-}
-
 type Subscription {
 	onNotification(tenant: String!, app: String): Notification
 	@aws_subscribe(mutations: ["createNotification"])
 }
 
 type Tenant {
-	alertSnsTopic: String!
 	config: AWSJSON
 	created: AtBy!
 	integrations: [Integration]
