@@ -1,4 +1,4 @@
-type ApiUser @aws_cognito_user_pools {
+type ApiUser {
 	config: AWSJSON!
 	created: AtBy!
 	description: String
@@ -11,7 +11,7 @@ type ApiUser @aws_cognito_user_pools {
 	Update(description: String, role: ApiUserRole): ApiUser!
 }
 
-type ApiUserResult @aws_cognito_user_pools {
+type ApiUserResult {
 	items: [ApiUser]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
@@ -33,13 +33,13 @@ interface App {
 	Delete(drainEdges: Boolean): Boolean!
 }
 
-type AppResult @aws_cognito_user_pools {
+type AppResult {
 	items: [App]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type AtBy @aws_cognito_user_pools {
+type AtBy {
 	at: AWSDateTime
 	by: String
 }
@@ -69,7 +69,7 @@ enum ContentEncoding {
 	deflate
 }
 
-type CrossAccountApp implements App @aws_cognito_user_pools {
+type CrossAccountApp implements App {
 	account: String!
 	config: AWSJSON
 	created: AtBy!
@@ -84,7 +84,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	Update(config: AWSJSON, description: String): CrossAccountApp!
 }
 
-type DockerConfig @aws_cognito_user_pools {
+type DockerConfig {
 	imageUrl: String!
 	password: String
 	username: String
@@ -96,7 +96,7 @@ input DockerConfigInput {
 	username: String
 }
 
-type Edge @aws_cognito_user_pools {
+type Edge {
 	created: AtBy!
 	description: String
 	kmsKey: KmsKey!
@@ -113,13 +113,13 @@ type Edge @aws_cognito_user_pools {
 	Update(description: String): Edge!
 }
 
-type EdgeResult @aws_cognito_user_pools {
+type EdgeResult {
 	items: [Edge]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type ExternalApp implements App @aws_cognito_user_pools {
+type ExternalApp implements App {
 	created: AtBy!
 	config: AWSJSON
 	description: String
@@ -133,7 +133,7 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	Update(config: AWSJSON, description: String): ExternalApp!
 }
 
-type ExternalNode implements Node @aws_cognito_user_pools {
+type ExternalNode implements Node {
 	app: ExternalApp!
 	config: AWSJSON
 	created: AtBy!
@@ -165,13 +165,13 @@ interface Function {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidateResult!
 }
 
-type FunctionResult @aws_cognito_user_pools {
+type FunctionResult {
 	items: [Function]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type Healthcheck @aws_cognito_user_pools {
+type Healthcheck {
 	interval: String!
 	retries: Int!
 	startPeriod: String!
@@ -187,7 +187,7 @@ input HealthcheckInput {
 	timeout: String!
 }
 
-type HostMount @aws_cognito_user_pools {
+type HostMount {
 	containerPath: String!
 	description: String!
 	hostPath: String!
@@ -199,7 +199,7 @@ input HostMountInput {
 	hostPath: String!
 }
 
-type HostMountRequirement @aws_cognito_user_pools {
+type HostMountRequirement {
 	containerPath: String!
 	description: String!
 }
@@ -209,14 +209,14 @@ input HostMountRequirementInput {
 	description: String!
 }
 
-type Integration @aws_cognito_user_pools @aws_iam {
+type Integration @aws_iam {
 	config: AWSJSON!
 	description: String!
 	enabled: Boolean!
 	name: AvailableIntegrations!
 }
 
-type IntegrationDefinition @aws_cognito_user_pools @aws_iam {
+type IntegrationDefinition @aws_iam {
 	configTemplate: AWSJSON!
 	description: String!
 	form: AWSJSON
@@ -224,7 +224,7 @@ type IntegrationDefinition @aws_cognito_user_pools @aws_iam {
 	name: AvailableIntegrations!
 }
 
-type LoginUser @aws_cognito_user_pools {
+type LoginUser {
 	activeDate: String
 	created: AtBy!
 	email: AWSEmail!
@@ -234,7 +234,7 @@ type LoginUser @aws_cognito_user_pools {
 	tenantUsers: [TenantUser!]
 }
 
-type KmsKey @aws_cognito_user_pools {
+type KmsKey {
 	arn: String!
 	created: AtBy!
 	description: String
@@ -246,13 +246,13 @@ type KmsKey @aws_cognito_user_pools {
 	Update(description: String): KmsKey!
 }
 
-type KmsKeyResult @aws_cognito_user_pools {
+type KmsKeyResult {
 	items: [KmsKey]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type LargeMessageStorage @aws_cognito_user_pools {
+type LargeMessageStorage {
 	presignedGet: AWSURL!
 	presignedPost: PresignedPost!
 }
@@ -275,7 +275,7 @@ enum LogLevel {
 	WARNING
 }
 
-type ManagedApp implements App @aws_cognito_user_pools {
+type ManagedApp implements App {
 	config: AWSJSON
 	created: AtBy!
 	description: String
@@ -292,7 +292,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	Update(description: String): ManagedApp!
 }
 
-type ManagedInstance @aws_cognito_user_pools {
+type ManagedInstance {
 	activationId: String!
 	hostname: String!
 	instanceId: String!
@@ -302,7 +302,7 @@ type ManagedInstance @aws_cognito_user_pools {
 	registrationDate: AWSDateTime!
 }
 
-type ManagedNode implements Node @aws_cognito_user_pools {
+type ManagedNode implements Node {
 	app: ManagedApp!
 	config: AWSJSON
 	created: AtBy!
@@ -323,7 +323,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	Update(config: AWSJSON, description: String, hostMounts: [HostMount!], portMappings: [PortMapping!]): ManagedNode!
 }
 
-type ManagedNodeType @aws_cognito_user_pools {
+type ManagedNodeType {
 	configTemplate: AWSJSON
 	created: AtBy!
 	description: String
@@ -343,13 +343,13 @@ type ManagedNodeType @aws_cognito_user_pools {
 	Update(description: String!): ManagedNodeType!
 }
 
-type ManagedNodeTypeResult @aws_cognito_user_pools {
+type ManagedNodeTypeResult {
 	items: [ManagedNodeType]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type MessageType @aws_cognito_user_pools {
+type MessageType {
 	auditor: String!
 	bitmapperTemplate: String!
 	created: AtBy!
@@ -366,13 +366,13 @@ type MessageType @aws_cognito_user_pools {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidateResult!
 }
 
-type MessageTypeResult @aws_cognito_user_pools {
+type MessageTypeResult {
 	items: [MessageType]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type Mutation @aws_cognito_user_pools {
+type Mutation {
 	CreateApiUser(tenant: String!, role: ApiUserRole!, description: String): ApiUser!
 	CreateBitmapperFunction(
 		tenant: String!,
@@ -524,7 +524,7 @@ interface Node {
 	Delete(drainEdges: Boolean): Boolean!
 }
 
-type NodeResult @aws_cognito_user_pools {
+type NodeResult {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
@@ -532,7 +532,7 @@ type NodeResult @aws_cognito_user_pools {
 
 union Notifiable = BitmapperFunction | CrossAccountApp | Edge |  ExternalApp | ExternalNode | KmsKey | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TransformerFunction | TransformerNode | XTenantReceivingApp | XTenantReceivingNode | XTenantSendingApp | XTenantSendingNode
 
-type Notification @aws_cognito_user_pools {
+type Notification {
 	app: String,
 	old: Notifiable,
 	new: Notifiable
@@ -545,7 +545,7 @@ enum PingStatus {
 	Online
 }
 
-type PortMapping @aws_cognito_user_pools {
+type PortMapping {
 	containerPort: Int!
 	description: String!
 	hostPort: Int!
@@ -556,7 +556,7 @@ input PortMappingInput {
 	hostPort: Int!
 }
 
-type PortMappingRequirement @aws_cognito_user_pools {
+type PortMappingRequirement {
 	containerPort: Int!
 	description: String!
 }
@@ -566,13 +566,13 @@ input PortMappingRequirementInput {
 	description: String!
 }
 
-type PresignedPost @aws_cognito_user_pools {
+type PresignedPost {
 	expiration: AWSTimestamp!
 	fields: AWSJSON!
 	url: AWSURL!
 }
 
-type Query @aws_cognito_user_pools {
+type Query {
 	GetApiUser(tenant: String!, username: String!): ApiUser
 	GetApp(name: String!, tenant: String!): App
 	GetEdge(source: String!, target: String!, tenant: String!): Edge
@@ -630,7 +630,7 @@ enum Region {
 	us_gov_west_1
 }
 
-type RouterNode implements Node @aws_cognito_user_pools {
+type RouterNode implements Node {
 	config: AWSJSON
 	created: AtBy!
 	description: String
@@ -652,7 +652,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidateResult!
 }
 
-type SnsSubscription @aws_cognito_user_pools {
+type SnsSubscription {
 	arn: String!
 	endpoint: String!
 	protocol: SnsSubscriptionProtocol!
@@ -670,12 +670,12 @@ enum SnsSubscriptionStatus {
 	PendingConfirmation
 }
 
-type Subscription @aws_cognito_user_pools {
+type Subscription {
 	onNotification(tenant: String!, app: String): Notification
 	@aws_subscribe(mutations: ["createNotification"])
 }
 
-type Tenant @aws_cognito_user_pools {
+type Tenant {
 	alertSnsTopic: String!
 	config: AWSJSON
 	created: AtBy!
@@ -686,18 +686,17 @@ type Tenant @aws_cognito_user_pools {
 	users: [TenantUser!]
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
-	@aws_iam @aws_cognito_user_pools
 	Delete: Boolean!
 	Update(config: AWSJSON): Tenant!
 }
 
-type TenantResult @aws_cognito_user_pools {
+type TenantResult {
 	items: [Tenant]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type TenantUser @aws_cognito_user_pools {
+type TenantUser {
 	activeDate: String
 	created: AtBy!
 	email: AWSEmail!
@@ -714,7 +713,7 @@ type TenantUser @aws_cognito_user_pools {
 	Update(role: UserRole, status: UserStatus): TenantUser!
 }
 
-type TenantUserResult @aws_cognito_user_pools {
+type TenantUserResult {
 	items: [TenantUser]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
@@ -737,7 +736,7 @@ type TransformerFunction implements Function @aws_cognito_user_pool {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidateResult!
 }
 
-type TransformerNode implements Node @aws_cognito_user_pools {
+type TransformerNode implements Node {
 	config: AWSJSON
 	created: AtBy!
 	description: String
@@ -773,12 +772,12 @@ enum UserStatus {
 	pending
 }
 
-type ValidateResult @aws_cognito_user_pools {
+type ValidateResult {
 	result: String!
 	stdout: String!
 }
 
-type XTenantReceivingApp implements App @aws_cognito_user_pools {
+type XTenantReceivingApp implements App {
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -792,7 +791,7 @@ type XTenantReceivingApp implements App @aws_cognito_user_pools {
 	Update(description: String): XTenantReceivingApp!
 }
 
-type XTenantReceivingNode implements Node @aws_cognito_user_pools {
+type XTenantReceivingNode implements Node {
 	app: XTenantReceivingApp!
 	created: AtBy!
 	description: String
@@ -806,7 +805,7 @@ type XTenantReceivingNode implements Node @aws_cognito_user_pools {
 	Update(description: String): XTenantReceivingNode!
 }
 
-type XTenantSendingApp implements App @aws_cognito_user_pools {
+type XTenantSendingApp implements App {
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -820,7 +819,7 @@ type XTenantSendingApp implements App @aws_cognito_user_pools {
 	Update(description: String): XTenantSendingApp!
 }
 
-type XTenantSendingNode implements Node @aws_cognito_user_pools {
+type XTenantSendingNode implements Node {
 	app: XTenantSendingApp!
 	config: AWSJSON
 	created: AtBy!
