@@ -44,10 +44,6 @@ type AtBy {
 	by: String
 }
 
-enum AvailableIntegrations {
-	alert_to_clickup_task
-}
-
 type BitmapperFunction implements Function @aws_cognito_user_pool {
 	argumentMessageType: MessageType!
 	code: String!
@@ -207,21 +203,6 @@ type HostMountRequirement {
 input HostMountRequirementInput {
 	containerPath: String!
 	description: String!
-}
-
-type Integration @aws_iam {
-	config: AWSJSON!
-	description: String!
-	enabled: Boolean!
-	name: AvailableIntegrations!
-}
-
-type IntegrationDefinition @aws_iam {
-	configTemplate: AWSJSON!
-	description: String!
-	form: AWSJSON
-	icon: AWSURL
-	name: AvailableIntegrations!
 }
 
 type LoginUser {
@@ -505,10 +486,6 @@ type Mutation {
 		sequentialProcessing: Boolean,
 		requirements: [String!]
 	): XTenantSendingNode!
-
-
-	PutIntegration(config: AWSJSON!, name: AvailableIntegrations!, enabled: Boolean!): Integration!
-	RemoveIntegration(tenant: String!, name: AvailableIntegrations!): Boolean!
 }
 
 interface Node {
@@ -592,12 +569,6 @@ type Query {
 	ListMessageTypes(limit: Int, startKey: String, tenant: String): MessageTypeResult
 	ListTenants(limit: Int, startKey: String): TenantResult
 	ListTenantUsers(tenant: String!, limit: Int, startKey: AWSJSON): TenantUserResult
-
-
-	GetInstalledIntegration(tenant: String!, name: AvailableIntegrations!): Integration
-	ListInstalledIntegrations(tenant: String!): [Integration!]
-	GetIntegrationDefinition(tenant: String!, name: AvailableIntegrations): IntegrationDefinition!
-	ListAvailableIntegrations(tenant: String!): [AvailableIntegrations]!
 }
 
 enum Region {
@@ -656,7 +627,6 @@ type Subscription {
 type Tenant {
 	config: AWSJSON
 	created: AtBy!
-	integrations: [Integration]
 	lastModified: AtBy!
 	name: String!
 	region: String!
