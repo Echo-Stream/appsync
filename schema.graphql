@@ -562,9 +562,9 @@ type Query {
 	GetManagedNodeType(name: String!, tenant: String): ManagedNodeType
 	GetMessageType(name: String!, tenant: String): MessageType
 	GetNode(name: String!, tenant: String!): Node
-	GetTenant(tenant: String!): Tenant!
-	GetTenantUser(tenant: String!, email: AWSEmail!): TenantUser!
-	GetUser: LoginUser!
+	GetTenant(tenant: String!): Tenant
+	GetTenantUser(tenant: String!, email: AWSEmail!): TenantUser
+	GetUser: LoginUser
 
 	ListApiUsers(tenant: String!, limit: Int, startKey: AWSJSON): ApiUserResult
 	ListApps(tenant: String!, limit: Int, nameContains: String, startKey: AWSJSON): AppResult
