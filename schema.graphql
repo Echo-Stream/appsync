@@ -1,3 +1,11 @@
+type AlertEmitterNode implements Node {
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	tenant: Tenant!
+}
+
 type ApiUser {
 	config: AWSJSON!
 	created: AtBy!
@@ -494,8 +502,6 @@ interface Node {
 	lastModified: AtBy!
 	name: String!
 	tenant: Tenant!
-
-	Delete(drainEdges: Boolean): Boolean!
 }
 
 type NodeResult {
