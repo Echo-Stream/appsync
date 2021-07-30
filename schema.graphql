@@ -85,7 +85,7 @@ type CrossAccountApp implements App {
 
 	Delete(drainEdges: Boolean): Boolean!
 	ResetPassword: CrossAccountApp!
-	Update(config: AWSJSON, description: String): CrossAccountApp!
+	Update(description: String): CrossAccountApp!
 }
 
 type DockerConfig {
@@ -134,7 +134,7 @@ type ExternalApp implements App {
 
 	Delete(drainEdges: Boolean): Boolean!
 	ResetPassword: ExternalApp!
-	Update(config: AWSJSON, description: String): ExternalApp!
+	Update(description: String): ExternalApp!
 }
 
 type ExternalNode implements Node {
@@ -151,7 +151,7 @@ type ExternalNode implements Node {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
-	Update(description: String): ExternalNode!
+	Update(config: AWSJSON, description: String): ExternalNode!
 }
 
 interface Function {
@@ -633,6 +633,7 @@ type Subscription {
 type Tenant {
 	config: AWSJSON
 	created: AtBy!
+	description: String
 	lastModified: AtBy!
 	name: String!
 	region: String!
@@ -640,7 +641,7 @@ type Tenant {
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
 	Delete: Boolean!
-	Update(config: AWSJSON): Tenant!
+	Update(config: AWSJSON, description: String): Tenant!
 }
 
 type TenantResult {
