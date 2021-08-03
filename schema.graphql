@@ -444,7 +444,7 @@ type Mutation {
 		config: AWSJSON,
 		requirements: [String!]
 	): RouterNode!
-	CreateTenant(name: String!, region: Region!, config: AWJSON): Tenant!
+	CreateTenant(name: String!, region: Region!, config: AWSJSON): Tenant!
 	CreateTransformerFunction(
 		tenant: String!,
 		name: String!,
