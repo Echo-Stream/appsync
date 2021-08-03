@@ -309,7 +309,7 @@ type ManagedNode implements Node {
 
 	Delete(drainEdges: Boolean): Boolean!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
-	Update(config: AWSJSON, description: String, hostMounts: [HostMount!], portMappings: [PortMapping!]): ManagedNode!
+	Update(config: AWSJSON, description: String, hostMounts: [HostMountInput!], portMappings: [PortMappingInput!]): ManagedNode!
 }
 
 type ManagedNodeType {
