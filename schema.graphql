@@ -706,7 +706,7 @@ type TransformerNode implements Node {
 
 	Delete(drainEdges: Boolean): Boolean!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
-	Update(config: AWSJSON, description: String, inlineTransformer: String, inlineTransformer: String, requirements: [String!], sequentialProcessing: Boolean): TransformerNode!
+	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): TransformerNode!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidateResult!
 }
 
@@ -788,6 +788,6 @@ type XTenantSendingNode implements Node {
 
 	Delete(drainEdges: Boolean): Boolean!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
-	Update(config: AWSJSON, description: String, inlineTransformer: String, inlineTransformer: String, requirements: [String!], sequentialProcessing: Boolean): XTenantSendingNode!
+	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): XTenantSendingNode!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidateResult!
 }
