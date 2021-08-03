@@ -625,7 +625,7 @@ type RouterNode implements Node {
 
 type Subscription {
 	onNotification(tenant: String!, app: String): Notification
-	@aws_subscribe(mutations: ["createNotification"])
+	@aws_subscribe(mutations: ["CreateNotification"])
 }
 
 type Tenant {
