@@ -368,7 +368,6 @@ type Mutation {
 		name: String!,
 		code: String!,
 		description: String!,
-		type: FunctionType!,
 		argumentMessageType: String!,
 		requirements: [String!]
 	): BitmapperFunction!
@@ -451,7 +450,6 @@ type Mutation {
 		name: String!,
 		code: String!,
 		description: String!,
-		type: FunctionType!,
 		argumentMessageType: String!,
 		resultMessageType: String!,
 		requirements: [String!]
@@ -694,9 +692,9 @@ type TransformerNode implements Node {
 	config: AWSJSON
 	created: AtBy!
 	description: String
-	lastModified: AtBy!
 	inlineTransformer: String
-	inlineTransformer: TransformerFunction
+	lastModified: AtBy!
+	managedTransformer: TransformerFunction
 	name: String!
 	receiveEdges: [Edge]
 	receiveMessageType: MessageType
