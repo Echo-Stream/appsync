@@ -68,6 +68,23 @@ type BitmapperFunction implements Function @aws_cognito_user_pool {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidateResult!
 }
 
+type Change {
+	old: Echo
+	new: Echo
+}
+
+type ChangeNotification {
+	app: String
+	change: Change!
+	dateTime: AWSDateTime!
+	tenant: String!
+}
+
+type ChangeResult {
+	items: [Change]!
+	nextToken: String
+}
+
 enum ContentEncoding {
 	gzip
 	deflate
@@ -99,6 +116,8 @@ input DockerConfigInput {
 	password: String
 	username: String
 }
+
+union Echo = BitmapperFunction | CrossAccountApp | Edge |  ExternalApp | ExternalNode | KmsKey | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TransformerFunction | TransformerNode | XTenantReceivingApp | XTenantReceivingNode | XTenantSendingApp | XTenantSendingNode
 
 type Edge {
 	created: AtBy!
@@ -371,6 +390,8 @@ type Mutation {
 		argumentMessageType: String!,
 		requirements: [String!]
 	): BitmapperFunction!
+	CreateChangeNotification(tenant: String!, app: String, old: AWSJSON, new: AWSJSON): ChangeNotification!
+	@aws_iam
 	CreateCrossAccountApp(
 		tenant: String!,
 		name: String!,
@@ -431,8 +452,6 @@ type Mutation {
 		bitmapperTemplate: String!,
 		requirements: [String!]
 	): MessageType!
-	CreateNotification(old: AWSJSON, new: AWSJSON): Notification!
-	@aws_iam
 	CreateRouterNode(
 		tenant: String!,
 		name: String!,
@@ -506,15 +525,6 @@ type NodeResult {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
-}
-
-union Notifiable = BitmapperFunction | CrossAccountApp | Edge |  ExternalApp | ExternalNode | KmsKey | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TransformerFunction | TransformerNode | XTenantReceivingApp | XTenantReceivingNode | XTenantSendingApp | XTenantSendingNode
-
-type Notification {
-	app: String,
-	old: Notifiable,
-	new: Notifiable
-	tenant: String!,
 }
 
 enum PingStatus {
@@ -624,8 +634,8 @@ type RouterNode implements Node {
 }
 
 type Subscription {
-	onNotification(tenant: String!, app: String): Notification
-	@aws_subscribe(mutations: ["CreateNotification"])
+	onChange(tenant: String!, app: String): ChangeNotification
+	@aws_subscribe(mutations: ["CreateChangeNotification"])
 }
 
 type Tenant {
@@ -639,6 +649,7 @@ type Tenant {
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
 	Delete: Boolean!
+	ListChanges(by: String, endDateTime: AWSDateTime, nextToken: String, startDateTime: AWSDateTime): ChangeResult!
 	Update(config: AWSJSON, description: String): Tenant!
 }
 
