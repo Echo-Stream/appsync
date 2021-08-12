@@ -95,6 +95,7 @@ type CrossAccountApp implements App {
 	config: AWSJSON
 	created: AtBy!
 	description: String
+	iamPolicy: AWSJSON!
 	lastModified: AtBy!
 	name: String!
 	nodes: [ExternalNode]
@@ -124,6 +125,7 @@ type Edge {
 	description: String
 	kmsKey: KmsKey!
 	lastModified: AtBy!
+	messageCounts: MessageCounts!
 	messageType: MessageType!
 	queue: AWSURL!
 	source: Node!
@@ -355,6 +357,12 @@ type ManagedNodeTypeResult {
 	items: [ManagedNodeType]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
+}
+
+type MessageCounts {
+	approximateNumberOfMessages: Int!
+	approximateNumberOfMessagesDelayed: Int!
+	approximateNumberOfMessagesNotVisible: Int!
 }
 
 type MessageType {
