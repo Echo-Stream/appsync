@@ -106,6 +106,69 @@ type CrossAccountApp implements App {
 	Update(description: String): CrossAccountApp!
 }
 
+type CrossTenantReceivingApp implements App {
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	nodes: [CrossTenantReceivingNode]
+	sendingApp: String
+	sendingTenant: String!
+	tenant: Tenant!
+
+	Delete(drainEdges: Boolean): Boolean!
+	Update(description: String): CrossTenantReceivingApp!
+}
+
+type CrossTenantReceivingNode implements Node {
+	app: CrossTenantReceivingApp!
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	sendEdges: [Edge]
+	sendMessageType: MessageType
+	tenant: Tenant!
+
+	Delete(drainEdges: Boolean): Boolean!
+	Update(description: String): CrossTenantReceivingNode!
+}
+
+type CrossTenantSendingApp implements App {
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	nodes: [CrossTenantSendingNode]
+	receivingApp: String!
+	receivingTenant: String!
+	tenant: Tenant!
+	
+	Delete(drainEdges: Boolean): Boolean!
+	Update(description: String): CrossTenantSendingApp!
+}
+
+type CrossTenantSendingNode implements Node {
+	app: CrossTenantSendingApp!
+	config: AWSJSON
+	created: AtBy!
+	description: String
+	inlineTransformer: String
+	lastModified: AtBy!
+	managedTransformer: TransformerFunction
+	name: String!
+	receiveEdges: [Edge]
+	receiveMessageType: MessageType
+	requirements: [String!]
+	sequentialProcessing: Boolean
+	tenant: Tenant!
+
+	Delete(drainEdges: Boolean): Boolean!
+	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
+	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): CrossTenantSendingNode!
+	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidateResult!
+}
+
 type DockerConfig {
 	imageUrl: String!
 	password: String
@@ -118,7 +181,7 @@ input DockerConfigInput {
 	username: String
 }
 
-union Echo = BitmapperFunction | CrossAccountApp | Edge |  ExternalApp | ExternalNode | KmsKey | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TransformerFunction | TransformerNode | XTenantReceivingApp | XTenantReceivingNode | XTenantSendingApp | XTenantSendingNode
+union Echo = BitmapperFunction | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | Edge |  ExternalApp | ExternalNode | KmsKey | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TransformerFunction | TransformerNode
 
 type Edge {
 	created: AtBy!
@@ -406,6 +469,32 @@ type Mutation {
 		description: String,
 		account: String!
 	): ExternalApp!
+	CreateCrossTenantReceivingApp(
+		tenant: String!, 
+		name: String!, 
+		sendingTenant: String!, 
+		description: String
+	): CrossTenantReceivingApp!
+	CreateCrossTenantSendingApp(
+		tenant: String!,
+		name: String!,
+		description: String,
+		receivingTenant: String!,
+		receivingApp: String!
+	): CrossTenantSendingApp!
+	CreateCrossTenantSendingNode(
+		tenant: String!,
+		app: String!,
+		name: String!,
+		receiveMessageType: String!,
+		description: String,
+		config: AWSJSON,
+		sendMessageType: String,
+		inlineTransformer: String,
+		managedTransformer: String,
+		sequentialProcessing: Boolean,
+		requirements: [String!]
+	): CrossTenantSendingNode!
 	CreateEdge(
 		tenant: String!, 
 		source: String!, 
@@ -493,32 +582,6 @@ type Mutation {
 		sequentialProcessing: Boolean,
 		requirements: [String!]
 	): TransformerNode!
-	CreateXTenantReceivingApp(
-		tenant: String!, 
-		name: String!, 
-		sendingTenant: String!, 
-		description: String
-	): XTenantReceivingApp!
-	CreateXTenantSendingApp(
-		tenant: String!,
-		name: String!,
-		description: String,
-		receivingTenant: String!,
-		receivingApp: String!
-	): XTenantSendingApp!
-	CreateXTenantSendingNode(
-		tenant: String!,
-		app: String!,
-		name: String!,
-		receiveMessageType: String!,
-		description: String,
-		config: AWSJSON,
-		sendMessageType: String,
-		inlineTransformer: String,
-		managedTransformer: String,
-		sequentialProcessing: Boolean,
-		requirements: [String!]
-	): XTenantSendingNode!
 }
 
 interface Node {
@@ -748,65 +811,3 @@ type ValidateResult {
 	stdout: String!
 }
 
-type XTenantReceivingApp implements App {
-	created: AtBy!
-	description: String
-	lastModified: AtBy!
-	name: String!
-	nodes: [XTenantReceivingNode]
-	sendingApp: String
-	sendingTenant: String!
-	tenant: Tenant!
-
-	Delete(drainEdges: Boolean): Boolean!
-	Update(description: String): XTenantReceivingApp!
-}
-
-type XTenantReceivingNode implements Node {
-	app: XTenantReceivingApp!
-	created: AtBy!
-	description: String
-	lastModified: AtBy!
-	name: String!
-	sendEdges: [Edge]
-	sendMessageType: MessageType
-	tenant: Tenant!
-
-	Delete(drainEdges: Boolean): Boolean!
-	Update(description: String): XTenantReceivingNode!
-}
-
-type XTenantSendingApp implements App {
-	created: AtBy!
-	description: String
-	lastModified: AtBy!
-	name: String!
-	nodes: [XTenantSendingNode]
-	receivingApp: String!
-	receivingTenant: String!
-	tenant: Tenant!
-	
-	Delete(drainEdges: Boolean): Boolean!
-	Update(description: String): XTenantSendingApp!
-}
-
-type XTenantSendingNode implements Node {
-	app: XTenantSendingApp!
-	config: AWSJSON
-	created: AtBy!
-	description: String
-	inlineTransformer: String
-	lastModified: AtBy!
-	managedTransformer: TransformerFunction
-	name: String!
-	receiveEdges: [Edge]
-	receiveMessageType: MessageType
-	requirements: [String!]
-	sequentialProcessing: Boolean
-	tenant: Tenant!
-
-	Delete(drainEdges: Boolean): Boolean!
-	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
-	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): XTenantSendingNode!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidateResult!
-}
