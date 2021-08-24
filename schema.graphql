@@ -3,6 +3,7 @@ type AlertEmitterNode implements Node {
 	description: String
 	lastModified: AtBy!
 	name: String!
+	sendMessageType: MessageType!
 	tenant: Tenant!
 }
 
@@ -71,6 +72,15 @@ type BitmapperFunction implements Function @aws_cognito_user_pool {
 type Change {
 	old: Echo
 	new: Echo
+}
+
+type ChangeEmitterNode implements Node {
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	sendMessageType: MessageType!
+	tenant: Tenant!
 }
 
 type ChangeNotification {
@@ -181,7 +191,7 @@ input DockerConfigInput {
 	username: String
 }
 
-union Echo = BitmapperFunction | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | Edge |  ExternalApp | ExternalNode | KmsKey | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TransformerFunction | TransformerNode
+union Echo = AlertEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TransformerFunction | TransformerNode
 
 type Edge {
 	created: AtBy!
@@ -295,6 +305,15 @@ type HostMountRequirement {
 input HostMountRequirementInput {
 	containerPath: String!
 	description: String!
+}
+
+type LogEmitterNode implements Node {
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	sendMessageType: MessageType!
+	tenant: Tenant!
 }
 
 type LoginUser {
