@@ -69,6 +69,11 @@ type BitmapperFunction implements Function @aws_cognito_user_pool {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
+type BulkDataStorage {
+	presignedGet: AWSURL!
+	presignedPost: PresignedPost!
+}
+
 type Change {
 	old: Echo
 	new: Echo
@@ -342,11 +347,6 @@ type KmsKeyResult {
 	items: [KmsKey]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
-}
-
-type LargeMessageStorage {
-	presignedGet: AWSURL!
-	presignedPost: PresignedPost!
 }
 
 type LogEvent {
@@ -653,10 +653,10 @@ type PresignedPost {
 type Query {
 	GetApiUser(tenant: String!, username: String!): ApiUser
 	GetApp(name: String!, tenant: String!): App
+	GetBulkDataStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [BulkDataStorage!]!
 	GetEdge(source: String!, target: String!, tenant: String!): Edge
 	GetFunction(name: String!, tenant: String): Function
 	GetKmsKey(name: String!, tenant: String!): KmsKey
-	GetLargeMessageStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [LargeMessageStorage!]!
 	GetManagedNodeType(name: String!, tenant: String): ManagedNodeType
 	GetMessageType(name: String!, tenant: String): MessageType
 	GetNode(name: String!, tenant: String!): Node
