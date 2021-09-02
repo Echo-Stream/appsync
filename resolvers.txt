@@ -1,0 +1,280 @@
+AlertEmitterNode:
+    sendMessageType: Batch
+    tenant: Batch
+
+
+ApiUser:
+	config: Batch
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+}
+
+
+BitmapperFunction:
+	argumentMessageType: Batch
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+	Validate: Invoke
+
+
+ChangeEmitterNode:
+	sendMessageType: Batch
+	tenant: Batch
+
+
+ChangeNotification:
+	tenant: Batch
+
+
+CrossAccountApp:
+	config: Batch
+	nodes: Batch
+	tenant: Batch
+	Delete: Invoke
+	ResetPassword: Invoke
+	Update: Invoke
+
+
+CrossTenantReceivingApp:
+	nodes: Batch
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+
+
+CrossTenantReceivingNode:
+	app: Batch
+	sendEdges: Batch
+	sendMessageType: Batch
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+
+
+CrossTenantSendingApp:
+	nodes: Batch
+	receivingApp: Batch
+	receivingTenant: Batch
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+}
+
+CrossTenantSendingNode:
+	app: Batch
+	config: Batch
+	managedTransformer: Batch
+	receiveEdges: Batch
+	receiveMessageType: Batch
+	tenant: Batch
+	Delete: Invoke
+	ListLogEvents: Invoke
+	Update: Invoke
+	Validate: Invoke
+
+
+Edge:
+	kmsKey: Batch
+	messageCounts: Batch
+	messageType: Batch
+	source: Batch
+	target: Batch
+	tenant: Batch
+	Delete: Invoke
+	Move: Invoke
+	Purge: Invoke
+	Update: Invoke
+
+
+ExternalApp:
+	config: Batch
+	nodes: Batch
+	tenant: Batch
+	Delete: Invoke
+	ResetPassword: Invoke
+	Update: Invoke
+
+
+ExternalNode:
+	app: Batch
+	config: Batch
+	receiveEdges: Batch
+	receiveMes`sageType: Batch
+	sendEdges: Batch
+	sendMessageType: Batch
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+
+
+Function:
+	argumentMessageType: Batch
+	tenant: Batch
+	Delete: Invoke
+	Validate: Invoke
+
+
+LogEmitterNode:
+	sendMessageType: Batch
+	tenant: Batch
+
+
+LoginUser:
+	tenantUsers: Batch
+
+
+KmsKey:
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+
+
+ManagedApp:
+	config: Batch
+	managedInstances: Batch
+	nodes: Batch
+	tenant: Batch
+
+	Delete: Invoke
+	DeregisterManagedInstance: Invoke
+	ResetPassword: Invoke
+	Update: Invoke
+
+
+ManagedInstance:
+	lastPingDateTime: Batch
+	pingStatus: Batch
+
+
+ManagedNode:
+	app: Batch
+	config: Batch
+	managedNodeType: Batch
+	receiveEdges: Batch
+	receiveMessageType: Batch
+	sendEdges: Batch
+	sendMessageType: Batch
+	tenant: Batch
+	Delete: Invoke
+	ListLogEvents: Invoke
+	Update: Invoke
+
+
+ManagedNodeType:
+	receiveMessageType: Batch
+	sendMessageType: Batch
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+
+
+MessageType:
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+	Validate: Invoke
+
+
+Mutation:
+	CreateApiUser: Invoke
+	CreateBitmapperFunction: Invoke
+	CreateChangeNotification: Invoke
+	CreateCrossAccountApp: Invoke
+	CreateCrossTenantReceivingApp: Invoke
+	CreateCrossTenantSendingApp: Invoke
+	CreateCrossTenantSendingNode: Invoke
+	CreateEdge: Invoke
+	CreateExternalApp: Invoke
+	CreateExternalNode: Invoke
+	CreateKmsKey: Invoke
+	CreateManagedApp: Invoke
+	CreateManagedNode: Invoke
+	CreateManagedNodeType: Invoke
+	CreateMessageType: Invoke
+	CreateRouterNode: Invoke
+	CreateTenant: Invoke
+	CreateTransformerFunction: Invoke
+	CreateTransformerNode: Invoke
+
+
+Query:
+	GetApiUser: Invoke
+	GetApp: Invoke
+	GetBulkDataStorage: Invoke
+	GetEdge: Invoke
+	GetFunction: Invoke
+	GetKmsKey: Invoke
+	GetManagedNodeType: Invoke
+	GetMessageType: Invoke
+	GetNode: Invoke
+	GetTenant: Invoke
+	GetTenantUser: Invoke
+	GetUser: Invoke
+	ListApiUsers: Invoke
+	ListApps: Invoke
+	ListFunctions: Invoke
+	ListKeys: Invoke
+	ListNodes: Invoke
+	ListManagedNodeTypes: Invoke
+	ListMessageTypes: Invoke
+	ListTenants: Invoke
+	ListTenantUsers: Invoke
+
+
+RouterNode:
+	config: Batch
+	managedBitmapper: Batch
+	receiveEdges: Batch
+	receiveMessageType: Batch
+	sendEdges: Batch
+	sendMessageType: Batch
+	tenant: Batch
+	Delete: Invoke
+	ListLogEvents: Invoke
+	Update: Invoke
+	Validate: Invoke
+
+
+Subscription:
+	onChange: Invoke
+
+
+Tenant:
+	config: Batch
+	users: Batch
+	AddUser: Invoke
+	Delete: Invoke
+	ListChanges: Invoke
+	Update: Invoke
+
+
+TenantUser:
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+
+
+TransformerFunction:
+	argumentMessageType: Batch
+	resultMessageType: Batch
+	tenant: Batch
+	Delete: Invoke
+	Update: Invoke
+	Validate: Invoke
+
+
+TransformerNode:
+	config: Batch
+	managedTransformer: Batch
+	receiveEdges: Batch
+	receiveMessageType: Batch
+	sendEdges: Batch
+	sendMessageType: Batch
+	tenant: Batch
+	Delete: Invoke
+	ListLogEvents: Invoke
+	Update: Invoke
+	Validate: Invoke
+
