@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.8
-from cognitoinator import TokenFetcher
+from cognitoinator.providers import TokenFetcher
 from logging import getLogger, StreamHandler
 from sys import stdout
 from os import path
