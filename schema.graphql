@@ -76,6 +76,7 @@ type BulkDataStorage {
 }
 
 type Change {
+	created: AtBy
 	old: Echo
 	new: Echo
 }
@@ -748,7 +749,7 @@ type Tenant {
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
 	Delete: Boolean!
-	ListChanges(by: String, endDateTime: AWSDateTime, nextToken: String, startDateTime: AWSDateTime): ChangeResult!
+	ListChanges(by: String, endDateTime: AWSDateTime, limit: Int, startDateTime: AWSDateTime, startKey: AWSJSON): ChangeResult!
 	Update(config: AWSJSON, description: String): Tenant!
 }
 
