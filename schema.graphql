@@ -97,7 +97,8 @@ type ChangeNotification {
 
 type ChangeResult {
 	items: [Change]!
-	nextToken: String
+	lastEvaluatedKey: AWSJSON
+	scannedCount: Int
 }
 
 enum ContentEncoding {
