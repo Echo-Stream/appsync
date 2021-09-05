@@ -67,7 +67,7 @@ type BitmapperFunction implements Function @aws_cognito_user_pool {
 
 	Delete: Boolean!
 	Update(code: String, description: String, readme: String, requirements: [String!]): BitmapperFunction!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
 }
 
 type BulkDataStorage {
@@ -183,7 +183,7 @@ type CrossTenantSendingNode implements Node {
 	Delete(drainEdges: Boolean): Boolean!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): CrossTenantSendingNode!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
 }
 
 type DockerConfig {
@@ -268,7 +268,7 @@ interface Function {
 	tenant: Tenant
 
 	Delete: Boolean!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
 }
 
 type FunctionResult {
@@ -466,7 +466,7 @@ type MessageType {
 	
 	Delete: Boolean!
 	Update(auditor: String, bitmapperTemplate: String, description: String, readme: String, requirements: [String!], transformerTemplate: String): MessageType!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
 }
 
 type MessageTypeResult {
@@ -729,7 +729,7 @@ type RouterNode implements Node {
 	Delete(drainEdges: Boolean): Boolean!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineBitmapper: String, managedBitmapper: String, requirements: [String!], routeTable: AWSJSON): RouterNode!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
 }
 
 type Subscription {
@@ -796,7 +796,7 @@ type TransformerFunction implements Function @aws_cognito_user_pool {
 
 	Delete: Boolean!
 	Update(code: String, description: String, readme: String, requirements: [String!]): TransformerFunction!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
 }
 
 type TransformerNode implements Node {
@@ -818,7 +818,7 @@ type TransformerNode implements Node {
 	Delete(drainEdges: Boolean): Boolean!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): TransformerNode!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
 }
 
 enum UserRole {
