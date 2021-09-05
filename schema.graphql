@@ -76,7 +76,7 @@ type BulkDataStorage {
 }
 
 type Change {
-	created: AtBy
+	created: AtBy!
 	old: Echo
 	new: Echo
 }
@@ -93,7 +93,6 @@ type ChangeEmitterNode implements Node {
 type ChangeNotification {
 	app: String
 	change: Change!
-	dateTime: AWSDateTime!
 	tenant: String!
 }
 
