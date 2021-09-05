@@ -60,12 +60,13 @@ type BitmapperFunction implements Function @aws_cognito_user_pool {
 	description: String!
 	lastModified: AtBy!
 	name: String!
+	readme: String
 	requirements: [String!]
 	system: Boolean!
 	tenant: Tenant
 
 	Delete: Boolean!
-	Update(code: String, description: String, requirements: [String!]): BitmapperFunction!
+	Update(code: String, description: String, readme: String, requirements: [String!]): BitmapperFunction!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
@@ -261,6 +262,7 @@ interface Function {
 	description: String!
 	name: String!
 	lastModified: AtBy!
+	readme: String
 	requirements: [String!]
 	system: Boolean!
 	tenant: Tenant
@@ -426,6 +428,7 @@ type ManagedNodeType {
 	lastModified: AtBy!
 	name: String!
 	portMappingRequirements: [PortMappingRequirement!]
+	readme: String
 	receiveMessageType: MessageType
 	sendMessageType: MessageType
 	system: Boolean!
@@ -433,7 +436,7 @@ type ManagedNodeType {
 	volumes: [String!]
 
 	Delete: Boolean!
-	Update(description: String!): ManagedNodeType!
+	Update(description: String, healthcheck: Healthcheck, readme: String, volumes: [String!]): ManagedNodeType!
 }
 
 type ManagedNodeTypeResult {
@@ -452,16 +455,17 @@ type MessageType {
 	auditor: String!
 	bitmapperTemplate: String!
 	created: AtBy!
-	description: String,
+	description: String
 	lastModified: AtBy!
 	name: String!
+	readme: String
 	requirements: [String!]
 	system: Boolean!
 	tenant: Tenant
 	transformerTemplate: String!
 	
 	Delete: Boolean!
-	Update(auditor: String, bitmapperTemplate: String, description: String, requirements: [String!], transformerTemplate: String): MessageType!
+	Update(auditor: String, bitmapperTemplate: String, description: String, readme: String, requirements: [String!], transformerTemplate: String): MessageType!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
@@ -479,6 +483,7 @@ type Mutation {
 		code: String!,
 		description: String!,
 		argumentMessageType: String!,
+		readme: String,
 		requirements: [String!]
 	): BitmapperFunction!
 	CreateChangeNotification(tenant: String!, app: String, old: AWSJSON, new: AWSJSON): ChangeNotification!
@@ -551,15 +556,16 @@ type Mutation {
 	CreateManagedNodeType(
 		tenant: String!, 
 		name: String!,
+		configTemplate: AWSJSON,
 		description: String,
 		dockerConfig: DockerConfigInput!,
-		configTemplate: AWSJSON,
+		healthcheck: HealthcheckInput
 		hostMountRequirements: [HostMountRequirementInput!],
 		portMappingRequirements: [PortMappingRequirementInput!],
-		volumes: [String!],
-		sendMessageType: String,
+		readme: String,
 		receiveMessageType: String,
-		healthcheck: HealthcheckInput
+		sendMessageType: String,
+		volumes: [String!],
 	): ManagedNodeType!
 	CreateMessageType(
 		tenant: String!, 
@@ -567,6 +573,7 @@ type Mutation {
 		auditor: String!,
 		transformerTemplate: String!,
 		bitmapperTemplate: String!,
+		readme: String,
 		requirements: [String!]
 	): MessageType!
 	CreateRouterNode(
@@ -587,6 +594,7 @@ type Mutation {
 		code: String!,
 		description: String!,
 		argumentMessageType: String!,
+		readme: String,
 		resultMessageType: String!,
 		requirements: [String!]
 	): TransformerFunction!
@@ -780,13 +788,14 @@ type TransformerFunction implements Function @aws_cognito_user_pool {
 	description: String!
 	lastModified: AtBy!
 	name: String!
+	readme: String
 	requirements: [String!]
 	resultMessageType: MessageType!
 	system: Boolean!
 	tenant: Tenant
 
 	Delete: Boolean!
-	Update(code: String, description: String, requirements: [String!]): TransformerFunction!
+	Update(code: String, description: String, readme: String, requirements: [String!]): TransformerFunction!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
