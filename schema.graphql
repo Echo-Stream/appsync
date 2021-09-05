@@ -749,7 +749,7 @@ type Tenant {
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
 	Delete: Boolean!
-	ListChanges(by: String, endDateTime: AWSDateTime, limit: Int, startDateTime: AWSDateTime, startKey: AWSJSON): ChangeResult!
+	ListChanges(endDateTime: AWSDateTime, limit: Int, startDateTime: AWSDateTime, startKey: AWSJSON): ChangeResult!
 	Update(config: AWSJSON, description: String): Tenant!
 }
 
