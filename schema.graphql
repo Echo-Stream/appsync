@@ -1,4 +1,4 @@
-type AlertEmitterNode implements Node {
+type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -7,7 +7,7 @@ type AlertEmitterNode implements Node {
 	tenant: Tenant!
 }
 
-type ApiUser {
+type ApiUser @aws_cognito_user_pools {
 	config: AWSJSON!
 	created: AtBy!
 	description: String
@@ -20,7 +20,7 @@ type ApiUser {
 	Update(description: String, role: ApiUserRole): ApiUser!
 }
 
-type ApiUserResult {
+type ApiUserResult @aws_cognito_user_pools {
 	items: [ApiUser]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
@@ -32,7 +32,7 @@ enum ApiUserRole {
 	user
 }
 
-interface App {
+interface App @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -42,13 +42,13 @@ interface App {
 	Delete(drainEdges: Boolean): Boolean!
 }
 
-type AppResult {
+type AppResult @aws_cognito_user_pools {
 	items: [App]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type AtBy {
+type AtBy @aws_cognito_user_pools {
 	at: AWSDateTime
 	by: String
 }
@@ -60,28 +60,26 @@ type BitmapperFunction implements Function @aws_cognito_user_pool {
 	description: String!
 	lastModified: AtBy!
 	name: String!
-	readme: String
 	requirements: [String!]
 	system: Boolean!
 	tenant: Tenant
 
 	Delete: Boolean!
-	Update(code: String, description: String, readme: String, requirements: [String!]): BitmapperFunction!
-	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
+	Update(code: String, description: String, requirements: [String!]): BitmapperFunction!
+	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
-type BulkDataStorage {
+type BulkDataStorage @aws_cognito_user_pools {
 	presignedGet: AWSURL!
 	presignedPost: PresignedPost!
 }
 
-type Change {
-	created: AtBy!
+type Change @aws_cognito_user_pools {
 	old: Echo
 	new: Echo
 }
 
-type ChangeEmitterNode implements Node {
+type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -90,16 +88,16 @@ type ChangeEmitterNode implements Node {
 	tenant: Tenant!
 }
 
-type ChangeNotification {
+type ChangeNotification @aws_cognito_user_pools {
 	app: String
 	change: Change!
+	dateTime: AWSDateTime!
 	tenant: String!
 }
 
-type ChangeResult {
+type ChangeResult @aws_cognito_user_pools {
 	items: [Change]!
-	lastEvaluatedKey: AWSJSON
-	scannedCount: Int
+	nextToken: String
 }
 
 enum ContentEncoding {
@@ -107,7 +105,7 @@ enum ContentEncoding {
 	deflate
 }
 
-type CrossAccountApp implements App {
+type CrossAccountApp implements App @aws_cognito_user_pools {
 	account: String!
 	config: AWSJSON
 	created: AtBy!
@@ -123,7 +121,7 @@ type CrossAccountApp implements App {
 	Update(description: String): CrossAccountApp!
 }
 
-type CrossTenantReceivingApp implements App {
+type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -137,7 +135,7 @@ type CrossTenantReceivingApp implements App {
 	Update(description: String): CrossTenantReceivingApp!
 }
 
-type CrossTenantReceivingNode implements Node {
+type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	app: CrossTenantReceivingApp!
 	created: AtBy!
 	description: String
@@ -151,7 +149,7 @@ type CrossTenantReceivingNode implements Node {
 	Update(description: String): CrossTenantReceivingNode!
 }
 
-type CrossTenantSendingApp implements App {
+type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -165,7 +163,7 @@ type CrossTenantSendingApp implements App {
 	Update(description: String): CrossTenantSendingApp!
 }
 
-type CrossTenantSendingNode implements Node {
+type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	app: CrossTenantSendingApp!
 	config: AWSJSON
 	created: AtBy!
@@ -183,10 +181,10 @@ type CrossTenantSendingNode implements Node {
 	Delete(drainEdges: Boolean): Boolean!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): CrossTenantSendingNode!
-	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
+	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
-type DockerConfig {
+type DockerConfig @aws_cognito_user_pools {
 	imageUrl: String!
 	password: String
 	username: String
@@ -200,7 +198,7 @@ input DockerConfigInput {
 
 union Echo = AlertEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TransformerFunction | TransformerNode
 
-type Edge {
+type Edge @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	kmsKey: KmsKey!
@@ -218,13 +216,13 @@ type Edge {
 	Update(description: String): Edge!
 }
 
-type EdgeResult {
+type EdgeResult @aws_cognito_user_pools {
 	items: [Edge]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type ExternalApp implements App {
+type ExternalApp implements App @aws_cognito_user_pools {
 	created: AtBy!
 	config: AWSJSON
 	description: String
@@ -238,7 +236,7 @@ type ExternalApp implements App {
 	Update(description: String): ExternalApp!
 }
 
-type ExternalNode implements Node {
+type ExternalNode implements Node @aws_cognito_user_pools {
 	app: ExternalApp!
 	config: AWSJSON
 	created: AtBy!
@@ -255,29 +253,28 @@ type ExternalNode implements Node {
 	Update(config: AWSJSON, description: String): ExternalNode!
 }
 
-interface Function {
+interface Function @aws_cognito_user_pools {
 	argumentMessageType: MessageType!
 	code: String!
 	created: AtBy!
 	description: String!
 	name: String!
 	lastModified: AtBy!
-	readme: String
 	requirements: [String!]
 	system: Boolean!
 	tenant: Tenant
 
 	Delete: Boolean!
-	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
+	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
-type FunctionResult {
+type FunctionResult @aws_cognito_user_pools {
 	items: [Function]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type Healthcheck {
+type Healthcheck @aws_cognito_user_pools {
 	interval: String!
 	retries: Int!
 	startPeriod: String!
@@ -293,7 +290,7 @@ input HealthcheckInput {
 	timeout: String!
 }
 
-type HostMount {
+type HostMount @aws_cognito_user_pools {
 	containerPath: String!
 	description: String!
 	hostPath: String!
@@ -305,7 +302,7 @@ input HostMountInput {
 	hostPath: String!
 }
 
-type HostMountRequirement {
+type HostMountRequirement @aws_cognito_user_pools {
 	containerPath: String!
 	description: String!
 }
@@ -315,7 +312,7 @@ input HostMountRequirementInput {
 	description: String!
 }
 
-type LogEmitterNode implements Node {
+type LogEmitterNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -324,7 +321,7 @@ type LogEmitterNode implements Node {
 	tenant: Tenant!
 }
 
-type LoginUser {
+type LoginUser @aws_cognito_user_pools {
 	activeDate: String
 	created: AtBy!
 	email: AWSEmail!
@@ -334,7 +331,7 @@ type LoginUser {
 	tenantUsers: [TenantUser!]
 }
 
-type KmsKey {
+type KmsKey @aws_cognito_user_pools {
 	arn: String!
 	created: AtBy!
 	description: String
@@ -346,19 +343,19 @@ type KmsKey {
 	Update(description: String): KmsKey!
 }
 
-type KmsKeyResult {
+type KmsKeyResult @aws_cognito_user_pools {
 	items: [KmsKey]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type LogEvent {
+type LogEvent @aws_cognito_user_pools {
 	timestamp: AWSDateTime!
 	message: String!
 	ingestionTime: AWSDateTime!
 }
 
-type LogEventResults {
+type LogEventResults @aws_cognito_user_pools {
 	items: [LogEvent]!
 	nextToken: String
 }
@@ -370,7 +367,7 @@ enum LogLevel {
 	WARNING
 }
 
-type ManagedApp implements App {
+type ManagedApp implements App @aws_cognito_user_pools {
 	config: AWSJSON
 	created: AtBy!
 	description: String
@@ -387,7 +384,7 @@ type ManagedApp implements App {
 	Update(description: String): ManagedApp!
 }
 
-type ManagedInstance {
+type ManagedInstance @aws_cognito_user_pools {
 	activationId: String!
 	hostname: String!
 	instanceId: String!
@@ -397,7 +394,7 @@ type ManagedInstance {
 	registrationDate: AWSDateTime!
 }
 
-type ManagedNode implements Node {
+type ManagedNode implements Node @aws_cognito_user_pools {
 	app: ManagedApp!
 	config: AWSJSON
 	created: AtBy!
@@ -418,7 +415,7 @@ type ManagedNode implements Node {
 	Update(config: AWSJSON, description: String, hostMounts: [HostMountInput!], portMappings: [PortMappingInput!]): ManagedNode!
 }
 
-type ManagedNodeType {
+type ManagedNodeType @aws_cognito_user_pools {
 	configTemplate: AWSJSON
 	created: AtBy!
 	description: String
@@ -428,7 +425,6 @@ type ManagedNodeType {
 	lastModified: AtBy!
 	name: String!
 	portMappingRequirements: [PortMappingRequirement!]
-	readme: String
 	receiveMessageType: MessageType
 	sendMessageType: MessageType
 	system: Boolean!
@@ -436,46 +432,45 @@ type ManagedNodeType {
 	volumes: [String!]
 
 	Delete: Boolean!
-	Update(description: String, healthcheck: Healthcheck, readme: String, volumes: [String!]): ManagedNodeType!
+	Update(description: String!): ManagedNodeType!
 }
 
-type ManagedNodeTypeResult {
+type ManagedNodeTypeResult @aws_cognito_user_pools {
 	items: [ManagedNodeType]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type MessageCounts {
+type MessageCounts @aws_cognito_user_pools {
 	approximateNumberOfMessages: Int!
 	approximateNumberOfMessagesDelayed: Int!
 	approximateNumberOfMessagesNotVisible: Int!
 }
 
-type MessageType {
+type MessageType @aws_cognito_user_pools {
 	auditor: String!
 	bitmapperTemplate: String!
 	created: AtBy!
-	description: String
+	description: String,
 	lastModified: AtBy!
 	name: String!
-	readme: String
 	requirements: [String!]
 	system: Boolean!
 	tenant: Tenant
 	transformerTemplate: String!
 
 	Delete: Boolean!
-	Update(auditor: String, bitmapperTemplate: String, description: String, readme: String, requirements: [String!], transformerTemplate: String): MessageType!
-	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
+	Update(auditor: String, bitmapperTemplate: String, description: String, requirements: [String!], transformerTemplate: String): MessageType!
+	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
-type MessageTypeResult {
+type MessageTypeResult @aws_cognito_user_pools {
 	items: [MessageType]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type Mutation {
+type Mutation @aws_cognito_user_pools {
 	CreateApiUser(tenant: String!, role: ApiUserRole!, description: String): ApiUser!
 	CreateBitmapperFunction(
 		tenant: String!,
@@ -483,7 +478,6 @@ type Mutation {
 		code: String!,
 		description: String!,
 		argumentMessageType: String!,
-		readme: String,
 		requirements: [String!]
 	): BitmapperFunction!
 	CreateChangeNotification(tenant: String!, app: String, old: AWSJSON, new: AWSJSON): ChangeNotification!
@@ -556,16 +550,15 @@ type Mutation {
 	CreateManagedNodeType(
 		tenant: String!,
 		name: String!,
-		configTemplate: AWSJSON,
 		description: String,
 		dockerConfig: DockerConfigInput!,
-		healthcheck: HealthcheckInput
+		configTemplate: AWSJSON,
 		hostMountRequirements: [HostMountRequirementInput!],
 		portMappingRequirements: [PortMappingRequirementInput!],
-		readme: String,
-		receiveMessageType: String,
-		sendMessageType: String,
 		volumes: [String!],
+		sendMessageType: String,
+		receiveMessageType: String,
+		healthcheck: HealthcheckInput
 	): ManagedNodeType!
 	CreateMessageType(
 		tenant: String!,
@@ -573,7 +566,6 @@ type Mutation {
 		auditor: String!,
 		transformerTemplate: String!,
 		bitmapperTemplate: String!,
-		readme: String,
 		requirements: [String!]
 	): MessageType!
 	CreateRouterNode(
@@ -594,7 +586,6 @@ type Mutation {
 		code: String!,
 		description: String!,
 		argumentMessageType: String!,
-		readme: String,
 		resultMessageType: String!,
 		requirements: [String!]
 	): TransformerFunction!
@@ -612,7 +603,7 @@ type Mutation {
 	): TransformerNode!
 }
 
-interface Node {
+interface Node @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -620,7 +611,7 @@ interface Node {
 	tenant: Tenant!
 }
 
-type NodeResult {
+type NodeResult @aws_cognito_user_pools {
 	items: [Node]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
@@ -632,7 +623,7 @@ enum PingStatus {
 	Online
 }
 
-type PortMapping {
+type PortMapping @aws_cognito_user_pools {
 	containerPort: Int!
 	description: String!
 	hostPort: Int!
@@ -643,7 +634,7 @@ input PortMappingInput {
 	hostPort: Int!
 }
 
-type PortMappingRequirement {
+type PortMappingRequirement @aws_cognito_user_pools {
 	containerPort: Int!
 	description: String!
 }
@@ -653,7 +644,7 @@ input PortMappingRequirementInput {
 	description: String!
 }
 
-type PresignedPost {
+type PresignedPost @aws_cognito_user_pools {
 	expiration: AWSTimestamp!
 	fields: AWSJSON!
 	url: AWSURL!
@@ -710,7 +701,7 @@ enum Region {
 	us_gov_west_1
 }
 
-type RouterNode implements Node {
+type RouterNode implements Node @aws_cognito_user_pools {
 	config: AWSJSON
 	created: AtBy!
 	description: String
@@ -729,15 +720,15 @@ type RouterNode implements Node {
 	Delete(drainEdges: Boolean): Boolean!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineBitmapper: String, managedBitmapper: String, requirements: [String!], routeTable: AWSJSON): RouterNode!
-	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
+	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
-type Subscription {
+type Subscription @aws_cognito_user_pools {
 	onChange(tenant: String!, app: String): ChangeNotification
 	@aws_subscribe(mutations: ["CreateChangeNotification"])
 }
 
-type Tenant {
+type Tenant @aws_cognito_user_pools {
 	config: AWSJSON
 	created: AtBy!
 	description: String
@@ -748,17 +739,17 @@ type Tenant {
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
 	Delete: Boolean!
-	ListChanges(endDateTime: AWSDateTime, limit: Int, startDateTime: AWSDateTime, startKey: AWSJSON): ChangeResult!
+	ListChanges(by: String, endDateTime: AWSDateTime, nextToken: String, startDateTime: AWSDateTime): ChangeResult!
 	Update(config: AWSJSON, description: String): Tenant!
 }
 
-type TenantResult {
+type TenantResult @aws_cognito_user_pools {
 	items: [Tenant]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
-type TenantUser {
+type TenantUser @aws_cognito_user_pools {
 	activeDate: String
 	created: AtBy!
 	email: AWSEmail!
@@ -775,7 +766,7 @@ type TenantUser {
 	Update(role: UserRole, status: UserStatus): TenantUser!
 }
 
-type TenantUserResult {
+type TenantUserResult @aws_cognito_user_pools {
 	items: [TenantUser]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
@@ -788,18 +779,17 @@ type TransformerFunction implements Function @aws_cognito_user_pool {
 	description: String!
 	lastModified: AtBy!
 	name: String!
-	readme: String
 	requirements: [String!]
 	resultMessageType: MessageType!
 	system: Boolean!
 	tenant: Tenant
 
 	Delete: Boolean!
-	Update(code: String, description: String, readme: String, requirements: [String!]): TransformerFunction!
-	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
+	Update(code: String, description: String, requirements: [String!]): TransformerFunction!
+	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
-type TransformerNode implements Node {
+type TransformerNode implements Node @aws_cognito_user_pools {
 	config: AWSJSON
 	created: AtBy!
 	description: String
@@ -818,7 +808,7 @@ type TransformerNode implements Node {
 	Delete(drainEdges: Boolean): Boolean!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): TransformerNode!
-	Validate(code: String!, message: String!, loggingLevel: LogLevel): ValidationResult!
+	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
 enum UserRole {
@@ -835,7 +825,7 @@ enum UserStatus {
 	pending
 }
 
-type ValidationResult {
+type ValidationResult @aws_cognito_user_pools {
 	result: String!
 	stdout: String!
 }
