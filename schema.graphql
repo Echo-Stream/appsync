@@ -53,7 +53,7 @@ type AtBy @aws_cognito_user_pools {
 	by: String
 }
 
-type BitmapperFunction implements Function @aws_cognito_user_pool {
+type BitmapperFunction implements Function @aws_cognito_user_pools {
 	argumentMessageType: MessageType!
 	code: String!
 	created: AtBy!
@@ -650,7 +650,7 @@ type PresignedPost @aws_cognito_user_pools {
 	url: AWSURL!
 }
 
-type Query @aws_cognito_user_pool {
+type Query @aws_cognito_user_pools {
 	GetApiUser(tenant: String!, username: String!): ApiUser
 	GetApp(name: String!, tenant: String!): App
 	GetBulkDataStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [BulkDataStorage!]!
@@ -772,7 +772,7 @@ type TenantUserResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
-type TransformerFunction implements Function @aws_cognito_user_pool {
+type TransformerFunction implements Function @aws_cognito_user_pools {
 	argumentMessageType: MessageType!
 	code: String!
 	created: AtBy!
