@@ -278,3 +278,15 @@ TransformerNode:
 	Update: Invoke
 	Validate: Invoke
 
+
+Function:
+	argumentMessageType: Batch
+	Validate: Invoke
+
+
+Mutation:
+	CreateAppChangeNotification: Invoke
+
+
+Subscription:
+	onAppChange: Invoke
