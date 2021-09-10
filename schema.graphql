@@ -42,6 +42,13 @@ interface App @aws_cognito_user_pools {
 	Delete(drainEdges: Boolean): Boolean!
 }
 
+type AppChangeNotification @aws_cognito_user_pools {
+	app: String!
+	change: Change!
+	dateTime: AWSDateTime!
+	tenant: String!
+}
+
 type AppResult @aws_cognito_user_pools {
 	items: [App]
 	lastEvaluatedKey: AWSJSON
@@ -86,13 +93,6 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	name: String!
 	sendMessageType: MessageType!
 	tenant: Tenant!
-}
-
-type ChangeNotification @aws_cognito_user_pools {
-	app: String
-	change: Change!
-	dateTime: AWSDateTime!
-	tenant: String!
 }
 
 type ChangeResult @aws_cognito_user_pools {
@@ -472,6 +472,8 @@ type MessageTypeResult @aws_cognito_user_pools {
 
 type Mutation @aws_cognito_user_pools {
 	CreateApiUser(tenant: String!, role: ApiUserRole!, description: String): ApiUser!
+	CreateAppChangeNotification(tenant: String!, app: String!, old: AWSJSON, new: AWSJSON): AppChangeNotification!
+	@aws_iam
 	CreateBitmapperFunction(
 		tenant: String!,
 		name: String!,
@@ -480,8 +482,6 @@ type Mutation @aws_cognito_user_pools {
 		argumentMessageType: String!,
 		requirements: [String!]
 	): BitmapperFunction!
-	CreateChangeNotification(tenant: String!, app: String, old: AWSJSON, new: AWSJSON): ChangeNotification!
-	@aws_iam
 	CreateCrossAccountApp(
 		tenant: String!,
 		name: String!,
@@ -724,8 +724,8 @@ type RouterNode implements Node @aws_cognito_user_pools {
 }
 
 type Subscription @aws_cognito_user_pools {
-	onChange(tenant: String!, app: String): ChangeNotification
-	@aws_subscribe(mutations: ["CreateChangeNotification"])
+	onAppChange(tenant: String!, app: String!): AppChangeNotification
+	@aws_subscribe(mutations: ["CreateAppChangeNotification"])
 }
 
 type Tenant @aws_cognito_user_pools {
