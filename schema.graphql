@@ -82,8 +82,8 @@ type BulkDataStorage @aws_cognito_user_pools {
 }
 
 type Change @aws_cognito_user_pools {
-	old: Echo
 	new: Echo
+	old: Echo
 }
 
 type ChangeEmitterNode implements Node @aws_cognito_user_pools {
@@ -472,7 +472,7 @@ type MessageTypeResult @aws_cognito_user_pools {
 
 type Mutation @aws_cognito_user_pools {
 	CreateApiUser(tenant: String!, role: ApiUserRole!, description: String): ApiUser!
-	CreateAppChangeNotification(tenant: String!, app: String!, old: AWSJSON, new: AWSJSON): AppChangeNotification!
+	CreateAppChangeNotification(tenant: String!, app: String!, new: AWSJSON, old: AWSJSON): AppChangeNotification!
 	@aws_iam
 	CreateBitmapperFunction(
 		tenant: String!,
