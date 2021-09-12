@@ -143,3 +143,6 @@ venv.bak/
 README.rst
 
 .vscode
+
+# Mac crap
+.DS_Store
