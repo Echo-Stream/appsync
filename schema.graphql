@@ -184,18 +184,6 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
-type DockerConfig @aws_cognito_user_pools {
-	imageUrl: String!
-	password: String
-	username: String
-}
-
-input DockerConfigInput {
-	imageUrl: String!
-	password: String
-	username: String
-}
-
 union Echo = AlertEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TransformerFunction | TransformerNode
 
 type Edge @aws_cognito_user_pools {
@@ -419,7 +407,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	configTemplate: AWSJSON
 	created: AtBy!
 	description: String
-	dockerConfig: DockerConfig!
+	imageUri: String!
 	healthcheck: Healthcheck
 	hostMountRequirements: [HostMountRequirement!]
 	lastModified: AtBy!
@@ -548,10 +536,10 @@ type Mutation @aws_cognito_user_pools {
 		hostMounts: [HostMountInput!]
 	): ManagedNode!
 	CreateManagedNodeType(
+		imageUri: String!
 		tenant: String!,
 		name: String!,
 		description: String,
-		dockerConfig: DockerConfigInput!,
 		configTemplate: AWSJSON,
 		hostMountRequirements: [HostMountRequirementInput!],
 		portMappingRequirements: [PortMappingRequirementInput!],
