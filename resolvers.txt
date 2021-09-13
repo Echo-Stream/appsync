@@ -251,6 +251,8 @@ Tenant:
 
 
 TenantUser:
+    firstName: Batch
+    lastName: Batch
 	tenant: Batch
 	Delete: Invoke
 	Update: Invoke
