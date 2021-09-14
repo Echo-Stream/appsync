@@ -186,7 +186,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
-union Echo = AlertEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TransformerFunction | TransformerNode
+union Echo = AlertEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TimerNode | TransformerFunction | TransformerNode
 
 type Edge @aws_cognito_user_pools {
 	created: AtBy!
@@ -571,6 +571,12 @@ type Mutation @aws_cognito_user_pools {
 		requirements: [String!]
 	): RouterNode!
 	CreateTenant(name: String!, region: Region!, config: AWSJSON): Tenant!
+	CreateTimerNode(
+		name: String!,
+		scheduleExpression: String!,
+		tenant: String!,
+		description: String
+	): TimerNode!
 	CreateTransformerFunction(
 		tenant: String!,
 		name: String!,
@@ -657,7 +663,7 @@ type Query @aws_cognito_user_pools {
 
 	ListApiUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): ApiUserResult
 	ListApps(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): AppResult
-	ListFunctions(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): FunctionResult
+	ListChanges(tenant: String!, endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, startDateTime: AWSDateTime): ChangeResult!	ListFunctions(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): FunctionResult
 	ListKmsKeys(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): KmsKeyResult
 	ListNodes(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): NodeResult
 	ListManagedNodeTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): ManagedNodeTypeResult
@@ -730,7 +736,6 @@ type Tenant @aws_cognito_user_pools {
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
 	Delete: Boolean!
-	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, startDateTime: AWSDateTime): ChangeResult!
 	Update(config: AWSJSON, description: String): Tenant!
 }
 
@@ -761,6 +766,20 @@ type TenantUserResult @aws_cognito_user_pools {
 	items: [TenantUser]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
+}
+
+type TimerNode implements Node @aws_cognito_user_pools {
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	scheduleExpression: String!
+	sendEdges: [Edge]
+	sendMessageType: MessageType!
+	tenant: Tenant!
+
+	Delete(drainEdges: Boolean): Boolean!
+	Update(description: String): TimerNode!
 }
 
 type TransformerFunction implements Function @aws_cognito_user_pools {
