@@ -3,6 +3,7 @@ type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	description: String
 	lastModified: AtBy!
 	name: String!
+	sendEdges: [Edge]
 	sendMessageType: MessageType!
 	tenant: Tenant!
 }
@@ -91,6 +92,7 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	description: String
 	lastModified: AtBy!
 	name: String!
+	sendEdges: [Edge]
 	sendMessageType: MessageType!
 	tenant: Tenant!
 }
@@ -305,6 +307,7 @@ type LogEmitterNode implements Node @aws_cognito_user_pools {
 	description: String
 	lastModified: AtBy!
 	name: String!
+	sendEdges: [Edge]
 	sendMessageType: MessageType!
 	tenant: Tenant!
 }
@@ -652,15 +655,15 @@ type Query @aws_cognito_user_pools {
 	GetTenantUser(tenant: String!, email: AWSEmail!): TenantUser
 	GetUser: LoginUser
 
-	ListApiUsers(tenant: String!, limit: Int, startKey: AWSJSON): ApiUserResult
-	ListApps(tenant: String!, limit: Int, nameContains: String, startKey: AWSJSON): AppResult
-	ListFunctions(limit: Int, startKey: AWSJSON, tenant: String): FunctionResult
-	ListKeys(tenant: String!, limit: Int, startKey: AWSJSON): KmsKeyResult
-	ListNodes(tenant: String!, limit: Int, nameContains: String, startKey: AWSJSON): NodeResult
-	ListManagedNodeTypes(limit: Int, startKey: String, tenant: String): ManagedNodeTypeResult
-	ListMessageTypes(limit: Int, startKey: String, tenant: String): MessageTypeResult
-	ListTenants(limit: Int, startKey: String): TenantResult
-	ListTenantUsers(tenant: String!, limit: Int, startKey: AWSJSON): TenantUserResult
+	ListApiUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): ApiUserResult
+	ListApps(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): AppResult
+	ListFunctions(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): FunctionResult
+	ListKmsKeys(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): KmsKeyResult
+	ListNodes(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): NodeResult
+	ListManagedNodeTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): ManagedNodeTypeResult
+	ListMessageTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): MessageTypeResult
+	ListTenants(exclusiveStartKey: AWSJSON, limit: Int): TenantResult
+	ListTenantUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): TenantUserResult
 }
 
 enum Region {
