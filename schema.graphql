@@ -663,7 +663,8 @@ type Query @aws_cognito_user_pools {
 
 	ListApiUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): ApiUserResult
 	ListApps(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): AppResult
-	ListChanges(tenant: String!, endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, startDateTime: AWSDateTime): ChangeResult!	ListFunctions(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): FunctionResult
+	ListChanges(tenant: String!, endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!	
+	ListFunctions(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): FunctionResult
 	ListKmsKeys(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): KmsKeyResult
 	ListNodes(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): NodeResult
 	ListManagedNodeTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): ManagedNodeTypeResult
