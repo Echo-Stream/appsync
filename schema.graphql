@@ -730,7 +730,7 @@ type Tenant @aws_cognito_user_pools {
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
 	Delete: Boolean!
-	ListChanges(by: String, endDateTime: AWSDateTime, nextToken: String, startDateTime: AWSDateTime): ChangeResult!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, startDateTime: AWSDateTime): ChangeResult!
 	Update(config: AWSJSON, description: String): Tenant!
 }
 
