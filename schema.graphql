@@ -70,11 +70,11 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	name: String!
 	readme: String
 	requirements: [String!]
-	system: Boolean!
+	system: Boolean
 	tenant: Tenant
 
 	Delete: Boolean!
-	Update(code: String, description: String, requirements: [String!]): BitmapperFunction!
+	Update(code: String, description: String, readme: String, requirements: [String!]): BitmapperFunction!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
@@ -253,7 +253,7 @@ interface Function @aws_cognito_user_pools {
 	lastModified: AtBy!
 	readme: String
 	requirements: [String!]
-	system: Boolean!
+	system: Boolean
 	tenant: Tenant
 
 	Delete: Boolean!
@@ -421,7 +421,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	readme: String
 	receiveMessageType: MessageType
 	sendMessageType: MessageType
-	system: Boolean!
+	system: Boolean
 	tenant: Tenant
 	volumes: [String!]
 
@@ -450,12 +450,12 @@ type MessageType @aws_cognito_user_pools {
 	name: String!
 	readme: String
 	requirements: [String!]
-	system: Boolean!
+	system: Boolean
 	tenant: Tenant
 	transformerTemplate: String!
 
 	Delete: Boolean!
-	Update(auditor: String, bitmapperTemplate: String, description: String, requirements: [String!], transformerTemplate: String): MessageType!
+	Update(auditor: String, bitmapperTemplate: String, description: String, readme: String, requirements: [String!], transformerTemplate: String): MessageType!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
@@ -590,9 +590,9 @@ type Mutation @aws_cognito_user_pools {
 		code: String!,
 		description: String!,
 		argumentMessageType: String!,
-		resultMessageType: String!,
 		reademe: String,
-		requirements: [String!]
+		requirements: [String!],
+		returnMessageType: String
 	): TransformerFunction!
 	CreateTransformerNode(
 		tenant: String!,
@@ -665,7 +665,7 @@ type Query @aws_cognito_user_pools {
 	GetManagedNodeType(name: String!, tenant: String): ManagedNodeType
 	GetMessageType(name: String!, tenant: String): MessageType
 	GetNode(name: String!, tenant: String!): Node
-	GetTenant(name: String!): Tenant
+	GetTenant(tenant: String!): Tenant
 	GetTenantUser(tenant: String!, email: AWSEmail!): TenantUser
 	GetUser: LoginUser
 
@@ -800,12 +800,12 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 	name: String!
 	readme: String
 	requirements: [String!]
-	resultMessageType: MessageType!
-	system: Boolean!
+	returnMessageType: MessageType!
+	system: Boolean
 	tenant: Tenant
 
 	Delete: Boolean!
-	Update(code: String, description: String, requirements: [String!]): TransformerFunction!
+	Update(code: String, description: String, readme: String, requirements: [String!]): TransformerFunction!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
