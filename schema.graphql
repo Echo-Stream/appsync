@@ -68,6 +68,7 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	description: String!
 	lastModified: AtBy!
 	name: String!
+	readme: String
 	requirements: [String!]
 	system: Boolean!
 	tenant: Tenant
@@ -250,6 +251,7 @@ interface Function @aws_cognito_user_pools {
 	description: String!
 	name: String!
 	lastModified: AtBy!
+	readme: String
 	requirements: [String!]
 	system: Boolean!
 	tenant: Tenant
@@ -416,6 +418,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	portMappingRequirements: [PortMappingRequirement!]
+	readme: String
 	receiveMessageType: MessageType
 	sendMessageType: MessageType
 	system: Boolean!
@@ -445,6 +448,7 @@ type MessageType @aws_cognito_user_pools {
 	description: String,
 	lastModified: AtBy!
 	name: String!
+	readme: String
 	requirements: [String!]
 	system: Boolean!
 	tenant: Tenant
@@ -471,6 +475,7 @@ type Mutation @aws_cognito_user_pools {
 		code: String!,
 		description: String!,
 		argumentMessageType: String!,
+		readme: String,
 		requirements: [String!]
 	): BitmapperFunction!
 	CreateCrossAccountApp(
@@ -540,23 +545,25 @@ type Mutation @aws_cognito_user_pools {
 	): ManagedNode!
 	CreateManagedNodeType(
 		imageUri: String!
-		tenant: String!,
 		name: String!,
-		description: String,
+		tenant: String!,
 		configTemplate: AWSJSON,
+		description: String,
+		healthcheck: HealthcheckInput
 		hostMountRequirements: [HostMountRequirementInput!],
 		portMappingRequirements: [PortMappingRequirementInput!],
-		volumes: [String!],
-		sendMessageType: String,
+		readme: String,
 		receiveMessageType: String,
-		healthcheck: HealthcheckInput
+		sendMessageType: String,
+		volumes: [String!],
 	): ManagedNodeType!
 	CreateMessageType(
-		tenant: String!,
-		name: String!,
 		auditor: String!,
-		transformerTemplate: String!,
 		bitmapperTemplate: String!,
+		name: String!,
+		tenant: String!,
+		transformerTemplate: String!,
+		readme: String,
 		requirements: [String!]
 	): MessageType!
 	CreateRouterNode(
@@ -584,6 +591,7 @@ type Mutation @aws_cognito_user_pools {
 		description: String!,
 		argumentMessageType: String!,
 		resultMessageType: String!,
+		reademe: String,
 		requirements: [String!]
 	): TransformerFunction!
 	CreateTransformerNode(
@@ -790,6 +798,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 	description: String!
 	lastModified: AtBy!
 	name: String!
+	readme: String
 	requirements: [String!]
 	resultMessageType: MessageType!
 	system: Boolean!
