@@ -304,6 +304,24 @@ input HostMountRequirementInput {
 	description: String!
 }
 
+type KmsKey @aws_cognito_user_pools {
+	arn: String!
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	tenant: Tenant!
+
+	Delete: Boolean!
+	Update(description: String): KmsKey!
+}
+
+type KmsKeyResult @aws_cognito_user_pools {
+	items: [KmsKey]
+	lastEvaluatedKey: AWSJSON
+	scannedCount: Int
+}
+
 type LogEmitterNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
@@ -322,24 +340,6 @@ type LoginUser @aws_cognito_user_pools {
 	lastModified: AtBy!
 	lastName: String!
 	tenantUsers: [TenantUser!]
-}
-
-type KmsKey @aws_cognito_user_pools {
-	arn: String!
-	created: AtBy!
-	description: String
-	lastModified: AtBy!
-	name: String!
-	tenant: Tenant!
-
-	Delete: Boolean!
-	Update(description: String): KmsKey!
-}
-
-type KmsKeyResult @aws_cognito_user_pools {
-	items: [KmsKey]
-	lastEvaluatedKey: AWSJSON
-	scannedCount: Int
 }
 
 type LogEvent @aws_cognito_user_pools {
