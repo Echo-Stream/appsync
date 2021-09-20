@@ -847,4 +847,3 @@ type ValidationResult @aws_cognito_user_pools {
 	result: String!
 	stdout: String!
 }
-
