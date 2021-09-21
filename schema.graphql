@@ -18,6 +18,7 @@ type ApiUser @aws_cognito_user_pools {
 	username: String!
 
 	Delete: Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(description: String, role: ApiUserRole): ApiUser!
 }
 
@@ -41,6 +42,7 @@ interface App @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 }
 
 type AppChangeNotification @aws_cognito_user_pools {
@@ -74,6 +76,7 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	tenant: Tenant
 
 	Delete: Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(code: String, description: String, readme: String, requirements: [String!]): BitmapperFunction!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
@@ -120,6 +123,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: CrossAccountApp!
 	Update(description: String): CrossAccountApp!
 }
@@ -135,6 +139,7 @@ type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(description: String): CrossTenantReceivingApp!
 }
 
@@ -149,6 +154,7 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(description: String): CrossTenantReceivingNode!
 }
 
@@ -163,6 +169,7 @@ type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(description: String): CrossTenantSendingApp!
 }
 
@@ -182,6 +189,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): CrossTenantSendingNode!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
@@ -202,6 +210,7 @@ type Edge @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drain: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Move(source: String!, target: String): Edge!
 	Purge: Boolean!
 	Update(description: String): Edge!
@@ -223,6 +232,7 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: ExternalApp!
 	Update(description: String): ExternalApp!
 }
@@ -241,6 +251,7 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(config: AWSJSON, description: String): ExternalNode!
 }
 
@@ -257,6 +268,7 @@ interface Function @aws_cognito_user_pools {
 	tenant: Tenant
 
 	Delete: Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
@@ -313,6 +325,7 @@ type KmsKey @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete: Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(description: String): KmsKey!
 }
 
@@ -373,6 +386,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 
 	Delete(drainEdges: Boolean): Boolean!
 	DeregisterManagedInstance(instanceId: String!): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: ManagedApp!
 	Update(description: String): ManagedApp!
 }
@@ -404,6 +418,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, hostMounts: [HostMountInput!], portMappings: [PortMappingInput!]): ManagedNode!
 }
@@ -426,6 +441,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	volumes: [String!]
 
 	Delete: Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(description: String!): ManagedNodeType!
 }
 
@@ -455,6 +471,7 @@ type MessageType @aws_cognito_user_pools {
 	transformerTemplate: String!
 
 	Delete: Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(auditor: String, bitmapperTemplate: String, description: String, readme: String, requirements: [String!], transformerTemplate: String): MessageType!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
@@ -588,7 +605,7 @@ type Mutation @aws_cognito_user_pools {
 		code: String!,
 		description: String!,
 		argumentMessageType: String!,
-		reademe: String,
+		readme: String,
 		requirements: [String!],
 		returnMessageType: String
 	): TransformerFunction!
@@ -667,16 +684,16 @@ type Query @aws_cognito_user_pools {
 	GetTenantUser(tenant: String!, email: AWSEmail!): TenantUser
 	GetUser: LoginUser
 
-	ListApiUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): ApiUserResult
-	ListApps(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): AppResult
-	ListChanges(tenant: String!, endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!	
-	ListFunctions(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): FunctionResult
-	ListKmsKeys(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): KmsKeyResult
-	ListNodes(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): NodeResult
-	ListManagedNodeTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): ManagedNodeTypeResult
-	ListMessageTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): MessageTypeResult
-	ListTenants(exclusiveStartKey: AWSJSON, limit: Int): TenantResult
-	ListTenantUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): TenantUserResult
+	ListApiUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): ApiUserResult!
+	ListApps(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): AppResult!
+	ListChanges(tenant: String!, endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
+	ListFunctions(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): FunctionResult!
+	ListKmsKeys(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): KmsKeyResult!
+	ListNodes(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): NodeResult!
+	ListManagedNodeTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): ManagedNodeTypeResult!
+	ListMessageTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): MessageTypeResult!
+	ListTenants(exclusiveStartKey: AWSJSON, limit: Int): TenantResult!
+	ListTenantUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): TenantUserResult!
 }
 
 enum Region {
@@ -722,6 +739,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineBitmapper: String, managedBitmapper: String, requirements: [String!], routeTable: AWSJSON): RouterNode!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
@@ -743,6 +761,7 @@ type Tenant @aws_cognito_user_pools {
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
 	Delete: Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(config: AWSJSON, description: String): Tenant!
 }
 
@@ -766,6 +785,7 @@ type TenantUser @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete: Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(role: UserRole, status: UserStatus): TenantUser!
 }
 
@@ -786,6 +806,7 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(description: String): TimerNode!
 }
 
@@ -803,6 +824,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 	tenant: Tenant
 
 	Delete: Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(code: String, description: String, readme: String, requirements: [String!]): TransformerFunction!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
@@ -824,6 +846,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): TransformerNode!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
