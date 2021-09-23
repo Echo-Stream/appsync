@@ -426,7 +426,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 type ManagedNodeType @aws_cognito_user_pools {
 	configTemplate: AWSJSON
 	created: AtBy!
-	description: String
+	description: String!
 	imageUri: String!
 	healthcheck: Healthcheck
 	hostMountRequirements: [HostMountRequirement!]
@@ -461,7 +461,7 @@ type MessageType @aws_cognito_user_pools {
 	auditor: String!
 	bitmapperTemplate: String!
 	created: AtBy!
-	description: String,
+	description: String!,
 	lastModified: AtBy!
 	name: String!
 	readme: String
@@ -563,7 +563,7 @@ type Mutation @aws_cognito_user_pools {
 		name: String!,
 		tenant: String!,
 		configTemplate: AWSJSON,
-		description: String,
+		description: String!,
 		healthcheck: HealthcheckInput
 		hostMountRequirements: [HostMountRequirementInput!],
 		portMappingRequirements: [PortMappingRequirementInput!],
@@ -575,6 +575,7 @@ type Mutation @aws_cognito_user_pools {
 	CreateMessageType(
 		auditor: String!,
 		bitmapperTemplate: String!,
+		description: String!,
 		name: String!,
 		tenant: String!,
 		transformerTemplate: String!,
@@ -585,8 +586,8 @@ type Mutation @aws_cognito_user_pools {
 		tenant: String!,
 		name: String!,
 		receiveMessageType: String!,
-		inlineBitmapper: String,
 		routeTable: AWSJSON!,
+		inlineBitmapper: String,
 		managedBitmapper: String
 		description: String,
 		config: AWSJSON,
