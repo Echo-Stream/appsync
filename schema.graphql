@@ -461,7 +461,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 
 	Delete: Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
-	Update(description: String, healthcheck: HealthcheckInput, volumes: [String!]): ManagedNodeType!
+	Update(description: String, healthcheck: HealthcheckInput, readme: String, volumes: [String!]): ManagedNodeType!
 }
 
 type ManagedNodeTypeResult @aws_cognito_user_pools {
