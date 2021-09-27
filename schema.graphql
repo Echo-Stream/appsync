@@ -63,6 +63,14 @@ type AtBy @aws_cognito_user_pools {
 	by: String
 }
 
+input AuditRecord {
+	attributes: AWSJSON
+	datetime: AWSDateTime!
+	previousTrackingIds: [String!]
+	sourceNode: String
+	trackingId: String!
+}
+
 type BitmapperFunction implements Function @aws_cognito_user_pools {
 	argumentMessageType: MessageType!
 	code: String!
@@ -109,6 +117,13 @@ type ChangeResult @aws_cognito_user_pools {
 enum ContentEncoding {
 	gzip
 	deflate
+}
+
+type Credentials @aws_cognito_user_pools {
+	accessKeyId: String!
+	secretAccessKey: String!
+	sessionToken: String!
+	expiration: AWSDateTime!
 }
 
 type CrossAccountApp implements App @aws_cognito_user_pools {
@@ -232,6 +247,7 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	GetCredentials(duration: Int): Credentials!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: ExternalApp!
 	Update(description: String): ExternalApp!
@@ -250,6 +266,7 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	sendMessageType: MessageType
 	tenant: Tenant!
 
+	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
 	Delete(drainEdges: Boolean): Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	Update(config: AWSJSON, description: String): ExternalNode!
@@ -386,6 +403,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 
 	Delete(drainEdges: Boolean): Boolean!
 	DeregisterManagedInstance(instanceId: String!): Boolean!
+	GetCredentials(duration: Int): Credentials!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: ManagedApp!
 	Update(description: String): ManagedApp!
@@ -417,6 +435,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	sendMessageType: MessageType
 	tenant: Tenant!
 
+	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
 	Delete(drainEdges: Boolean): Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
