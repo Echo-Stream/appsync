@@ -1,6 +1,6 @@
 type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
-	description: String
+	description: String!
 	lastModified: AtBy!
 	name: String!
 	sendEdges: [Edge]
@@ -101,7 +101,7 @@ type Change @aws_cognito_user_pools {
 
 type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
-	description: String
+	description: String!
 	lastModified: AtBy!
 	name: String!
 	sendEdges: [Edge]
@@ -210,13 +210,24 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
-union Echo = AlertEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TimerNode | TransformerFunction | TransformerNode
+type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
+	created: AtBy!
+	description: String!
+	lastModified: AtBy!
+	name: String!
+	sendEdges: [Edge]
+	sendMessageType: MessageType!
+	tenant: Tenant!
+}
+
+union Echo = AlertEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TimerNode | TransformerFunction | TransformerNode
 
 type Edge @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	kmsKey: KmsKey
 	lastModified: AtBy!
+	maxReceiveCount: Int
 	messageCounts: MessageCounts!
 	messageType: MessageType!
 	queue: AWSURL!
@@ -354,7 +365,7 @@ type KmsKeyResult @aws_cognito_user_pools {
 
 type LogEmitterNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
-	description: String
+	description: String!
 	lastModified: AtBy!
 	name: String!
 	sendEdges: [Edge]
@@ -545,11 +556,12 @@ type Mutation @aws_cognito_user_pools {
 		requirements: [String!]
 	): CrossTenantSendingNode!
 	CreateEdge(
-		tenant: String!,
 		source: String!,
 		target: String!,
+		tenant: String!,
+		description: String,
 		kmsKey: String,
-		description: String
+		maxReceiveCount: Int
 	): Edge!
 	CreateExternalApp(
 		tenant: String!,
@@ -563,7 +575,7 @@ type Mutation @aws_cognito_user_pools {
 		receiveMessageType: String,
 		sendMessageType: String
 		description: String,
-		config: AWSJSON,
+		config: AWSJSON
 	): ExternalNode!
 	CreateKmsKey(tenant: String!, 	name: String!, description: String): KmsKey!
 	CreateManagedApp(tenant: String!, name: String!, description: String): ManagedApp!
