@@ -9,8 +9,8 @@ type AlertEmitterNode implements Node @aws_cognito_user_pools {
 }
 
 type ApiUser @aws_cognito_user_pools {
-	config: AWSJSON!
 	created: AtBy!
+	credentials: CognitoCredentials!
 	description: String
 	lastModified: AtBy!
 	role: ApiUserRole!
@@ -19,6 +19,7 @@ type ApiUser @aws_cognito_user_pools {
 
 	Delete: Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
+	ResetPassword: ApiUser!
 	Update(description: String, role: ApiUserRole): ApiUser!
 }
 
@@ -71,6 +72,13 @@ input AuditRecord {
 	trackingId: String!
 }
 
+type AwsCredentials @aws_cognito_user_pools {
+	accessKeyId: String!
+	secretAccessKey: String!
+	sessionToken: String!
+	expiration: AWSDateTime!
+}
+
 type BitmapperFunction implements Function @aws_cognito_user_pools {
 	argumentMessageType: MessageType!
 	code: String!
@@ -114,22 +122,23 @@ type ChangeResult @aws_cognito_user_pools {
 	nextToken: String
 }
 
+type CognitoCredentials @aws_cognito_user_pools {
+	clientId: String!
+	password: String!
+	userPoolId: String!
+	username: String!
+}
+
 enum ContentEncoding {
 	gzip
 	deflate
-}
-
-type Credentials @aws_cognito_user_pools {
-	accessKeyId: String!
-	secretAccessKey: String!
-	sessionToken: String!
-	expiration: AWSDateTime!
 }
 
 type CrossAccountApp implements App @aws_cognito_user_pools {
 	account: String!
 	config: AWSJSON
 	created: AtBy!
+	credentials: CognitoCredentials!
 	description: String
 	iamPolicy: AWSJSON!
 	lastModified: AtBy!
@@ -140,7 +149,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	Delete(drainEdges: Boolean): Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: CrossAccountApp!
-	Update(description: String): CrossAccountApp!
+	Update(config: AWSJSON, description: String): CrossAccountApp!
 }
 
 type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
@@ -249,8 +258,9 @@ type EdgeResult @aws_cognito_user_pools {
 }
 
 type ExternalApp implements App @aws_cognito_user_pools {
-	created: AtBy!
 	config: AWSJSON
+	created: AtBy!
+	credentials: CognitoCredentials!
 	description: String
 	lastModified: AtBy!
 	name: String!
@@ -258,10 +268,10 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
-	GetCredentials(duration: Int): Credentials!
+	GetAwsCredentials(duration: Int): AwsCredentials!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: ExternalApp!
-	Update(description: String): ExternalApp!
+	Update(config: AWSJSON, description: String): ExternalApp!
 }
 
 type ExternalNode implements Node @aws_cognito_user_pools {
@@ -404,6 +414,7 @@ enum LogLevel {
 type ManagedApp implements App @aws_cognito_user_pools {
 	config: AWSJSON
 	created: AtBy!
+	credentials: CognitoCredentials!
 	description: String
 	managedInstances: [ManagedInstance]
 	iso: String!
@@ -414,10 +425,10 @@ type ManagedApp implements App @aws_cognito_user_pools {
 
 	Delete(drainEdges: Boolean): Boolean!
 	DeregisterManagedInstance(instanceId: String!): Boolean!
-	GetCredentials(duration: Int): Credentials!
+	GetAwsCredentials(duration: Int): AwsCredentials!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: ManagedApp!
-	Update(description: String): ManagedApp!
+	Update(config: AWSJSON, description: String): ManagedApp!
 }
 
 type ManagedInstance @aws_cognito_user_pools {
@@ -526,10 +537,11 @@ type Mutation @aws_cognito_user_pools {
 		requirements: [String!]
 	): BitmapperFunction!
 	CreateCrossAccountApp(
+		account: String!,
 		tenant: String!,
 		name: String!,
-		description: String,
-		account: String!
+		config: AWSJSON,
+		description: String
 	): ExternalApp!
 	CreateCrossTenantReceivingApp(
 		tenant: String!,
@@ -566,6 +578,7 @@ type Mutation @aws_cognito_user_pools {
 	CreateExternalApp(
 		tenant: String!,
 		name: String!,
+		config: AWSJSON,
 		description: String,
 	): ExternalApp!
 	CreateExternalNode(
@@ -578,7 +591,12 @@ type Mutation @aws_cognito_user_pools {
 		config: AWSJSON
 	): ExternalNode!
 	CreateKmsKey(tenant: String!, 	name: String!, description: String): KmsKey!
-	CreateManagedApp(tenant: String!, name: String!, description: String): ManagedApp!
+	CreateManagedApp(
+		tenant: String!,
+		name: String!, 
+		config: AWSJSON, 
+		description: String
+	): ManagedApp!
 	CreateManagedNode(
 		tenant: String!,
 		app: String!,
