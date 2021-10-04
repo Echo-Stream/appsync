@@ -325,11 +325,11 @@ type Healthcheck @aws_cognito_user_pools {
 }
 
 input HealthcheckInput {
-	interval: String!
+	interval: Int!
 	retries: Int!
-	startPeriod: String!
-	test: String!
-	timeout: String!
+	startPeriod: Int!
+	test: [String]!
+	timeout: Int!
 }
 
 type HostMount @aws_cognito_user_pools {
