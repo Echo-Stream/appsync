@@ -455,7 +455,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	imageUri: String!
 	healthcheck: Healthcheck
 	lastModified: AtBy!
-	mountRequirements: [MountRequirements!]
+	mountRequirements: [MountRequirement!]
 	name: String!
 	portRequirements: [PortRequirement!]
 	readme: String
@@ -517,12 +517,12 @@ type Mount @aws_cognito_user_pools {
 	target: String!
 }
 
-type MountInput {
+input MountInput {
 	source: String
 	target: String!
 }
 
-type MountRequirements @aws_cognito_user_pools {
+type MountRequirement @aws_cognito_user_pools {
 	consistency: Consistency
 	description: String!
 	labels: AWSJSON
@@ -533,7 +533,7 @@ type MountRequirements @aws_cognito_user_pools {
 	target: String!
 }
 
-input MountRequirementsInput {
+input MountRequirementInput {
 	consistency: Consistency
 	description: String!
 	labels: AWSJSON
