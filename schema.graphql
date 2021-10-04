@@ -129,6 +129,12 @@ type CognitoCredentials @aws_cognito_user_pools {
 	username: String!
 }
 
+enum Consistency {
+	cached
+	consistent
+	delegated
+}
+
 enum ContentEncoding {
 	gzip
 	deflate
@@ -332,28 +338,6 @@ input HealthcheckInput {
 	timeout: Int!
 }
 
-type HostMount @aws_cognito_user_pools {
-	containerPath: String!
-	description: String!
-	hostPath: String!
-}
-
-input HostMountInput {
-	containerPath: String!
-	description: String
-	hostPath: String!
-}
-
-type HostMountRequirement @aws_cognito_user_pools {
-	containerPath: String!
-	description: String!
-}
-
-input HostMountRequirementInput {
-	containerPath: String!
-	description: String!
-}
-
 type KmsKey @aws_cognito_user_pools {
 	arn: String!
 	created: AtBy!
@@ -446,11 +430,11 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	config: AWSJSON
 	created: AtBy!
 	description: String
-	hostMounts: [HostMount!]
 	lastModified: AtBy!
 	managedNodeType: ManagedNodeType!
+	mounts: [Mount!]
 	name: String!
-	portMappings: [PortMapping!]
+	ports: [Port!]
 	receiveEdges: [Edge]
 	receiveMessageType: MessageType
 	sendEdges: [Edge]
@@ -461,7 +445,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	Delete(drainEdges: Boolean): Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
-	Update(config: AWSJSON, description: String, hostMounts: [HostMountInput!], portMappings: [PortMappingInput!]): ManagedNode!
+	Update(config: AWSJSON, description: String, mounts: [MountInput!], ports: [PortInput!]): ManagedNode!
 }
 
 type ManagedNodeType @aws_cognito_user_pools {
@@ -470,20 +454,19 @@ type ManagedNodeType @aws_cognito_user_pools {
 	description: String!
 	imageUri: String!
 	healthcheck: Healthcheck
-	hostMountRequirements: [HostMountRequirement!]
 	lastModified: AtBy!
+	mountRequirements: [MountRequirements!]
 	name: String!
-	portMappingRequirements: [PortMappingRequirement!]
+	portRequirements: [PortRequirement!]
 	readme: String
 	receiveMessageType: MessageType
 	sendMessageType: MessageType
 	system: Boolean
 	tenant: Tenant
-	volumes: [String!]
 
 	Delete: Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
-	Update(description: String, healthcheck: HealthcheckInput, readme: String, volumes: [String!]): ManagedNodeType!
+	Update(description: String, healthcheck: HealthcheckInput, readme: String): ManagedNodeType!
 }
 
 type ManagedNodeTypeResult @aws_cognito_user_pools {
@@ -521,6 +504,44 @@ type MessageTypeResult @aws_cognito_user_pools {
 	echos: [MessageType]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
+}
+
+type Mount @aws_cognito_user_pools {
+	consistency: Consistency
+	description: String!
+	labels: AWSJSON
+	noCopy: Boolean
+	options: AWSJSON
+	readOnly: Boolean
+	source: String
+	target: String!
+}
+
+type MountInput {
+	source: String
+	target: String!
+}
+
+type MountRequirements @aws_cognito_user_pools {
+	consistency: Consistency
+	description: String!
+	labels: AWSJSON
+	noCopy: Boolean
+	options: AWSJSON
+	readOnly: Boolean
+	source: String
+	target: String!
+}
+
+input MountRequirementsInput {
+	consistency: Consistency
+	description: String!
+	labels: AWSJSON
+	noCopy: Boolean
+	options: AWSJSON
+	readOnly: Boolean
+	source: String
+	target: String!
 }
 
 type Mutation @aws_cognito_user_pools {
@@ -592,34 +613,33 @@ type Mutation @aws_cognito_user_pools {
 	): ExternalNode!
 	CreateKmsKey(tenant: String!, 	name: String!, description: String): KmsKey!
 	CreateManagedApp(
-		tenant: String!,
 		name: String!, 
+		tenant: String!,
 		config: AWSJSON, 
 		description: String
 	): ManagedApp!
 	CreateManagedNode(
-		tenant: String!,
 		app: String!,
-		name: String!,
 		managedNodeType: String!,
-		description: String,
+		name: String!,
+		tenant: String!,
 		config: AWSJSON,
-		portMappings: [PortMappingInput!],
-		hostMounts: [HostMountInput!]
+		description: String,
+		mounts: [MountInput!],
+		ports: [PortInput!]
 	): ManagedNode!
 	CreateManagedNodeType(
+		description: String!,
 		imageUri: String!
 		name: String!,
 		tenant: String!,
 		configTemplate: AWSJSON,
-		description: String!,
 		healthcheck: HealthcheckInput
-		hostMountRequirements: [HostMountRequirementInput!],
-		portMappingRequirements: [PortMappingRequirementInput!],
+		mountRequirements: [MountRequirementInput!],
+		portRequirements: [PortRequirementInput!],
 		readme: String,
 		receiveMessageType: String,
 		sendMessageType: String,
-		volumes: [String!],
 	): ManagedNodeType!
 	CreateMessageType(
 		auditor: String!,
@@ -693,31 +713,43 @@ enum PingStatus {
 	Online
 }
 
-type PortMapping @aws_cognito_user_pools {
+type Port @aws_cognito_user_pools {
 	containerPort: Int!
 	description: String!
+	hostAddress: AWSIPAddress
 	hostPort: Int!
+	protocol: Protocol!
 }
 
-input PortMappingInput {
+input PortInput {
 	containerPort: Int!
+	hostAddress: AWSIPAddress
 	hostPort: Int!
+	protocol: Protocol!
 }
 
-type PortMappingRequirement @aws_cognito_user_pools {
+type PortRequirement @aws_cognito_user_pools {
 	containerPort: Int!
 	description: String!
+	protocol: Protocol!
 }
 
-input PortMappingRequirementInput {
+input PortRequirementInput {
 	containerPort: Int!
 	description: String!
+	protocol: Protocol!
 }
 
 type PresignedPost @aws_cognito_user_pools {
 	expiration: AWSTimestamp!
 	fields: AWSJSON!
 	url: AWSURL!
+}
+
+enum Protocol {
+	sctp
+	tcp
+	udp
 }
 
 type Query @aws_cognito_user_pools {
