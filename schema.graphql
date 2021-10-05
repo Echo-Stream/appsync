@@ -322,6 +322,11 @@ type FunctionResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+type GraphLayout @aws_cognito_user_pools {
+	name: String!
+	layout: AWSJSON!
+}
+
 type Healthcheck @aws_cognito_user_pools {
 	interval: String!
 	retries: Int!
@@ -851,11 +856,6 @@ type TenantResult @aws_cognito_user_pools {
 	echos: [Tenant]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
-}
-
-type GraphLayout @aws_cognito_user_pools {
-	name: String!
-	layout: AWSJSON!
 }
 
 type TenantUser @aws_cognito_user_pools {
