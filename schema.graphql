@@ -240,6 +240,7 @@ union Echo = AlertEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAcc
 type Edge @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
+	draining: Boolean!
 	kmsKey: KmsKey
 	lastModified: AtBy!
 	maxReceiveCount: Int
