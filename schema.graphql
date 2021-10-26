@@ -119,7 +119,8 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 
 type ChangeResult @aws_cognito_user_pools {
 	echos: [Change]!
-	nextToken: String
+	lastEvaluatedKey: AWSJSON
+	scannedCount: Int
 }
 
 type CognitoCredentials @aws_cognito_user_pools {
