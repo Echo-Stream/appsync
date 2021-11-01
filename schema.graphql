@@ -332,7 +332,7 @@ type GraphLayout @aws_cognito_user_pools {
 type Healthcheck @aws_cognito_user_pools {
 	interval: Int!
 	retries: Int!
-	startPeriod: Int!
+	start_period: Int!
 	test: [String]!
 	timeout: Int!
 }
@@ -340,7 +340,7 @@ type Healthcheck @aws_cognito_user_pools {
 input HealthcheckInput {
 	interval: Int!
 	retries: Int!
-	startPeriod: Int!
+	start_period: Int!
 	test: [String]!
 	timeout: Int!
 }
