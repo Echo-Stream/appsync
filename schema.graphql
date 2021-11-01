@@ -330,11 +330,11 @@ type GraphLayout @aws_cognito_user_pools {
 }
 
 type Healthcheck @aws_cognito_user_pools {
-	interval: String!
+	interval: Int!
 	retries: Int!
-	startPeriod: String!
-	test: String!
-	timeout: String!
+	startPeriod: Int!
+	test: [String]!
+	timeout: Int!
 }
 
 input HealthcheckInput {
