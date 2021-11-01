@@ -49,7 +49,8 @@ interface App @aws_cognito_user_pools {
 type AppChangeNotification @aws_cognito_user_pools {
 	app: String!
 	change: Change!
-	dateTime: AWSDateTime!
+	datetime: AWSDateTime!
+	node: String
 	tenant: String!
 }
 
@@ -553,7 +554,7 @@ input MountRequirementInput {
 
 type Mutation @aws_cognito_user_pools {
 	CreateApiUser(tenant: String!, role: ApiUserRole!, description: String): ApiUser!
-	CreateAppChangeNotification(tenant: String!, app: String!, new: AWSJSON, old: AWSJSON): AppChangeNotification!
+	CreateAppChangeNotification(app: String!, tenant: String!, new: AWSJSON, node: String, old: AWSJSON): AppChangeNotification!
 	@aws_iam
 	CreateBitmapperFunction(
 		tenant: String!,
