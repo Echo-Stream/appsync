@@ -340,7 +340,7 @@ type Healthcheck @aws_cognito_user_pools {
 input HealthcheckInput {
 	interval: Int!
 	retries: Int!
-	start_period: Int!
+	startPeriod: Int!
 	test: [String]!
 	timeout: Int!
 }
