@@ -46,14 +46,6 @@ interface App @aws_cognito_user_pools {
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 }
 
-type AppChangeNotification @aws_cognito_user_pools {
-	app: String!
-	change: Change!
-	datetime: AWSDateTime!
-	node: String
-	tenant: String!
-}
-
 type AppResult @aws_cognito_user_pools {
 	echos: [App]
 	lastEvaluatedKey: AWSJSON
@@ -554,8 +546,6 @@ input MountRequirementInput {
 
 type Mutation @aws_cognito_user_pools {
 	CreateApiUser(tenant: String!, role: ApiUserRole!, description: String): ApiUser!
-	CreateAppChangeNotification(app: String!, tenant: String!, new: AWSJSON, node: String, old: AWSJSON): AppChangeNotification!
-	@aws_iam
 	CreateBitmapperFunction(
 		tenant: String!,
 		name: String!,
@@ -833,11 +823,6 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineBitmapper: String, managedBitmapper: String, requirements: [String!], routeTable: AWSJSON): RouterNode!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
-}
-
-type Subscription @aws_cognito_user_pools {
-	onAppChange(tenant: String!, app: String!): AppChangeNotification
-	@aws_subscribe(mutations: ["CreateAppChangeNotification"])
 }
 
 type Tenant @aws_cognito_user_pools {
