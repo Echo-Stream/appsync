@@ -105,7 +105,7 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	description: String
 	lastModified: AtBy!
 	name: String!
-	sendEdges: [Edge]
+	sendEdges: [Edge]!
 	sendMessageType: MessageType!
 	tenant: Tenant!
 }
@@ -413,6 +413,31 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: ManagedApp!
 	Update(config: AWSJSON, description: String): ManagedApp!
+}
+
+type ManagedAppChangeReceiverNode implements Node @aws_cognito_user_pools {
+	app: ManagedApp!
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	receiveEdge: Edge!
+	receiveMessageType: MessageType!
+	tenant: Tenant!
+
+	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
+}
+
+type ManagedAppChangeRouterNode implements Node @aws_cognito_user_pools {
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	receiveEdge: Edge!
+	receiveMessageType: MessageType!
+	sendEdges: [Edge]
+	sendMessageType: MessageType!
+	tenant: Tenant!
 }
 
 type ManagedInstance @aws_cognito_user_pools {
