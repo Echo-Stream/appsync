@@ -404,7 +404,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	iso: String!
 	lastModified: AtBy!
 	name: String!
-	nodes: [ManagedNode]
+	nodes: [ManagedAppNode]!
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -439,6 +439,8 @@ type ManagedAppChangeRouterNode implements Node @aws_cognito_user_pools {
 	sendMessageType: MessageType!
 	tenant: Tenant!
 }
+
+union ManagedAppNode = ManagedAppChangeReceiverNode | ManagedNode
 
 type ManagedInstance @aws_cognito_user_pools {
 	activationId: String!
