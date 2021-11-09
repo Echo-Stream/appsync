@@ -123,12 +123,6 @@ type CognitoCredentials @aws_cognito_user_pools {
 	username: String!
 }
 
-enum Consistency {
-	cached
-	consistent
-	delegated
-}
-
 enum ContentEncoding {
 	gzip
 	deflate
@@ -322,22 +316,6 @@ type GraphLayout @aws_cognito_user_pools {
 	layout: AWSJSON!
 }
 
-type Healthcheck @aws_cognito_user_pools {
-	interval: Int!
-	retries: Int!
-	startPeriod: Int!
-	test: [String]!
-	timeout: Int!
-}
-
-input HealthcheckInput {
-	interval: Int!
-	retries: Int!
-	startPeriod: Int!
-	test: [String]!
-	timeout: Int!
-}
-
 type KmsKey @aws_cognito_user_pools {
 	arn: String!
 	created: AtBy!
@@ -480,7 +458,6 @@ type ManagedNodeType @aws_cognito_user_pools {
 	created: AtBy!
 	description: String!
 	imageUri: String!
-	healthcheck: Healthcheck
 	lastModified: AtBy!
 	mountRequirements: [MountRequirement!]
 	name: String!
@@ -493,7 +470,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 
 	Delete: Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
-	Update(description: String, healthcheck: HealthcheckInput, imageUri: String, readme: String): ManagedNodeType!
+	Update(description: String, imageUri: String, readme: String): ManagedNodeType!
 }
 
 type ManagedNodeTypeResult @aws_cognito_user_pools {
@@ -534,12 +511,7 @@ type MessageTypeResult @aws_cognito_user_pools {
 }
 
 type Mount @aws_cognito_user_pools {
-	consistency: Consistency
 	description: String!
-	labels: AWSJSON
-	noCopy: Boolean
-	options: AWSJSON
-	readOnly: Boolean
 	source: String
 	target: String!
 }
@@ -550,23 +522,13 @@ input MountInput {
 }
 
 type MountRequirement @aws_cognito_user_pools {
-	consistency: Consistency
 	description: String!
-	labels: AWSJSON
-	noCopy: Boolean
-	options: AWSJSON
-	readOnly: Boolean
 	source: String
 	target: String!
 }
 
 input MountRequirementInput {
-	consistency: Consistency
 	description: String!
-	labels: AWSJSON
-	noCopy: Boolean
-	options: AWSJSON
-	readOnly: Boolean
 	source: String
 	target: String!
 }
@@ -659,7 +621,6 @@ type Mutation @aws_cognito_user_pools {
 		name: String!,
 		tenant: String!,
 		configTemplate: AWSJSON,
-		healthcheck: HealthcheckInput
 		mountRequirements: [MountRequirementInput!],
 		portRequirements: [PortRequirementInput!],
 		readme: String,
