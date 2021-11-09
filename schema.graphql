@@ -270,7 +270,7 @@ type ExternalApp implements App @aws_cognito_user_pools {
 }
 
 type ExternalNode implements Node @aws_cognito_user_pools {
-	app: ExternalApp!
+	app: RemoteApp!
 	config: AWSJSON
 	created: AtBy!
 	description: String
@@ -789,6 +789,8 @@ enum Region {
 	us_gov_east_1
 	us_gov_west_1
 }
+
+union RemoteApp = CrossAccountApp | ExternalApp
 
 type RouterNode implements Node @aws_cognito_user_pools {
 	config: AWSJSON
