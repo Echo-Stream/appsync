@@ -346,7 +346,7 @@ type LogEmitterNode implements Node @aws_cognito_user_pools {
 }
 
 type LoginUser @aws_cognito_user_pools {
-	activeDate: String
+	activeAt: String
 	created: AtBy!
 	email: AWSEmail!
 	firstName: String!
@@ -837,12 +837,12 @@ type TenantResult @aws_cognito_user_pools {
 }
 
 type TenantUser @aws_cognito_user_pools {
-	activeDate: String
+	activeAt: String
 	created: AtBy!
 	email: AWSEmail!
 	firstName: String
 	graphLayouts: [GraphLayout!]
-	invitationDate: String
+	invitationAt: String
 	invitationToken: String
 	lastModified: AtBy!
 	lastName: String
