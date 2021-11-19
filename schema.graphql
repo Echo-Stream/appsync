@@ -494,13 +494,14 @@ type MessageType @aws_cognito_user_pools {
 	name: String!
 	readme: String
 	requirements: [String!]
+	sampleMessage: String!
 	system: Boolean
 	tenant: Tenant
 	transformerTemplate: String!
 
 	Delete: Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
-	Update(auditor: String, bitmapperTemplate: String, description: String, readme: String, requirements: [String!], transformerTemplate: String): MessageType!
+	Update(auditor: String, bitmapperTemplate: String, description: String, readme: String, requirements: [String!], sampleMessage: String, transformerTemplate: String): MessageType!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
@@ -632,6 +633,7 @@ type Mutation @aws_cognito_user_pools {
 		bitmapperTemplate: String!,
 		description: String!,
 		name: String!,
+		sampleMessage: String!,
 		tenant: String!,
 		transformerTemplate: String!,
 		readme: String,
