@@ -711,6 +711,7 @@ type Port @aws_cognito_user_pools {
 
 input PortInput {
 	containerPort: Int!
+	description: String!
 	hostAddress: AWSIPAddress
 	hostPort: Int!
 	protocol: Protocol!
