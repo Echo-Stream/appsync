@@ -67,9 +67,9 @@ input AuditRecord {
 
 type AwsCredentials @aws_cognito_user_pools {
 	accessKeyId: String!
+	expiration: AWSDateTime!
 	secretAccessKey: String!
 	sessionToken: String!
-	expiration: AWSDateTime!
 }
 
 type BitmapperFunction implements Function @aws_cognito_user_pools {
