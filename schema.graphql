@@ -890,7 +890,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 	name: String!
 	readme: String
 	requirements: [String!]
-	returnMessageType: MessageType!
+	returnMessageType: MessageType
 	system: Boolean
 	tenant: Tenant
 
