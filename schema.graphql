@@ -8,6 +8,16 @@ type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 }
 
+type AuditEmitterNode implements Node @aws_cognito_user_pools {
+	created: AtBy!
+	description: String
+	lastModified: AtBy!
+	name: String!
+	sendEdges: [Edge]
+	sendMessageType: MessageType!
+	tenant: Tenant!
+}
+
 type ApiUser @aws_cognito_user_pools {
 	created: AtBy!
 	credentials: CognitoCredentials!
@@ -223,7 +233,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 }
 
-union Echo = AlertEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedAppChangeReceiverNode | ManagedAppChangeRouterNode | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TimerNode | TransformerFunction | TransformerNode
+union Echo = AlertEmitterNode | AuditEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedAppChangeReceiverNode | ManagedAppChangeRouterNode | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TimerNode | TransformerFunction | TransformerNode
 
 type Edge @aws_cognito_user_pools {
 	created: AtBy!
