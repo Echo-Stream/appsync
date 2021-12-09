@@ -835,6 +835,7 @@ type Tenant @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	region: String!
+	table: String!
 	users: [TenantUser!]
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
