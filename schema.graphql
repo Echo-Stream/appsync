@@ -148,12 +148,13 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	nodes: [ExternalNode]
+	tableAccess: Boolean!
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: CrossAccountApp!
-	Update(config: AWSJSON, description: String): CrossAccountApp!
+	Update(config: AWSJSON, description: String, tableAccess: Boolean): CrossAccountApp!
 }
 
 type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
@@ -270,13 +271,14 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	nodes: [ExternalNode]
+	tableAccess: Boolean!
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
 	GetAwsCredentials(duration: Int): AwsCredentials!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: ExternalApp!
-	Update(config: AWSJSON, description: String): ExternalApp!
+	Update(config: AWSJSON, description: String, tableAccess: Boolean): ExternalApp!
 }
 
 type ExternalNode implements Node @aws_cognito_user_pools {
@@ -393,6 +395,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	nodes: [ManagedAppNode]!
+	tableAccess: Boolean!
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -400,7 +403,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	GetAwsCredentials(duration: Int): AwsCredentials!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: ManagedApp!
-	Update(config: AWSJSON, description: String): ManagedApp!
+	Update(config: AWSJSON, description: String, tableAccess: Boolean): ManagedApp!
 }
 
 type ManagedAppChangeReceiverNode implements Node @aws_cognito_user_pools {
@@ -560,7 +563,8 @@ type Mutation @aws_cognito_user_pools {
 		tenant: String!,
 		name: String!,
 		config: AWSJSON,
-		description: String
+		description: String,
+		tableAccess: Boolean
 	): ExternalApp!
 	CreateCrossTenantReceivingApp(
 		tenant: String!,
@@ -599,6 +603,7 @@ type Mutation @aws_cognito_user_pools {
 		name: String!,
 		config: AWSJSON,
 		description: String,
+		tableAccess: Boolean
 	): ExternalApp!
 	CreateExternalNode(
 		tenant: String!,
@@ -615,6 +620,7 @@ type Mutation @aws_cognito_user_pools {
 		tenant: String!,
 		config: AWSJSON, 
 		description: String
+		tableAccess: Boolean
 	): ManagedApp!
 	CreateManagedNode(
 		app: String!,
