@@ -234,6 +234,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	description: String
 	inlineTransformer: String
 	lastModified: AtBy!
+	loggingLevel: LogLevel
 	managedTransformer: TransformerFunction
 	name: String!
 	receiveEdges: [Edge]
@@ -245,7 +246,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	Delete(drainEdges: Boolean): Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
-	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): CrossTenantSendingNode!
+	Update(config: AWSJSON, description: String, inlineTransformer: String, loggingLevel: LogLevel, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): CrossTenantSendingNode!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
@@ -449,6 +450,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
+	loggingLevel: LogLevel
 	managedNodeType: ManagedNodeType!
 	mounts: [Mount!]
 	name: String!
@@ -463,7 +465,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	Delete(drainEdges: Boolean): Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
-	Update(config: AWSJSON, description: String, mounts: [MountInput!], ports: [PortInput!]): ManagedNode!
+	Update(config: AWSJSON, description: String, loggingLevel: LogLevel, mounts: [MountInput!], ports: [PortInput!]): ManagedNode!
 }
 
 type ManagedNodeType @aws_cognito_user_pools {
@@ -578,17 +580,18 @@ type Mutation @aws_cognito_user_pools {
 		receivingApp: String!
 	): CrossTenantSendingApp!
 	CreateCrossTenantSendingNode(
-		tenant: String!,
 		app: String!,
 		name: String!,
 		receiveMessageType: String!,
-		description: String,
+		tenant: String!,
 		config: AWSJSON,
-		sendMessageType: String,
+		description: String,
 		inlineTransformer: String,
+		loggingLevel: LogLevel,
 		managedTransformer: String,
-		sequentialProcessing: Boolean,
 		requirements: [String!]
+		sendMessageType: String,
+		sequentialProcessing: Boolean
 	): CrossTenantSendingNode!
 	CreateEdge(
 		source: String!,
@@ -629,6 +632,7 @@ type Mutation @aws_cognito_user_pools {
 		tenant: String!,
 		config: AWSJSON,
 		description: String,
+		loggingLevel: LogLevel,
 		mounts: [MountInput!],
 		ports: [PortInput!]
 	): ManagedNode!
@@ -656,14 +660,15 @@ type Mutation @aws_cognito_user_pools {
 		requirements: [String!]
 	): MessageType!
 	CreateRouterNode(
-		tenant: String!,
 		name: String!,
 		receiveMessageType: String!,
 		routeTable: AWSJSON!,
-		inlineBitmapper: String,
-		managedBitmapper: String
-		description: String,
+		tenant: String!,
 		config: AWSJSON,
+		description: String,
+		inlineBitmapper: String,
+		loggingLevel: LogLevel,
+		managedBitmapper: String,
 		requirements: [String!]
 	): RouterNode!
 	CreateTenant(name: String!, region: Region!, config: AWSJSON): Tenant!
@@ -684,16 +689,17 @@ type Mutation @aws_cognito_user_pools {
 		returnMessageType: String
 	): TransformerFunction!
 	CreateTransformerNode(
-		tenant: String!,
 		name: String!,
 		receiveMessageType: String!,
-		description: String,
+		tenant: String!,
 		config: AWSJSON,
-		sendMessageType: String,
+		description: String,
 		inlineTransformer: String,
+		loggingLevel: LogLevel,
 		managedTransformer: String,
-		sequentialProcessing: Boolean,
-		requirements: [String!]
+		requirements: [String!],
+		sendMessageType: String,
+		sequentialProcessing: Boolean
 	): TransformerNode!
 }
 
@@ -819,6 +825,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	description: String
 	inlineBitmapper: String
 	lastModified: AtBy!
+	loggingLevel: LogLevel
 	managedBitmapper: BitmapperFunction
 	name: String!
 	receiveEdges: [Edge]
@@ -832,7 +839,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	Delete(drainEdges: Boolean): Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
-	Update(config: AWSJSON, description: String, inlineBitmapper: String, managedBitmapper: String, requirements: [String!], routeTable: AWSJSON): RouterNode!
+	Update(config: AWSJSON, description: String, inlineBitmapper: String, loggingLevel: LogLevel, managedBitmapper: String, requirements: [String!], routeTable: AWSJSON): RouterNode!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
@@ -925,6 +932,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	description: String
 	inlineTransformer: String
 	lastModified: AtBy!
+	loggingLevel: LogLevel
 	managedTransformer: TransformerFunction
 	name: String!
 	receiveEdges: [Edge]
@@ -938,7 +946,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	Delete(drainEdges: Boolean): Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
-	Update(config: AWSJSON, description: String, inlineTransformer: String, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): TransformerNode!
+	Update(config: AWSJSON, description: String, inlineTransformer: String, loggingLevel: LogLevel, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): TransformerNode!
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
