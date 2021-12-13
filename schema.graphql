@@ -173,7 +173,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	nodes: [RemoteAppNode]!
-	tableAccess: Boolean!
+	tableAccess: Boolean
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -297,7 +297,7 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	nodes: [RemoteAppNode]!
-	tableAccess: Boolean!
+	tableAccess: Boolean
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -421,7 +421,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	nodes: [ManagedAppNode]!
-	tableAccess: Boolean!
+	tableAccess: Boolean
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
