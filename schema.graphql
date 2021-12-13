@@ -57,7 +57,7 @@ interface App @aws_cognito_user_pools {
 }
 
 type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
-	app: ManagedApp!
+	app: App!
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
