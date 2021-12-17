@@ -819,6 +819,8 @@ union RemoteApp = CrossAccountApp | ExternalApp
 
 union RemoteAppNode = AppChangeReceiverNode | ExternalNode
 
+union Result = Int | String
+
 type RouterNode implements Node @aws_cognito_user_pools {
 	config: AWSJSON
 	created: AtBy!
@@ -965,6 +967,7 @@ enum UserStatus {
 }
 
 type ValidationResult @aws_cognito_user_pools {
-	result: String!
+	logs: String!
+	result: Result!
 	stdout: String!
 }
