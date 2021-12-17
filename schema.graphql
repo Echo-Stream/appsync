@@ -278,7 +278,7 @@ type Edge @aws_cognito_user_pools {
 
 	Delete(drain: Boolean): Boolean!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
-	Move(source: String!, target: String): Edge!
+	Move(source: String!, target: String!): Edge!
 	Purge: Boolean!
 	Update(description: String): Edge!
 }
