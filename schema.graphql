@@ -177,6 +177,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	GetAwsCredentials(duration: Int): AwsCredentials!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: CrossAccountApp!
 	Update(config: AWSJSON, description: String, tableAccess: Boolean): CrossAccountApp!
