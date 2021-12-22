@@ -567,7 +567,7 @@ type Mutation @aws_cognito_user_pools {
 		config: AWSJSON,
 		description: String,
 		tableAccess: Boolean
-	): ExternalApp!
+	): CrossAccountApp!
 	CreateCrossTenantReceivingApp(
 		tenant: String!,
 		name: String!,
