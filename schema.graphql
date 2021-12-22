@@ -421,7 +421,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	nodes: [ManagedAppNode]!
-	tableAccess: Boolean!ß
+	tableAccess: Boolean!
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
