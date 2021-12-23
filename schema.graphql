@@ -173,10 +173,11 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	nodes: [RemoteAppNode]!
-	tableAccess: Boolean
+	tableAccess: Boolean!
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
+	GetAwsCredentials(duration: Int): AwsCredentials!
 	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
 	ResetPassword: CrossAccountApp!
 	Update(config: AWSJSON, description: String, tableAccess: Boolean): CrossAccountApp!
@@ -297,7 +298,7 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	nodes: [RemoteAppNode]!
-	tableAccess: Boolean
+	tableAccess: Boolean!
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -421,7 +422,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	name: String!
 	nodes: [ManagedAppNode]!
-	tableAccess: Boolean
+	tableAccess: Boolean!
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -567,7 +568,7 @@ type Mutation @aws_cognito_user_pools {
 		config: AWSJSON,
 		description: String,
 		tableAccess: Boolean
-	): ExternalApp!
+	): CrossAccountApp!
 	CreateCrossTenantReceivingApp(
 		tenant: String!,
 		name: String!,
