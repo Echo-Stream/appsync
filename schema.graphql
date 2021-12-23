@@ -774,7 +774,7 @@ type Query @aws_cognito_user_pools {
 	GetManagedNodeType(name: String!, tenant: String): ManagedNodeType
 	GetMessageType(name: String!, tenant: String): MessageType
 	GetNode(name: String!, tenant: String!): Node
-	GetSupportedTenantRegions: [String!]!
+	GetSupportedRegions: [String!]!
 	GetTenant(tenant: String!): Tenant
 	GetTenantUser(tenant: String!, email: AWSEmail!): TenantUser
 	GetUser: LoginUser
