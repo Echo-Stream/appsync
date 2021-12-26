@@ -672,7 +672,7 @@ type Mutation @aws_cognito_user_pools {
 		managedBitmapper: String,
 		requirements: [String!]
 	): RouterNode!
-	CreateTenant(name: String!, region: Region!, config: AWSJSON): Tenant!
+	CreateTenant(name: String!, region: String!, config: AWSJSON): Tenant!
 	CreateTimerNode(
 		name: String!,
 		scheduleExpression: String!,
@@ -774,6 +774,7 @@ type Query @aws_cognito_user_pools {
 	GetManagedNodeType(name: String!, tenant: String): ManagedNodeType
 	GetMessageType(name: String!, tenant: String): MessageType
 	GetNode(name: String!, tenant: String!): Node
+	GetSupportedRegions: [String!]!
 	GetTenant(tenant: String!): Tenant
 	GetTenantUser(tenant: String!, email: AWSEmail!): TenantUser
 	GetUser: LoginUser
@@ -788,32 +789,6 @@ type Query @aws_cognito_user_pools {
 	ListMessageTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): MessageTypeResult!
 	ListTenants(exclusiveStartKey: AWSJSON, limit: Int): TenantResult!
 	ListTenantUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): TenantUserResult!
-}
-
-enum Region {
-	af_south_1
-	ap_east_1
-	ap_northeast_1
-	ap_northeast_2
-	ap_northeast_3
-	ap_south_1
-	ap_southeast_1
-	ap_southeast_2
-	ca_central_1
-	eu_central_1
-	eu_north_1
-	eu_south_1
-	eu_west_1
-	eu_west_2
-	eu_west_3
-	me_south_1
-	sa_east_1
-	us_east_1
-	us_east_2
-	us_west_1
-	us_west_2
-	us_gov_east_1
-	us_gov_west_1
 }
 
 union RemoteApp = CrossAccountApp | ExternalApp
