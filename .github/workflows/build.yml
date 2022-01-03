@@ -1,4 +1,4 @@
-name: Upload Appsync API
+name: Upload Appsync API and generate documentation
 
 on:
   push:
@@ -31,7 +31,7 @@ jobs:
             exit 1
           fi
           echo "REF: ${GITHUB_REF}"
-      - name: Upload
+      - name: Upload schema
         run: aws s3 cp schema.graphql s3://$ARTIFACTS_BUCKET/$S3_PREFIX/appsync/ --content-type text/plain --sse
         if: ${{ success() }}
       - uses: actions/setup-node@v2
@@ -42,7 +42,7 @@ jobs:
           npm install -g @2fd/graphdoc
           awk 1 scalars.graphql schema.graphql > echo.graphql
           graphdoc -s echo.graphql -o ./doc/
-      - name: Upload
+      - name: Upload docs
         run: |
           aws s3 sync doc/ s3://${{ secrets.ARTIFACTS_S3 }}/$S3_PREFIX/ui/docs --sse
         if: ${{ success() }}
