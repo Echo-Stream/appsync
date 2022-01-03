@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  upload-schema:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -34,5 +34,12 @@ jobs:
       - name: Upload
         run: aws s3 cp schema.graphql s3://$ARTIFACTS_BUCKET/$S3_PREFIX/appsync/ --content-type text/plain --sse
         if: ${{ success() }}
+  generate-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: test
+        run: |
+          echo "test"
 
         
