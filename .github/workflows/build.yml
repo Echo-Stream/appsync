@@ -41,9 +41,10 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '16'
-      - name: test
+      - name: Install graphdoc and generate docs
         run: |
-          node --version
-          npm --version
+          npm install -g @2fd/graphdoc
+          awk 1 scalars.graphql schema.graphql > echo.graphql
+          graphdoc -s echo.graphql -o ./doc/
 
         
