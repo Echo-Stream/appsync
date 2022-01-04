@@ -90,17 +90,27 @@ type ApiUser @aws_cognito_user_pools {
 	): ApiUser!
 }
 
-# A paginated result set of APIUsers
+# A (possibly) paginated result set of APIUsers
 type ApiUserResult @aws_cognito_user_pools {
+	# The list of APIUsers.
 	echos: [ApiUser]
+
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
 # The allowed roles for an API User
 enum ApiUserRole {
+	# All operations EXCEPT deleting the tenant.
 	admin
+
+	# Only get and list operations are allowed, as well as retriving attributes.
 	read_only
+
+	# All operations EXCEPT manipulating users or deleting the tenant.
 	user
 }
 
@@ -146,8 +156,12 @@ type AppResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+# Defines when and who. Used for creation and last modified stamps.
 type AtBy @aws_cognito_user_pools {
+	# When.
 	at: AWSDateTime
+
+	# Who.
 	by: String
 }
 
