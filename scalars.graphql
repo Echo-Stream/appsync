@@ -1,16 +1,16 @@
-# An extended ISO 8601 date string (https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates) in the format YYYY-MM-DD
-# Can optionally include a time zone offset (https://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators). For example, the values 1970-01-01Z, 1970-01-01-07:00, and 1970-01-01+05:30 are all valid for AWSDate. The time zone offset must be either Z (UTC) or an offset in hours and minutes (and, optionally, seconds). For example, ±hh:mm:ss. The seconds field in the time zone offset is considered valid even though it's not part of the ISO 8601 standard.
+# An extended ISO 8601 date string ( https://en.wikipedia.org/wiki/ISO_8601#Calendar_dates ) in the format YYYY-MM-DD
+# Can optionally include a time zone offset ( https://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators ). For example, the values 1970-01-01Z, 1970-01-01-07:00, and 1970-01-01+05:30 are all valid for AWSDate. The time zone offset must be either Z (UTC) or an offset in hours and minutes (and, optionally, seconds). For example, ±hh:mm:ss. The seconds field in the time zone offset is considered valid even though it's not part of the ISO 8601 standard.
 scalar AWSDate
-# An extended ISO 8601 date and time string (https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations) in the format YYYY-MM-DDThh:mm:ss.sssZ.
-# Can optionally include a time zone offset (https://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators). The time zone offset must be either Z (UTC) or an offset in hours and minutes (and, optionally, seconds). For example, ±hh:mm:ss. The seconds field in the time zone offset is considered valid even though it's not part of the ISO 8601 standard.
+# An extended ISO 8601 date and time string ( https://en.wikipedia.org/wiki/ISO_8601#Combined_date_and_time_representations ) in the format YYYY-MM-DDThh:mm:ss.sssZ.
+# Can optionally include a time zone offset ( https://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators ). The time zone offset must be either Z (UTC) or an offset in hours and minutes (and, optionally, seconds). For example, ±hh:mm:ss. The seconds field in the time zone offset is considered valid even though it's not part of the ISO 8601 standard.
 scalar AWSDateTime
-# An email address in the format local-part@domain-part as defined by RFC 822 (https://tools.ietf.org/html/rfc822).
+# An email address in the format local-part@domain-part as defined by RFC 822 ( https://tools.ietf.org/html/rfc822 ).
 scalar AWSEmail
 # A valid IPv4 or IPv6 address. IPv4 addresses are expected in quad-dotted notation (123.12.34.56). IPv6 addresses are expected in non-bracketed, colon-separated format (1a2b:3c4b::1234:4567). You can include an optional CIDR suffix (123.45.67.89/16) to indicate subnet mask.
 scalar AWSIPAddress
 # A JSON string. Any valid JSON construct is automatically parsed and loaded in the resolver mapping templates as maps, lists, or scalar values rather than as the literal input strings. Unquoted strings or otherwise invalid JSON result in a GraphQL validation error.
 scalar AWSJSON
-# A phone number. This value is stored as a string. Phone numbers can contain either spaces or hyphens to separate digit groups. Phone numbers without a country code are assumed to be US/North American numbers adhering to the North American Numbering Plan (NANP) (https://en.wikipedia.org/wiki/North_American_Numbering_Plan).
+# A phone number. This value is stored as a string. Phone numbers can contain either spaces or hyphens to separate digit groups. Phone numbers without a country code are assumed to be US/North American numbers adhering to the North American Numbering Plan (NANP) (https://en.wikipedia.org/wiki/North_American_Numbering_Plan ).
 scalar AWSPhone
 # An extended ISO 8601 time string (https://en.wikipedia.org/wiki/ISO_8601#Times) in the format hh:mm:ss.sss.
 # Can optionally include a time zone offset (https://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators). The time zone offset must be either Z (UTC) or an offset in hours and minutes (and, optionally, seconds). For example, ±hh:mm:ss. The seconds field in the time zone offset is considered valid even though it's not part of the ISO 8601 standard.
