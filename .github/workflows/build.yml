@@ -41,7 +41,7 @@ jobs:
         run: |
           npm install -g @2fd/graphdoc
           awk 1 scalars.graphql schema.graphql > echo.graphql
-          graphdoc -s echo.graphql -o ./doc/
+          graphdoc
       - name: Upload docs
         run: |
           aws s3 sync doc/ s3://${{ secrets.ARTIFACTS_S3 }}/$S3_PREFIX/ui/docs --sse
