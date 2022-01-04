@@ -1,13 +1,28 @@
+# An Internal Node that emits alert messages.
 type AlertEmitterNode implements Node @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
+	
+	# A human-readable description.
 	description: String
+	
+	# When and who modified.
 	lastModified: AtBy!
+	
+	# The name.
 	name: String!
+	
+	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+	
+	# The MessageType. Will always be "echo.alert".
 	sendMessageType: MessageType!
+	
+	# The Tenant.
 	tenant: Tenant!
 }
 
+# An Internal Node that emits audit messages
 type AuditEmitterNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
@@ -18,27 +33,71 @@ type AuditEmitterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 }
 
+# A programmatic user of the EchoStream API.
 type ApiUser @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
+	
+	# The credentials required to log into Cognito to get JWT's.
 	credentials: CognitoCredentials!
+	
+	# A human-readable description.
 	description: String
+	
+	# When and who modified.
 	lastModified: AtBy!
+	
+	# The role.
 	role: ApiUserRole!
+	
+	# The Tenant.
 	tenant: Tenant!
+	
+	# The username.
 	username: String!
 
+	# Deletes this APIUser
 	Delete: Boolean!
-	ListChanges(endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
+
+	# Lists the changes that have been made to this APIUser.
+	ListChanges(
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
+		exclusiveStartKey: AWSJSON,
+
+		# Used for limiting the number of results when paginating. Defaults to "all".
+		limit: Int, 
+
+		# True for ascending results, False for descending result. Defaults to True.
+		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): ChangeResult!
+
+	# Resets the password and returns this APIUser
 	ResetPassword: ApiUser!
-	Update(description: String, role: ApiUserRole): ApiUser!
+
+	# Updates and returns this APIUser
+	Update(
+		# A human-readable description. Null is ignored.
+		description: String,
+
+		# The new role. Null is ignored.
+		role: ApiUserRole
+	): ApiUser!
 }
 
+# A paginated result set of APIUsers
 type ApiUserResult @aws_cognito_user_pools {
 	echos: [ApiUser]
 	lastEvaluatedKey: AWSJSON
 	scannedCount: Int
 }
 
+# The allowed roles for an API User
 enum ApiUserRole {
 	admin
 	read_only
@@ -550,8 +609,18 @@ input MountRequirementInput {
 	target: String!
 }
 
+# Root Mutation
 type Mutation @aws_cognito_user_pools {
-	CreateApiUser(tenant: String!, role: ApiUserRole!, description: String): ApiUser!
+	# Creates a new APIUser and returns it.
+	CreateApiUser(
+		# The Tenant to create the APIUser in.
+		tenant: String!,
+		# The role of the new API User.
+		role: ApiUserRole!,
+		# A human-readable description of the APIUser.
+		description: String
+	): ApiUser!
+
 	CreateBitmapperFunction(
 		tenant: String!,
 		name: String!,
@@ -764,10 +833,20 @@ enum Protocol {
 	udp
 }
 
+# Root Query
 type Query @aws_cognito_user_pools {
 	GetApiUser(tenant: String!, username: String!): ApiUser
 	GetApp(name: String!, tenant: String!): App
-	GetBulkDataStorage(tenant: String!, contentEncoding: ContentEncoding, count: Int): [BulkDataStorage!]!
+
+	# Gets between 1 and 100 BulkDataStorage objects.
+	GetBulkDataStorage(
+		# The Tenant to get the BulkDataStorage objects for.
+		tenant: String!,
+		# The content encoding to use for the returned BulkDataStorage.
+		contentEncoding: ContentEncoding,
+		# The number of BulkDataStorage objects to get. Must be between 1 and 100. Defaults to 1.
+		count: Int
+	): [BulkDataStorage!]!
 	GetEdge(source: String!, target: String!, tenant: String!): Edge
 	GetFunction(name: String!, tenant: String): Function
 	GetKmsKey(name: String!, tenant: String!): KmsKey
