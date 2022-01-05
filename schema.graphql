@@ -97,7 +97,7 @@ type ApiUser @aws_cognito_user_pools {
 	): ApiUser!
 }
 
-# A (possibly) paginated result set of APIUsers.
+# A (possibly) paginated result set.
 type ApiUserResult @aws_cognito_user_pools {
 	# The list of APIUsers.
 	echos: [ApiUser]
@@ -204,9 +204,13 @@ type AppChangeRouterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 }
 
+# A (possibly) paginated result set.
 type AppResult @aws_cognito_user_pools {
+	# The list of Apps.
 	echos: [App]
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
@@ -301,9 +305,13 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 }
 
+# A (possibly) paginated result set.
 type ChangeResult @aws_cognito_user_pools {
+	# The list of Changes.
 	echos: [Change]!
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
@@ -601,9 +609,13 @@ type Edge @aws_cognito_user_pools {
 	Update(description: String): Edge!
 }
 
+# A (possibly) paginated result set.
 type EdgeResult @aws_cognito_user_pools {
+	# The list of Edges.
 	echos: [Edge]
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
@@ -749,9 +761,13 @@ interface Function @aws_cognito_user_pools {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
+# A (possibly) paginated result set.
 type FunctionResult @aws_cognito_user_pools {
+	# The list of Functions.
 	echos: [Function]
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
@@ -796,9 +812,13 @@ type KmsKey @aws_cognito_user_pools {
 	Update(description: String): KmsKey!
 }
 
+# A (possibly) paginated result set.
 type KmsKeyResult @aws_cognito_user_pools {
+	# The list of KmsKeys.
 	echos: [KmsKey]
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
@@ -1018,9 +1038,13 @@ type ManagedNodeType @aws_cognito_user_pools {
 	Update(description: String, imageUri: String, readme: String): ManagedNodeType!
 }
 
+# A (possibly) paginated result set.
 type ManagedNodeTypeResult @aws_cognito_user_pools {
+	# The list of ManagedNodeTypes.
 	echos: [ManagedNodeType]
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
@@ -1073,9 +1097,13 @@ type MessageType @aws_cognito_user_pools {
 	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
 }
 
+# A (possibly) paginated result set.
 type MessageTypeResult @aws_cognito_user_pools {
+	# The list of MessageTypes.
 	echos: [MessageType]
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
@@ -1297,9 +1325,13 @@ interface Node @aws_cognito_user_pools {
 	tenant: Tenant!
 }
 
+# A (possibly) paginated result set.
 type NodeResult @aws_cognito_user_pools {
+	# The list of Nodes.
 	echos: [Node]
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
@@ -1484,9 +1516,13 @@ type Tenant @aws_cognito_user_pools {
 	Update(config: AWSJSON, description: String): Tenant!
 }
 
+# A (possibly) paginated result set.
 type TenantResult @aws_cognito_user_pools {
+	# The list of Tenants.
 	echos: [Tenant]
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
@@ -1531,9 +1567,13 @@ type TenantUser @aws_cognito_user_pools {
 	Update(role: UserRole, status: UserStatus): TenantUser!
 }
 
+# A (possibly) paginated result set.
 type TenantUserResult @aws_cognito_user_pools {
+	# The list of TenantUsers.
 	echos: [TenantUser]
+	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
