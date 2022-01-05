@@ -32,6 +32,7 @@ type AuditEmitterNode implements Node @aws_cognito_user_pools {
 	name: String!
 	sendEdges: [Edge]
 	sendMessageType: MessageType!
+	# The Tenant.
 	tenant: Tenant!
 }
 
@@ -124,6 +125,7 @@ interface App @aws_cognito_user_pools {
 	# When and who modified.
 	lastModified: AtBy!
 	name: String!
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -140,6 +142,7 @@ type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	name: String!
 	receiveEdge: Edge!
 	receiveMessageType: MessageType!
+	# The Tenant.
 	tenant: Tenant!
 
 	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
@@ -156,6 +159,7 @@ type AppChangeRouterNode implements Node @aws_cognito_user_pools {
 	receiveMessageType: MessageType!
 	sendEdges: [Edge]
 	sendMessageType: MessageType!
+	# The Tenant.
 	tenant: Tenant!
 }
 
@@ -201,6 +205,7 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	readme: String
 	requirements: [String!]
 	system: Boolean
+	# The Tenant.
 	tenant: Tenant
 
 	Delete: Boolean!
@@ -228,6 +233,7 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	name: String!
 	sendEdges: [Edge]!
 	sendMessageType: MessageType!
+	# The Tenant.
 	tenant: Tenant!
 }
 
@@ -262,6 +268,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	name: String!
 	nodes: [RemoteAppNode]!
 	tableAccess: Boolean!
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -281,6 +288,7 @@ type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 	nodes: [CrossTenantReceivingNode]
 	sendingApp: String
 	sendingTenant: String!
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -298,6 +306,7 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	name: String!
 	sendEdges: [Edge]
 	sendMessageType: MessageType
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -315,6 +324,7 @@ type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 	nodes: [CrossTenantSendingNode]
 	receivingApp: String!
 	receivingTenant: String!
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -338,6 +348,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	receiveMessageType: MessageType
 	requirements: [String!]
 	sequentialProcessing: Boolean
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -356,6 +367,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 	name: String!
 	sendEdges: [Edge]
 	sendMessageType: MessageType!
+	# The Tenant.
 	tenant: Tenant!
 }
 
@@ -375,6 +387,7 @@ type Edge @aws_cognito_user_pools {
 	queue: AWSURL!
 	source: Node!
 	target: Node!
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drain: Boolean): Boolean!
@@ -401,6 +414,7 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	name: String!
 	nodes: [RemoteAppNode]!
 	tableAccess: Boolean!
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -423,6 +437,7 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	receiveMessageType: MessageType
 	sendEdges: [Edge]
 	sendMessageType: MessageType
+	# The Tenant.
 	tenant: Tenant!
 
 	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
@@ -443,6 +458,7 @@ interface Function @aws_cognito_user_pools {
 	readme: String
 	requirements: [String!]
 	system: Boolean
+	# The Tenant.
 	tenant: Tenant
 
 	Delete: Boolean!
@@ -469,6 +485,7 @@ type KmsKey @aws_cognito_user_pools {
 	# When and who modified.
 	lastModified: AtBy!
 	name: String!
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete: Boolean!
@@ -491,6 +508,7 @@ type LogEmitterNode implements Node @aws_cognito_user_pools {
 	name: String!
 	sendEdges: [Edge]
 	sendMessageType: MessageType!
+	# The Tenant.
 	tenant: Tenant!
 }
 
@@ -537,6 +555,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	name: String!
 	nodes: [ManagedAppNode]!
 	tableAccess: Boolean!
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -576,6 +595,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	receiveMessageType: MessageType
 	sendEdges: [Edge]
 	sendMessageType: MessageType
+	# The Tenant.
 	tenant: Tenant!
 
 	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
@@ -600,6 +620,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	receiveMessageType: MessageType
 	sendMessageType: MessageType
 	system: Boolean
+	# The Tenant.
 	tenant: Tenant
 
 	Delete: Boolean!
@@ -632,6 +653,7 @@ type MessageType @aws_cognito_user_pools {
 	requirements: [String!]
 	sampleMessage: String!
 	system: Boolean
+	# The Tenant.
 	tenant: Tenant
 	transformerTemplate: String!
 
@@ -841,6 +863,7 @@ interface Node @aws_cognito_user_pools {
 	# When and who modified.
 	lastModified: AtBy!
 	name: String!
+	# The Tenant.
 	tenant: Tenant!
 }
 
@@ -954,6 +977,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	routeTable: AWSJSON!
 	sendEdges: [Edge]
 	sendMessageType: MessageType
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -1001,6 +1025,7 @@ type TenantUser @aws_cognito_user_pools {
 	lastName: String
 	role: UserRole!
 	status: UserStatus!
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete: Boolean!
@@ -1026,6 +1051,7 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	scheduleExpression: String!
 	sendEdges: [Edge]
 	sendMessageType: MessageType!
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
@@ -1046,6 +1072,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 	requirements: [String!]
 	returnMessageType: MessageType
 	system: Boolean
+	# The Tenant.
 	tenant: Tenant
 
 	Delete: Boolean!
@@ -1071,6 +1098,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	sendEdges: [Edge]
 	sendMessageType: MessageType
 	sequentialProcessing: Boolean
+	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drainEdges: Boolean): Boolean!
