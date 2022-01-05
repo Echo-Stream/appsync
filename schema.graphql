@@ -169,6 +169,7 @@ interface App @aws_cognito_user_pools {
 }
 
 type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
+	# The App.
 	app: App!
 
 	# When and who created.
@@ -252,18 +253,37 @@ type AtBy @aws_cognito_user_pools {
 	by: String
 }
 
+# An audit record to create.
 input AuditRecord {
+	# The attributes. Must be a JSON object (i.e. - dict, map).
 	attributes: AWSJSON
+
+	# The date and time of the audit.
 	datetime: AWSDateTime!
+
+	# Any previous tracking ids. Used when a message is split into 2 or more messages.
 	previousTrackingIds: [String!]
+
+	# The name of the Node that sent the message being audited.
 	sourceNode: String
+
+	# The tracking id of the message.
 	trackingId: String!
 }
 
+# Temporary credentials used to access EchoStream Cloud resources. The scope of the resource access is context-specific.
+# When using these credentials to access EchoStream Cloud resources, all but expiration are required to be passed to AWS.
 type AwsCredentials @aws_cognito_user_pools {
+	# The access key id for the session.
 	accessKeyId: String!
+
+	# The expiration for the session.
 	expiration: AWSDateTime!
+
+	# The secret access key for the session.
 	secretAccessKey: String!
+
+	# The session token.
 	sessionToken: String!
 }
 
