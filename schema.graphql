@@ -22,8 +22,9 @@ type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 }
 
-# An Internal Node that emits audit messages
+# An Internal Node that emits audit messages.
 type AuditEmitterNode implements Node @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -35,6 +36,7 @@ type AuditEmitterNode implements Node @aws_cognito_user_pools {
 
 # A programmatic user of the EchoStream API.
 type ApiUser @aws_cognito_user_pools {
+	# When and who created.
 	# When and who created.
 	created: AtBy!
 	
@@ -90,7 +92,7 @@ type ApiUser @aws_cognito_user_pools {
 	): ApiUser!
 }
 
-# A (possibly) paginated result set of APIUsers
+# A (possibly) paginated result set of APIUsers.
 type ApiUserResult @aws_cognito_user_pools {
 	# The list of APIUsers.
 	echos: [ApiUser]
@@ -115,6 +117,7 @@ enum ApiUserRole {
 }
 
 interface App @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -127,6 +130,7 @@ interface App @aws_cognito_user_pools {
 
 type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	app: App!
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -139,6 +143,7 @@ type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 }
 
 type AppChangeRouterNode implements Node @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -183,6 +188,7 @@ type AwsCredentials @aws_cognito_user_pools {
 type BitmapperFunction implements Function @aws_cognito_user_pools {
 	argumentMessageType: MessageType!
 	code: String!
+	# When and who created.
 	created: AtBy!
 	description: String!
 	lastModified: AtBy!
@@ -209,6 +215,7 @@ type Change @aws_cognito_user_pools {
 }
 
 type ChangeEmitterNode implements Node @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -239,6 +246,7 @@ enum ContentEncoding {
 type CrossAccountApp implements App @aws_cognito_user_pools {
 	account: String!
 	config: AWSJSON
+	# When and who created.
 	created: AtBy!
 	credentials: CognitoCredentials!
 	description: String
@@ -257,6 +265,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 }
 
 type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -273,6 +282,7 @@ type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 
 type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	app: CrossTenantReceivingApp!
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -287,6 +297,7 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 }
 
 type CrossTenantSendingApp implements App @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -304,6 +315,7 @@ type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	app: CrossTenantSendingApp!
 	config: AWSJSON
+	# When and who created.
 	created: AtBy!
 	description: String
 	inlineTransformer: String
@@ -325,6 +337,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 }
 
 type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -337,6 +350,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TimerNode | TransformerFunction | TransformerNode
 
 type Edge @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	draining: Boolean!
@@ -365,6 +379,7 @@ type EdgeResult @aws_cognito_user_pools {
 
 type ExternalApp implements App @aws_cognito_user_pools {
 	config: AWSJSON
+	# When and who created.
 	created: AtBy!
 	credentials: CognitoCredentials!
 	description: String
@@ -384,6 +399,7 @@ type ExternalApp implements App @aws_cognito_user_pools {
 type ExternalNode implements Node @aws_cognito_user_pools {
 	app: RemoteApp!
 	config: AWSJSON
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -403,6 +419,7 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 interface Function @aws_cognito_user_pools {
 	argumentMessageType: MessageType!
 	code: String!
+	# When and who created.
 	created: AtBy!
 	description: String!
 	name: String!
@@ -430,6 +447,7 @@ type GraphLayout @aws_cognito_user_pools {
 
 type KmsKey @aws_cognito_user_pools {
 	arn: String!
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -448,6 +466,7 @@ type KmsKeyResult @aws_cognito_user_pools {
 }
 
 type LogEmitterNode implements Node @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -459,6 +478,7 @@ type LogEmitterNode implements Node @aws_cognito_user_pools {
 
 type LoginUser @aws_cognito_user_pools {
 	activeAt: String
+	# When and who created.
 	created: AtBy!
 	email: AWSEmail!
 	firstName: String!
@@ -487,6 +507,7 @@ enum LogLevel {
 
 type ManagedApp implements App @aws_cognito_user_pools {
 	config: AWSJSON
+	# When and who created.
 	created: AtBy!
 	credentials: CognitoCredentials!
 	description: String
@@ -521,6 +542,7 @@ type ManagedInstance @aws_cognito_user_pools {
 type ManagedNode implements Node @aws_cognito_user_pools {
 	app: ManagedApp!
 	config: AWSJSON
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -544,6 +566,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 
 type ManagedNodeType @aws_cognito_user_pools {
 	configTemplate: AWSJSON
+	# When and who created.
 	created: AtBy!
 	description: String!
 	imageUri: String!
@@ -577,6 +600,7 @@ type MessageCounts @aws_cognito_user_pools {
 type MessageType @aws_cognito_user_pools {
 	auditor: String!
 	bitmapperTemplate: String!
+	# When and who created.
 	created: AtBy!
 	description: String!,
 	lastModified: AtBy!
@@ -788,6 +812,7 @@ type Mutation @aws_cognito_user_pools {
 }
 
 interface Node @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -890,6 +915,7 @@ union RemoteAppNode = AppChangeReceiverNode | ExternalNode
 
 type RouterNode implements Node @aws_cognito_user_pools {
 	config: AWSJSON
+	# When and who created.
 	created: AtBy!
 	description: String
 	inlineBitmapper: String
@@ -914,6 +940,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 
 type Tenant @aws_cognito_user_pools {
 	config: AWSJSON
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -936,6 +963,7 @@ type TenantResult @aws_cognito_user_pools {
 
 type TenantUser @aws_cognito_user_pools {
 	activeAt: String
+	# When and who created.
 	created: AtBy!
 	email: AWSEmail!
 	firstName: String
@@ -962,6 +990,7 @@ type TenantUserResult @aws_cognito_user_pools {
 }
 
 type TimerNode implements Node @aws_cognito_user_pools {
+	# When and who created.
 	created: AtBy!
 	description: String
 	lastModified: AtBy!
@@ -979,6 +1008,7 @@ type TimerNode implements Node @aws_cognito_user_pools {
 type TransformerFunction implements Function @aws_cognito_user_pools {
 	argumentMessageType: MessageType!
 	code: String!
+	# When and who created.
 	created: AtBy!
 	description: String!
 	lastModified: AtBy!
@@ -997,6 +1027,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 
 type TransformerNode implements Node @aws_cognito_user_pools {
 	config: AWSJSON
+	# When and who created.
 	created: AtBy!
 	description: String
 	inlineTransformer: String
