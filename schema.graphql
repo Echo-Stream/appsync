@@ -174,7 +174,13 @@ type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
+	# Creates persistent audit records.
+	CreateAuditRecords(
+		# The name of the MessageType of the auditRecords.
+		messageType: String!,
+		# The list of audit records to create
+		auditRecords: [AuditRecord!]!
+	): Boolean!
 }
 
 type AppChangeRouterNode implements Node @aws_cognito_user_pools {
@@ -670,7 +676,13 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
+	# Creates persistent audit records.
+	CreateAuditRecords(
+		# The name of the MessageType of the auditRecords.
+		messageType: String!,
+		# The list of audit records to create
+		auditRecords: [AuditRecord!]!
+	): Boolean!
 	# Deletes this Node and all of its Edges.
 	Delete(
 		# If sending Edges attached to this Nodes should be drained. Defaults to True.
@@ -926,7 +938,13 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
+	# Creates persistent audit records.
+	CreateAuditRecords(
+		# The name of the MessageType of the auditRecords.
+		messageType: String!,
+		# The list of audit records to create
+		auditRecords: [AuditRecord!]!
+	): Boolean!
 	# Deletes this Node and all of its Edges.
 	Delete(
 		# If sending Edges attached to this Nodes should be drained. Defaults to True.
