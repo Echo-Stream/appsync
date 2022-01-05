@@ -257,7 +257,7 @@ type AtBy @aws_cognito_user_pools {
 
 # An audit record to create.
 input AuditRecord {
-	# The attributes. Must be a JSON object (i.e. - dict, map).
+	# The attributes. Must be a JSON object (i.e. - dict, map)..
 	attributes: AWSJSON
 
 	# The date and time of the audit.
@@ -449,7 +449,10 @@ enum ContentEncoding {
 }
 
 type CrossAccountApp implements App @aws_cognito_user_pools {
+	# The AWS account number that is authorized to use this App's EchoStream Cloud resources.
 	account: String!
+
+	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 
 	# When and who created.
@@ -460,6 +463,8 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 
 	# A human-readable description.
 	description: String
+
+	# An IAM policy in JSON format. May be used in an IAM managed policy, role, or user within your AWS account.
 	iamPolicy: AWSJSON!
 
 	# When and who modified.
@@ -468,8 +473,10 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	# The name.
 	name: String!
 
+	# The Nodes.
 	nodes: [RemoteAppNode]!
 
+	# True if this App can access the Tenant's table.
 	tableAccess: Boolean!
 
 	# The Tenant.
@@ -507,21 +514,41 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 
 	ResetPassword: CrossAccountApp!
 
-	Update(config: AWSJSON, description: String, tableAccess: Boolean): CrossAccountApp!
+	# Update this App.
+	Update(
+		# The config, in JSON object format (i.e. - dict, map). Null is ignored.
+		config: AWSJSON,
+
+		# The description.
+		description: String,
+
+		# True if access to the Tenant's table is allowed. Null is treated as False.
+		tableAccess: Boolean
+	): CrossAccountApp!
 }
 
 type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
+	# The Nodes.
 	nodes: [CrossTenantReceivingNode]
+
+	# The name of the CrossTenantSendingApp linked to this App.
 	sendingApp: String
+
+	# The name of the Tenant that contains the sendingApp.
 	sendingTenant: String!
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -530,6 +557,7 @@ type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -547,23 +575,36 @@ type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
-	Update(description: String): CrossTenantReceivingApp!
+
+	# Updates this App.
+	Update(
+		# The human-readable description.
+		description: String
+	): CrossTenantReceivingApp!
 }
 
 type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
+	# The App.
 	app: CrossTenantReceivingApp!
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -572,6 +613,7 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 		# If sending Edges attached to this Nodes should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -589,7 +631,12 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
-	Update(description: String): CrossTenantReceivingNode!
+
+	# Updates this App.
+	Update(
+		# The human-readable description.
+		description: String
+	): CrossTenantReceivingNode!
 }
 
 type CrossTenantSendingApp implements App @aws_cognito_user_pools {
@@ -601,6 +648,7 @@ type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	# The name.
 	name: String!
+	# The Nodes.
 	nodes: [CrossTenantSendingNode]
 	receivingApp: String!
 	receivingTenant: String!
@@ -634,6 +682,7 @@ type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 
 type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	app: CrossTenantSendingApp!
+	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
@@ -762,6 +811,7 @@ type EdgeResult @aws_cognito_user_pools {
 }
 
 type ExternalApp implements App @aws_cognito_user_pools {
+	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
@@ -773,7 +823,9 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	# The name.
 	name: String!
+	# The Nodes.
 	nodes: [RemoteAppNode]!
+	# True if this App can access the Tenant's table.
 	tableAccess: Boolean!
 	# The Tenant.
 	tenant: Tenant!
@@ -806,11 +858,22 @@ type ExternalApp implements App @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 	ResetPassword: ExternalApp!
-	Update(config: AWSJSON, description: String, tableAccess: Boolean): ExternalApp!
+	# Update this App.
+	Update(
+		# The config, in JSON object format (i.e. - dict, map). Null is ignored.
+		config: AWSJSON,
+
+		# The description.
+		description: String,
+
+		# True if access to the Tenant's table is allowed. Null is treated as False.
+		tableAccess: Boolean
+	): ExternalApp!
 }
 
 type ExternalNode implements Node @aws_cognito_user_pools {
 	app: RemoteApp!
+	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
@@ -1024,6 +1087,7 @@ enum LogLevel {
 }
 
 type ManagedApp implements App @aws_cognito_user_pools {
+	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
@@ -1039,7 +1103,9 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	lastModified: AtBy!
 	# The name.
 	name: String!
+	# The Nodes.
 	nodes: [ManagedAppNode]!
+	# True if this App can access the Tenant's table.
 	tableAccess: Boolean!
 	# The Tenant.
 	tenant: Tenant!
@@ -1073,7 +1139,17 @@ type ManagedApp implements App @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 	ResetPassword: ManagedApp!
-	Update(config: AWSJSON, description: String, tableAccess: Boolean): ManagedApp!
+	# Update this App.
+	Update(
+		# The config, in JSON object format (i.e. - dict, map). Null is ignored.
+		config: AWSJSON,
+
+		# The description.
+		description: String,
+
+		# True if access to the Tenant's table is allowed. Null is treated as False.
+		tableAccess: Boolean
+	): ManagedApp!
 }
 
 union ManagedAppNode = AppChangeReceiverNode | ManagedNode
@@ -1090,6 +1166,7 @@ type ManagedInstance @aws_cognito_user_pools {
 
 type ManagedNode implements Node @aws_cognito_user_pools {
 	app: ManagedApp!
+	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
@@ -1383,7 +1460,8 @@ type Mutation @aws_cognito_user_pools {
 		sendMessageType: String
 		# A human-readable description.
 		description: String,
-		config: AWSJSON
+		# The config, in JSON object format (i.e. - dict, map).
+	config: AWSJSON
 	): ExternalNode!
 	CreateKmsKey(tenant: String!, 	name: String!, description: String): KmsKey!
 	CreateManagedApp(
@@ -1596,6 +1674,7 @@ union RemoteApp = CrossAccountApp | ExternalApp
 union RemoteAppNode = AppChangeReceiverNode | ExternalNode
 
 type RouterNode implements Node @aws_cognito_user_pools {
+	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
@@ -1658,6 +1737,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 }
 
 type Tenant @aws_cognito_user_pools {
+	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
@@ -1865,6 +1945,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 }
 
 type TransformerNode implements Node @aws_cognito_user_pools {
+	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
