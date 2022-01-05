@@ -26,16 +26,22 @@ type AlertEmitterNode implements Node @aws_cognito_user_pools {
 type AuditEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
+
 	# The Tenant.
 	tenant: Tenant!
 }
@@ -124,12 +130,16 @@ enum ApiUserRole {
 interface App @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -138,6 +148,7 @@ interface App @aws_cognito_user_pools {
 		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -159,18 +170,25 @@ interface App @aws_cognito_user_pools {
 
 type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	app: App!
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# The Edge that messages are received on.
 	receiveEdge: Edge!
+
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -178,6 +196,7 @@ type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	CreateAuditRecords(
 		# The name of the MessageType of the auditRecords.
 		messageType: String!,
+
 		# The list of audit records to create
 		auditRecords: [AuditRecord!]!
 	): Boolean!
@@ -186,20 +205,28 @@ type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 type AppChangeRouterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# The Edge that messages are received on.
 	receiveEdge: Edge!
+
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
+
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
+
 	# The Tenant.
 	tenant: Tenant!
 }
@@ -208,8 +235,10 @@ type AppChangeRouterNode implements Node @aws_cognito_user_pools {
 type AppResult @aws_cognito_user_pools {
 	# The list of Apps.
 	echos: [App]
+
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
@@ -241,20 +270,28 @@ type AwsCredentials @aws_cognito_user_pools {
 type BitmapperFunction implements Function @aws_cognito_user_pools {
 	argumentMessageType: MessageType!
 	code: String!
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String!
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# README in MarkDown format.
 	readme: String
+
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
+
 	# True if this is an EchoStream system resource.
 	system: Boolean
+
 	# The Tenant.
 	tenant: Tenant
 
@@ -278,12 +315,15 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 	Update(code: String, description: String, readme: String, requirements: [String!]): BitmapperFunction!
+
 	# Validates the supplied code against the supplied message.
 	Validate(
 		# The message to use for validation.
 		message: String!,
+
 		# The code to validate.
 		code: String!,
+
 		# The loggingLevel to use duuring the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
@@ -302,15 +342,20 @@ type Change @aws_cognito_user_pools {
 type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
 	sendEdges: [Edge]!
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
+
 	# The Tenant.
 	tenant: Tenant!
 }
@@ -319,8 +364,10 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 type ChangeResult @aws_cognito_user_pools {
 	# The list of Changes.
 	echos: [Change]!
+
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
@@ -340,19 +387,27 @@ enum ContentEncoding {
 type CrossAccountApp implements App @aws_cognito_user_pools {
 	account: String!
 	config: AWSJSON
+
 	# When and who created.
 	created: AtBy!
+
 	# The credentials required to log into Cognito to get JWT's.
 	credentials: CognitoCredentials!
+
 	# A human-readable description.
 	description: String
 	iamPolicy: AWSJSON!
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	nodes: [RemoteAppNode]!
+
 	tableAccess: Boolean!
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -361,11 +416,13 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Returns that AwsCredentials required to access the EchoStream resources assigned to this App.
 	GetAwsCredentials(
 		# The length of time, in seconds, that the returned credentials are valid for. Between 900 and 43,200. Defaults to 3,600.
 		duration: Int
 	): AwsCredentials!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -383,7 +440,9 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	ResetPassword: CrossAccountApp!
+
 	Update(config: AWSJSON, description: String, tableAccess: Boolean): CrossAccountApp!
 }
 
