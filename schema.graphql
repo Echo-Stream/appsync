@@ -522,6 +522,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	): CrossAccountApp!
 }
 
+# Allows for receiving of messages from another Tenant.
 type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -578,6 +579,7 @@ type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 	): CrossTenantReceivingApp!
 }
 
+# Created automatically when the other Tenant's CrossTenantSendingApp has a CrossTenantSendingNode created in it. One per CrossTenantSendingNode.
 type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	# The App.
 	app: CrossTenantReceivingApp!
@@ -627,7 +629,7 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	# Updates this App.
+	# Updates this Node.
 	Update(
 		# The human-readable description.
 		description: String
@@ -637,16 +639,25 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# The Nodes.
 	nodes: [CrossTenantSendingNode]
+
+	# The name of the CrossTenantReceivingApp linked to this App.
 	receivingApp: String!
+
+	# The name of the Tenant that contains the receivingApp.
 	receivingTenant: String!
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -655,6 +666,7 @@ type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -672,31 +684,49 @@ type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
-	Update(description: String): CrossTenantSendingApp!
+
+	# Updates this App.
+	Update(
+		# The human-readable description.
+		description: String
+	): CrossTenantSendingApp!
 }
 
 type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	app: CrossTenantSendingApp!
+
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	inlineTransformer: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	loggingLevel: LogLevel
+
 	managedTransformer: TransformerFunction
+
 	# The name.
 	name: String!
+
 	# A list of the Edges messages are received on.
 	receiveEdges: [Edge]
+
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
+
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
+
 	sequentialProcessing: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -705,6 +735,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 		# If sending Edges attached to this Nodes should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -722,8 +753,11 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
+
 	Update(config: AWSJSON, description: String, inlineTransformer: String, loggingLevel: LogLevel, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): CrossTenantSendingNode!
+
 	# Validates the supplied code against the supplied message.
 	Validate(
 		# The message to use for validation.
@@ -738,41 +772,60 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
+
 	# The Tenant.
 	tenant: Tenant!
 }
 
+# A union of all EchoStream object types
 union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TimerNode | TransformerFunction | TransformerNode
 
 type Edge @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	draining: Boolean!
+
 	kmsKey: KmsKey
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	maxReceiveCount: Int
+
 	messageCounts: MessageCounts!
+
 	messageType: MessageType!
+
 	queue: AWSURL!
+
 	source: Node!
+
 	target: Node!
+
 	# The Tenant.
 	tenant: Tenant!
 
 	Delete(drain: Boolean): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -790,8 +843,11 @@ type Edge @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	Move(source: String!, target: String!): Edge!
+
 	Purge: Boolean!
+
 	Update(description: String): Edge!
 }
 
@@ -799,8 +855,10 @@ type Edge @aws_cognito_user_pools {
 type EdgeResult @aws_cognito_user_pools {
 	# The list of Edges.
 	echos: [Edge]
+
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
@@ -808,20 +866,28 @@ type EdgeResult @aws_cognito_user_pools {
 type ExternalApp implements App @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
+
 	# When and who created.
 	created: AtBy!
+
 	# The credentials required to log into Cognito to get JWT's.
 	credentials: CognitoCredentials!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# The Nodes.
 	nodes: [RemoteAppNode]!
+
 	# True if this App can access the Tenant's table.
 	tableAccess: Boolean!
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -830,11 +896,13 @@ type ExternalApp implements App @aws_cognito_user_pools {
 		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Returns that AwsCredentials required to access the EchoStream resources assigned to this App.
 	GetAwsCredentials(
 		# The length of time, in seconds, that the returned credentials are valid for. Between 900 and 43,200. Defaults to 3,600.
 		duration: Int
 	): AwsCredentials!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -871,24 +939,34 @@ type ExternalApp implements App @aws_cognito_user_pools {
 
 type ExternalNode implements Node @aws_cognito_user_pools {
 	app: RemoteApp!
+
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# A list of the Edges messages are received on.
 	receiveEdges: [Edge]
+
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType
+
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -896,14 +974,17 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	CreateAuditRecords(
 		# The name of the MessageType of the auditRecords.
 		messageType: String!,
+
 		# The list of audit records to create
 		auditRecords: [AuditRecord!]!
 	): Boolean!
+
 	# Deletes this Node and all of its Edges.
 	Delete(
 		# If sending Edges attached to this Nodes should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -921,33 +1002,44 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	Update(config: AWSJSON, description: String): ExternalNode!
 }
 
 interface Function @aws_cognito_user_pools {
 	# The MessageType passed in to the Function.
 	argumentMessageType: MessageType!
+
 	# The code of the Function in Python string format.
 	code: String!
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String!
+
 	# The name.
 	name: String!
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# README in MarkDown format.
 	readme: String
+
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
+
 	# True if this is an EchoStream system resource.
 	system: Boolean
+
 	# The Tenant.
 	tenant: Tenant
 
 	# Deletes this.
 	Delete: Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -965,12 +1057,15 @@ interface Function @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	# Validates the supplied code against the supplied message.
 	Validate(
 		# The message to use for validation.
 		message: String!,
+
 		# The code to validate.
 		code: String!,
+
 		# The loggingLevel to use duuring the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
@@ -980,8 +1075,10 @@ interface Function @aws_cognito_user_pools {
 type FunctionResult @aws_cognito_user_pools {
 	# The list of Functions.
 	echos: [Function]
+
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
@@ -989,24 +1086,31 @@ type FunctionResult @aws_cognito_user_pools {
 type GraphLayout @aws_cognito_user_pools {
 	# The name.
 	name: String!
+
 	layout: AWSJSON!
 }
 
 type KmsKey @aws_cognito_user_pools {
 	arn: String!
 	# When and who created.
+
 	created: AtBy!
 	# A human-readable description.
+
 	description: String
 	# When and who modified.
+
 	lastModified: AtBy!
 	# The name.
+
 	name: String!
 	# The Tenant.
+
 	tenant: Tenant!
 
 	# Deletes this.
 	Delete: Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1024,6 +1128,7 @@ type KmsKey @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	Update(description: String): KmsKey!
 }
 
@@ -1031,8 +1136,10 @@ type KmsKey @aws_cognito_user_pools {
 type KmsKeyResult @aws_cognito_user_pools {
 	# The list of KmsKeys.
 	echos: [KmsKey]
+
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
@@ -1040,40 +1147,55 @@ type KmsKeyResult @aws_cognito_user_pools {
 type LogEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
+
 	# The Tenant.
 	tenant: Tenant!
 }
 
 type LoginUser @aws_cognito_user_pools {
 	activeAt: String
+
 	# When and who created.
 	created: AtBy!
+
 	email: AWSEmail!
+
 	firstName: String!
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	lastName: String!
+
 	tenantUsers: [TenantUser!]
 }
 
 type LogEvent @aws_cognito_user_pools {
 	timestamp: AWSDateTime!
+
 	message: String!
+
 	ingestionTime: AWSDateTime!
 }
 
 type LogEventResults @aws_cognito_user_pools {
 	events: [LogEvent]!
+
 	nextToken: String
 }
 
@@ -1087,24 +1209,34 @@ enum LogLevel {
 type ManagedApp implements App @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
+
 	# When and who created.
 	created: AtBy!
+
 	# The credentials required to log into Cognito to get JWT's.
 	credentials: CognitoCredentials!
+
 	# A human-readable description.
 	description: String
+
 	# A list of registered instances.
 	managedInstances: [ManagedInstance]
+
 	# The iso image. Used to install and setup the ManagedApp virtual machine.
 	iso: String!
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# The Nodes.
 	nodes: [ManagedAppNode]!
+
 	# True if this App can access the Tenant's table.
 	tableAccess: Boolean!
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -1113,12 +1245,15 @@ type ManagedApp implements App @aws_cognito_user_pools {
 		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	DeregisterManagedInstance(instanceId: String!): Boolean!
+
 	# Returns that AwsCredentials required to access the EchoStream resources assigned to this App.
 	GetAwsCredentials(
 		# The length of time, in seconds, that the returned credentials are valid for. Between 900 and 43,200. Defaults to 3,600.
 		duration: Int
 	): AwsCredentials!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1153,42 +1288,63 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	): ManagedApp!
 }
 
+# Union of AppChangeReceiverNode and ManagedNode
 union ManagedAppNode = AppChangeReceiverNode | ManagedNode
 
 type ManagedInstance @aws_cognito_user_pools {
 	activationId: String!
+
 	hostname: String!
+
 	instanceId: String!
+
 	ipAddress: AWSIPAddress!
+
 	lastPingDateTime: AWSDateTime!
+
 	pingStatus: PingStatus!
+
 	registrationDate: AWSDateTime!
 }
 
 type ManagedNode implements Node @aws_cognito_user_pools {
 	app: ManagedApp!
+
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	loggingLevel: LogLevel
+
 	managedNodeType: ManagedNodeType!
+
 	mounts: [Mount!]
+
 	# The name.
 	name: String!
+
 	ports: [Port!]
+
 	# A list of the Edges messages are received on.
 	receiveEdges: [Edge]
+
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType
+
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -1199,11 +1355,13 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 		# The list of audit records to create
 		auditRecords: [AuditRecord!]!
 	): Boolean!
+
 	# Deletes this Node and all of its Edges.
 	Delete(
 		# If sending Edges attached to this Nodes should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1221,36 +1379,51 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
+
 	Update(config: AWSJSON, description: String, loggingLevel: LogLevel, mounts: [MountInput!], ports: [PortInput!]): ManagedNode!
 }
 
 type ManagedNodeType @aws_cognito_user_pools {
 	configTemplate: AWSJSON
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String!
+
 	imageUri: String!
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	mountRequirements: [MountRequirement!]
+
 	# The name.
 	name: String!
+
 	portRequirements: [PortRequirement!]
+
 	# README in MarkDown format.
 	readme: String
+
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
+
 	# True if this is an EchoStream system resource.
 	system: Boolean
+
 	# The Tenant.
 	tenant: Tenant
 
 	# Deletes this.
 	Delete: Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1268,6 +1441,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	Update(description: String, imageUri: String, readme: String): ManagedNodeType!
 }
 
@@ -1275,42 +1449,58 @@ type ManagedNodeType @aws_cognito_user_pools {
 type ManagedNodeTypeResult @aws_cognito_user_pools {
 	# The list of ManagedNodeTypes.
 	echos: [ManagedNodeType]
+
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
 type MessageCounts @aws_cognito_user_pools {
 	approximateNumberOfMessages: Int!
+
 	approximateNumberOfMessagesDelayed: Int!
+
 	approximateNumberOfMessagesNotVisible: Int!
 }
 
 type MessageType @aws_cognito_user_pools {
 	auditor: String!
+
 	bitmapperTemplate: String!
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String!,
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# README in MarkDown format.
 	readme: String
+
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
+
 	sampleMessage: String!
+
 	# True if this is an EchoStream system resource.
 	system: Boolean
+
 	# The Tenant.
 	tenant: Tenant
+
 	transformerTemplate: String!
 
 	# Deletes this.
 	Delete: Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1328,13 +1518,17 @@ type MessageType @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	Update(auditor: String, bitmapperTemplate: String, description: String, readme: String, requirements: [String!], sampleMessage: String, transformerTemplate: String): MessageType!
+
 	# Validates the supplied code against the supplied message.
 	Validate(
 		# The message to use for validation.
 		message: String!,
+
 		# The code to validate.
 		code: String!,
+
 		# The loggingLevel to use duuring the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
@@ -1344,8 +1538,10 @@ type MessageType @aws_cognito_user_pools {
 type MessageTypeResult @aws_cognito_user_pools {
 	# The list of MessageTypes.
 	echos: [MessageType]
+
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
@@ -1353,26 +1549,33 @@ type MessageTypeResult @aws_cognito_user_pools {
 type Mount @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String!
+
 	source: String
+
 	target: String!
 }
 
 input MountInput {
 	source: String
+
 	target: String!
 }
 
 type MountRequirement @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String!
+
 	source: String
+
 	target: String!
 }
 
 input MountRequirementInput {
 	# A human-readable description.
 	description: String!
+
 	source: String
+
 	target: String!
 }
 
@@ -1382,180 +1585,309 @@ type Mutation @aws_cognito_user_pools {
 	CreateApiUser(
 		# The Tenant to create the APIUser in.
 		tenant: String!,
+
 		# The role of the new API User.
 		role: ApiUserRole!,
-		# A human-readable description of the APIUser.
 		# A human-readable description.
-	description: String
+		description: String
 	): ApiUser!
 
 	CreateBitmapperFunction(
 		tenant: String!,
+
 		name: String!,
+
 		code: String!,
+
 		# A human-readable description.
 		description: String!,
+
 		argumentMessageType: String!,
+
 		readme: String,
+
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
 	): BitmapperFunction!
+
 	CreateCrossAccountApp(
 		account: String!,
+
 		tenant: String!,
+
 		name: String!,
+
 		config: AWSJSON,
+
 		# A human-readable description.
 		description: String,
+
 		tableAccess: Boolean
 	): CrossAccountApp!
+
 	CreateCrossTenantReceivingApp(
 		tenant: String!,
+
 		name: String!,
+
 		sendingTenant: String!
 	): CrossTenantReceivingApp!
+
 	CreateCrossTenantSendingApp(
 		tenant: String!,
+
 		name: String!,
+
 		receivingTenant: String!,
+
 		receivingApp: String!
 	): CrossTenantSendingApp!
+
 	CreateCrossTenantSendingNode(
 		app: String!,
+
 		name: String!,
+
 		receiveMessageType: String!,
+
 		tenant: String!,
+
 		config: AWSJSON,
+
 		# A human-readable description.
 		description: String,
+
 		inlineTransformer: String,
+
 		loggingLevel: LogLevel,
+
 		managedTransformer: String,
+
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
+
 		sendMessageType: String,
+
 		sequentialProcessing: Boolean
 	): CrossTenantSendingNode!
+
 	CreateEdge(
 		source: String!,
+
 		target: String!,
+
 		tenant: String!,
+
 		# A human-readable description.
 		description: String,
+
 		kmsKey: String,
+
 		maxReceiveCount: Int
 	): Edge!
+
 	CreateExternalApp(
 		tenant: String!,
+
 		name: String!,
+
 		config: AWSJSON,
+
 		# A human-readable description.
 		description: String,
+
 		tableAccess: Boolean
 	): ExternalApp!
+
 	CreateExternalNode(
 		tenant: String!,
+
 		app: String!,
+
 		name: String!,
+
 		receiveMessageType: String,
+
 		sendMessageType: String
+
 		# A human-readable description.
 		description: String,
+
 		# The config, in JSON object format (i.e. - dict, map).
-	config: AWSJSON
+		config: AWSJSON
 	): ExternalNode!
-	CreateKmsKey(tenant: String!, 	name: String!, description: String): KmsKey!
+
+	CreateKmsKey(
+		tenant: String!,
+	
+		name: String!, 
+	
+		description: String
+	): KmsKey!
+
 	CreateManagedApp(
 		name: String!, 
+	
 		tenant: String!,
+	
 		config: AWSJSON, 
+	
 		# A human-readable description.
 		description: String
+	
 		tableAccess: Boolean
 	): ManagedApp!
+	
 	CreateManagedNode(
 		app: String!,
+	
 		managedNodeType: String!,
+	
 		name: String!,
+	
 		tenant: String!,
+	
 		config: AWSJSON,
+	
 		# A human-readable description.
 		description: String,
+	
 		loggingLevel: LogLevel,
+	
 		mounts: [MountInput!],
+	
 		ports: [PortInput!]
 	): ManagedNode!
+	
 	CreateManagedNodeType(
 		# A human-readable description.
 		description: String!,
+	
 		imageUri: String!
+	
 		name: String!,
+	
 		tenant: String!,
+	
 		configTemplate: AWSJSON,
+	
 		mountRequirements: [MountRequirementInput!],
+	
 		portRequirements: [PortRequirementInput!],
+	
 		readme: String,
+	
 		receiveMessageType: String,
+	
 		sendMessageType: String,
 	): ManagedNodeType!
+
 	CreateMessageType(
 		auditor: String!,
+
 		bitmapperTemplate: String!,
+
 		# A human-readable description.
 		description: String!,
+
 		name: String!,
+
 		sampleMessage: String!,
+
 		tenant: String!,
+
 		transformerTemplate: String!,
+
 		readme: String,
+
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
 	): MessageType!
+
 	CreateRouterNode(
 		name: String!,
+
 		receiveMessageType: String!,
+
 		routeTable: AWSJSON!,
+
 		tenant: String!,
+
 		config: AWSJSON,
+
 		# A human-readable description.
 		description: String,
+
 		inlineBitmapper: String,
+
 		loggingLevel: LogLevel,
+
 		managedBitmapper: String,
+
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
 	): RouterNode!
-	CreateTenant(name: String!, region: String!, config: AWSJSON): Tenant!
+
+	CreateTenant(
+		name: String!,
+
+		region: String!,
+
+		config: AWSJSON
+	): Tenant!
+
 	CreateTimerNode(
 		name: String!,
+
 		scheduleExpression: String!,
+
 		tenant: String!,
+
 		# A human-readable description.
 		description: String
 	): TimerNode!
+
 	CreateTransformerFunction(
 		tenant: String!,
+
 		name: String!,
+
 		code: String!,
+
 		# A human-readable description.
 		description: String!,
+
 		argumentMessageType: String!,
+
 		readme: String,
+
 		requirements: [String!],
+
 		returnMessageType: String
 	): TransformerFunction!
+
 	CreateTransformerNode(
 		name: String!,
+
 		receiveMessageType: String!,
+
 		tenant: String!,
+
 		config: AWSJSON,
+
 		# A human-readable description.
 		description: String,
+
 		inlineTransformer: String,
+
 		loggingLevel: LogLevel,
+
 		managedTransformer: String,
+
 		requirements: [String!],
+
 		sendMessageType: String,
+
 		sequentialProcessing: Boolean
 	): TransformerNode!
 }
@@ -1563,12 +1895,16 @@ type Mutation @aws_cognito_user_pools {
 interface Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# The Tenant.
 	tenant: Tenant!
 }
@@ -1577,8 +1913,10 @@ interface Node @aws_cognito_user_pools {
 type NodeResult @aws_cognito_user_pools {
 	# The list of Nodes.
 	echos: [Node]
+
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
@@ -1591,39 +1929,53 @@ enum PingStatus {
 
 type Port @aws_cognito_user_pools {
 	containerPort: Int!
+
 	# A human-readable description.
 	description: String!
+
 	hostAddress: AWSIPAddress
+
 	hostPort: Int!
+
 	protocol: Protocol!
 }
 
 input PortInput {
 	containerPort: Int!
+
 	# A human-readable description.
 	description: String!
+
 	hostAddress: AWSIPAddress
+
 	hostPort: Int!
+
 	protocol: Protocol!
 }
 
 type PortRequirement @aws_cognito_user_pools {
 	containerPort: Int!
+
 	# A human-readable description.
 	description: String!
+
 	protocol: Protocol!
 }
 
 input PortRequirementInput {
 	containerPort: Int!
+
 	# A human-readable description.
 	description: String!
+
 	protocol: Protocol!
 }
 
 type PresignedPost @aws_cognito_user_pools {
 	expiration: AWSTimestamp!
+
 	fields: AWSJSON!
+
 	url: AWSURL!
 }
 
@@ -1635,70 +1987,180 @@ enum Protocol {
 
 # Root Query
 type Query @aws_cognito_user_pools {
-	GetApiUser(tenant: String!, username: String!): ApiUser
-	GetApp(name: String!, tenant: String!): App
+	GetApiUser(
+		tenant: String!,
+		username: String!
+	): ApiUser
+
+	GetApp(
+		name: String!,
+		tenant: String!
+	): App
 
 	# Gets between 1 and 100 BulkDataStorage objects.
 	GetBulkDataStorage(
 		# The Tenant to get the BulkDataStorage objects for.
 		tenant: String!,
+	
 		# The content encoding to use for the returned BulkDataStorage.
 		contentEncoding: ContentEncoding,
+	
 		# The number of BulkDataStorage objects to get. Must be between 1 and 100. Defaults to 1.
 		count: Int
 	): [BulkDataStorage!]!
-	GetEdge(source: String!, target: String!, tenant: String!): Edge
-	GetFunction(name: String!, tenant: String): Function
-	GetKmsKey(name: String!, tenant: String!): KmsKey
-	GetManagedNodeType(name: String!, tenant: String): ManagedNodeType
-	GetMessageType(name: String!, tenant: String): MessageType
-	GetNode(name: String!, tenant: String!): Node
+	
+	GetEdge(
+		source: String!,
+		target: String!,
+		tenant: String!
+	): Edge
+	
+	GetFunction(
+		name: String!,
+		tenant: String
+	): Function
+	
+	GetKmsKey(
+		name: String!,
+		tenant: String!
+	): KmsKey
+	
+	GetManagedNodeType(
+		name: String!,
+		tenant: String
+	): ManagedNodeType
+
+	GetMessageType(
+		name: String!,
+		tenant: String
+	): MessageType
+	
+	GetNode(
+		name: String!,
+		tenant: String!
+	): Node
+	
 	GetSupportedRegions: [String!]!
-	GetTenant(tenant: String!): Tenant
-	GetTenantUser(tenant: String!, email: AWSEmail!): TenantUser
+	
+	GetTenant(
+		tenant: String!
+	): Tenant
+	
+	GetTenantUser(
+		tenant: String!,
+		email: AWSEmail!
+	): TenantUser
+	
 	GetUser: LoginUser
 
-	ListApiUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): ApiUserResult!
-	ListApps(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): AppResult!
-	ListChanges(tenant: String!, endDateTime: AWSDateTime, exclusiveStartKey: AWSJSON, limit: Int, sortAscending: Boolean, startDateTime: AWSDateTime): ChangeResult!
-	ListFunctions(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): FunctionResult!
-	ListKmsKeys(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): KmsKeyResult!
-	ListNodes(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): NodeResult!
-	ListManagedNodeTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): ManagedNodeTypeResult!
-	ListMessageTypes(exclusiveStartKey: AWSJSON, limit: Int, tenant: String): MessageTypeResult!
-	ListTenants(exclusiveStartKey: AWSJSON, limit: Int): TenantResult!
-	ListTenantUsers(tenant: String!, exclusiveStartKey: AWSJSON, limit: Int): TenantUserResult!
+	ListApiUsers(
+		tenant: String!,
+		exclusiveStartKey: AWSJSON,
+		limit: Int
+	): ApiUserResult!
+	
+	ListApps(
+		tenant: String!, 
+		exclusiveStartKey: AWSJSON,
+		limit: Int
+	): AppResult!
+	
+	ListChanges(
+		tenant: String!,
+		endDateTime: AWSDateTime,
+		exclusiveStartKey: AWSJSON,
+		limit: Int,
+		sortAscending: Boolean,
+		startDateTime: AWSDateTime
+	): ChangeResult!
+	
+	ListFunctions(
+		exclusiveStartKey: AWSJSON,
+		limit: Int,
+		tenant: String
+	): FunctionResult!
+	
+	ListKmsKeys(
+		tenant: String!,
+		exclusiveStartKey: AWSJSON,
+		limit: Int
+	): KmsKeyResult!
+	
+	ListNodes(
+		tenant: String!, 
+		exclusiveStartKey: AWSJSON,
+		limit: Int
+	): NodeResult!
+	
+	ListManagedNodeTypes(
+		exclusiveStartKey: AWSJSON,
+		limit: Int,
+		tenant: String
+	): ManagedNodeTypeResult!
+	
+	ListMessageTypes(
+		exclusiveStartKey: AWSJSON,
+		limit: Int,
+		tenant: String
+	): MessageTypeResult!
+	
+	ListTenants(
+		exclusiveStartKey: AWSJSON,
+		limit: Int
+	): TenantResult!
+	
+	ListTenantUsers(
+		tenant: String!,
+		exclusiveStartKey: AWSJSON,
+		limit: Int
+	): TenantUserResult!
 }
 
+# Union of CrossAccountApp and ExternalApp
 union RemoteApp = CrossAccountApp | ExternalApp
 
+# union of AppChangeReceiverNode and ExternalNode
 union RemoteAppNode = AppChangeReceiverNode | ExternalNode
 
 type RouterNode implements Node @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	inlineBitmapper: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	loggingLevel: LogLevel
+
 	managedBitmapper: BitmapperFunction
+
 	# The name.
 	name: String!
+
 	# A list of the Edges messages are received on.
 	receiveEdges: [Edge]
+
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
+
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
+
 	routeTable: AWSJSON!
+
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -1707,6 +2169,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 		# If sending Edges attached to this Nodes should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1724,14 +2187,19 @@ type RouterNode implements Node @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
+
 	Update(config: AWSJSON, description: String, inlineBitmapper: String, loggingLevel: LogLevel, managedBitmapper: String, requirements: [String!], routeTable: AWSJSON): RouterNode!
+
 	# Validates the supplied code against the supplied message.
 	Validate(
 		# The message to use for validation.
 		message: String!,
+
 		# The code to validate.
 		code: String!,
+
 		# The loggingLevel to use duuring the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
@@ -1740,21 +2208,30 @@ type RouterNode implements Node @aws_cognito_user_pools {
 type Tenant @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	region: String!
+
 	table: String!
+
 	users: [TenantUser!]
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
+
 	# Deletes this.
 	Delete: Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1772,6 +2249,7 @@ type Tenant @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	Update(config: AWSJSON, description: String): Tenant!
 }
 
@@ -1779,32 +2257,47 @@ type Tenant @aws_cognito_user_pools {
 type TenantResult @aws_cognito_user_pools {
 	# The list of Tenants.
 	echos: [Tenant]
+
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
 
 type TenantUser @aws_cognito_user_pools {
 	activeAt: String
+
 	# When and who created.
 	created: AtBy!
+
 	email: AWSEmail!
+
 	firstName: String
+
 	graphLayouts: [GraphLayout!]
+
 	invitationAt: String
+
 	invitationToken: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	lastName: String
+
 	role: UserRole!
+
 	status: UserStatus!
+
 	# The Tenant.
 	tenant: Tenant!
 
 	# Deletes this.
 	Delete: Boolean!
+
 	DeleteGraphLayout(name: String!): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1822,7 +2315,9 @@ type TenantUser @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	SaveGraphLayout(name: String!, layout: AWSJSON!): GraphLayout!
+
 	Update(role: UserRole, status: UserStatus): TenantUser!
 }
 
@@ -1830,8 +2325,10 @@ type TenantUser @aws_cognito_user_pools {
 type TenantUserResult @aws_cognito_user_pools {
 	# The list of TenantUsers.
 	echos: [TenantUser]
+
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
+
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
 }
@@ -1839,17 +2336,24 @@ type TenantUserResult @aws_cognito_user_pools {
 type TimerNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	scheduleExpression: String!
+
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -1858,6 +2362,7 @@ type TimerNode implements Node @aws_cognito_user_pools {
 		# If sending Edges attached to this Nodes should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1875,34 +2380,46 @@ type TimerNode implements Node @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	Update(description: String): TimerNode!
 }
 
 type TransformerFunction implements Function @aws_cognito_user_pools {
 	# The MessageType passed in to the Function.
 	argumentMessageType: MessageType!
+
 	# The code of the Function in Python string format.
 	code: String!
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String!
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	# The name.
 	name: String!
+
 	# README in MarkDown format.
 	readme: String
+
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
+
 	returnMessageType: MessageType
+
 	# True if this is an EchoStream system resource.
 	system: Boolean
+
 	# The Tenant.
 	tenant: Tenant
 
 	# Deletes this.
 	Delete: Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1920,6 +2437,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
 	Update(
 		# The code. Must be compilable Python code containing a single top-level function definition. Null is ignored.
@@ -1934,12 +2452,15 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
 		requirements: [String!]
 	): TransformerFunction!
+
 	# Validates the supplied code against the supplied message.
 	Validate(
 		# The message to use for validation.
 		message: String!,
+
 		# The code to validate.
 		code: String!,
+
 		# The loggingLevel to use duuring the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
@@ -1948,28 +2469,42 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 type TransformerNode implements Node @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
+
 	# When and who created.
 	created: AtBy!
+
 	# A human-readable description.
 	description: String
+
 	inlineTransformer: String
+
 	# When and who modified.
 	lastModified: AtBy!
+
 	loggingLevel: LogLevel
+
 	managedTransformer: TransformerFunction
+
 	# The name.
 	name: String!
+
 	# A list of the Edges messages are received on.
 	receiveEdges: [Edge]
+
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
+
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
+
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
+
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
+
 	sequentialProcessing: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -1978,6 +2513,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 		# If sending Edges attached to this Nodes should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1995,19 +2531,25 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
+
 	Update(config: AWSJSON, description: String, inlineTransformer: String, loggingLevel: LogLevel, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): TransformerNode!
+
 	# Validates the supplied code against the supplied message.
 	Validate(
 		# The message to use for validation.
 		message: String!,
+
 		# The code to validate.
 		code: String!,
+
 		# The loggingLevel to use duuring the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
 }
 
+# List of the allowable roles for TenantUsers
 enum UserRole {
 	admin
 	owner
@@ -2015,6 +2557,7 @@ enum UserRole {
 	user
 }
 
+# Various User status codes
 enum UserStatus {
 	active
 	inactive
@@ -2024,6 +2567,8 @@ enum UserStatus {
 
 type ValidationResult @aws_cognito_user_pools {
 	logs: String!
+
 	result: AWSJSON!
+
 	stdout: String!
 }
