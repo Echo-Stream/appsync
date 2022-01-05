@@ -15,7 +15,7 @@ type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
 	
-	# The MessageType. Will always be "echo.alert".
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
 	
 	# The Tenant.
@@ -33,6 +33,7 @@ type AuditEmitterNode implements Node @aws_cognito_user_pools {
 	# The name.
 	name: String!
 	sendEdges: [Edge]
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
 	# The Tenant.
 	tenant: Tenant!
@@ -188,6 +189,7 @@ type AppChangeRouterNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
 	sendEdges: [Edge]
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
 	# The Tenant.
 	tenant: Tenant!
@@ -283,6 +285,7 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	# The name.
 	name: String!
 	sendEdges: [Edge]!
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
 	# The Tenant.
 	tenant: Tenant!
@@ -394,7 +397,8 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	# The name.
 	name: String!
 	sendEdges: [Edge]
-	sendMessageType: MessageType
+	# The MessageType that this Node is capable of sending.
+	sendMessageType: MessageType!
 	# The Tenant.
 	tenant: Tenant!
 
@@ -510,6 +514,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 	# The name.
 	name: String!
 	sendEdges: [Edge]
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
 	# The Tenant.
 	tenant: Tenant!
@@ -618,6 +623,7 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType
 	sendEdges: [Edge]
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 	# The Tenant.
 	tenant: Tenant!
@@ -746,6 +752,7 @@ type LogEmitterNode implements Node @aws_cognito_user_pools {
 	# The name.
 	name: String!
 	sendEdges: [Edge]
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
 	# The Tenant.
 	tenant: Tenant!
@@ -854,6 +861,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType
 	sendEdges: [Edge]
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 	# The Tenant.
 	tenant: Tenant!
@@ -897,6 +905,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	readme: String
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 	system: Boolean
 	# The Tenant.
@@ -1318,6 +1327,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	requirements: [String!]
 	routeTable: AWSJSON!
 	sendEdges: [Edge]
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
 	# The Tenant.
 	tenant: Tenant!
@@ -1446,6 +1456,7 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	name: String!
 	scheduleExpression: String!
 	sendEdges: [Edge]
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType!
 	# The Tenant.
 	tenant: Tenant!
@@ -1530,6 +1541,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	receiveMessageType: MessageType!
 	requirements: [String!]
 	sendEdges: [Edge]
+	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 	sequentialProcessing: Boolean
 	# The Tenant.
