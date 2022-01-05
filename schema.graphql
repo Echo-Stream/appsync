@@ -636,6 +636,7 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	): CrossTenantReceivingNode!
 }
 
+# Allows for sending messages to another Tenant.
 type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -692,7 +693,9 @@ type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 	): CrossTenantSendingApp!
 }
 
+# Allows for sending messages to another Tenant.
 type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
+	# The App.
 	app: CrossTenantSendingApp!
 
 	# The config, in JSON object format (i.e. - dict, map).
@@ -704,13 +707,16 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String
 
+	# The inlineTransformer. Mutually exclusive with managedTransformer.
 	inlineTransformer: String
 
 	# When and who modified.
 	lastModified: AtBy!
 
+	# The logging level applied to the transformer function.
 	loggingLevel: LogLevel
 
+	# The manageTransformer. Mutually exclusive with the inlineTransformer.
 	managedTransformer: TransformerFunction
 
 	# The name.
@@ -725,6 +731,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
 
+	# True if messages should not be processed concurrently. If False, messages are processed concurrently.
 	sequentialProcessing: Boolean
 
 	# The Tenant.
@@ -754,21 +761,62 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
+	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	ListLogEvents(
+		# The end date/time, inclusive, to list the log events to. Defaults to now.
+		endDateTime: AWSDateTime,
 
-	Update(config: AWSJSON, description: String, inlineTransformer: String, loggingLevel: LogLevel, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): CrossTenantSendingNode!
+		# The filter pattern to apply, in AWS Cloudwatch Logs filter pattern format ( https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html ).
+		filterPattern: String,
+
+		# The number of log events to return. Maximum 10,000.
+		limit: Int,
+
+		# The nextToken returned from a previous call to ListLogEvents.
+		nextToken: String,
+
+		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): LogEventResults!
+
+	# Updates the Node and returns it.
+	Update(
+		# The config, in JSON object format (i.e. - dict, map). 
+		config: AWSJSON,
+
+		# A human-readable description.
+		description: String,
+
+		# The inlineTransformer. Mutually exclusive with managedTransformer.
+		inlineTransformer: String,
+
+		# The logging level applied to the transformer function.
+		loggingLevel: LogLevel,
+
+		# The manageTransformer. Mutually exclusive with the inlineTransformer.
+		managedTransformer: String,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!],
+
+		# True if messages should not be processed concurrently. If False, messages are processed concurrently.
+		sequentialProcessing: Boolean
+	): CrossTenantSendingNode!
 
 	# Validates the supplied code against the supplied message.
 	Validate(
 		# The message to use for validation.
 		message: String!,
+
 		# The code to validate.
 		code: String!,
+
 		# The loggingLevel to use duuring the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
 }
 
+# Emits dead letters (i.e. - undeliverable messages).  One per Tenant, automatically created when the Tenant is created.
 type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -795,6 +843,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 # A union of all EchoStream object types
 union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TimerNode | TransformerFunction | TransformerNode
 
+# Transmits messages between Nodes.
 type Edge @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -802,29 +851,41 @@ type Edge @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String
 
+	# True if currently draining in preparation for deletion.
 	draining: Boolean!
 
+	# The KmsKey encryption key used to encrypt messages at rest.
 	kmsKey: KmsKey
 
 	# When and who modified.
 	lastModified: AtBy!
 
+	# The maximum number of times that a message is attempted to be delivered before being emitted by the DeadLetterEmitterNode.
 	maxReceiveCount: Int
 
+	# An estimate of the number of messages currently being transferred.
 	messageCounts: MessageCounts!
 
+	# The MessageType being transferred.
 	messageType: MessageType!
 
+	# The AWS SQS Queue URL.
 	queue: AWSURL!
 
+	# The source Node that places messages on this Edge.
 	source: Node!
 
+	# The target Node that this Edge delivers messages to.
 	target: Node!
 
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drain: Boolean): Boolean!
+	# Deletes the Edge, optionally draining it in the process.
+	Delete(
+		# True if the messages on the edge shoudl be drained prior to deletion. Defaults to False.
+		drain: Boolean
+	): Boolean!
 
 	# Lists the changes.
 	ListChanges(
@@ -844,11 +905,23 @@ type Edge @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	Move(source: String!, target: String!): Edge!
+	# Moves the edge to a new source and/or target combination. Messages currently being transmitted by the Edge are retained.
+	Move(
+		# The name of the new source Node.
+		source: String!,
 
+		# The name of the new target Node.
+		target: String!
+	): Edge!
+
+	# Purges all messages currently being transmitted by the Edge.
 	Purge: Boolean!
 
-	Update(description: String): Edge!
+	# Updates the Edge and returns it.
+	Update(
+		# A human-readable description.
+		description: String
+	): Edge!
 }
 
 # A (possibly) paginated result set.
@@ -863,6 +936,7 @@ type EdgeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+# An App that exists outside of the EchoStream Cloud. Access to the EchoStream Cloud is accomplished through GetAwsCredentials.
 type ExternalApp implements App @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
@@ -937,7 +1011,9 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	): ExternalApp!
 }
 
+# A Node that exists outside the EchoStream Cloud. Can be part of an ExternalApp or CrossAccountApp.
 type ExternalNode implements Node @aws_cognito_user_pools {
+	# The App.
 	app: RemoteApp!
 
 	# The config, in JSON object format (i.e. - dict, map).
@@ -1003,7 +1079,14 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	Update(config: AWSJSON, description: String): ExternalNode!
+	# Updates the Node and returns it.
+	Update(
+		# The config, in JSON object format (i.e. - dict, map).
+		config: AWSJSON,
+
+		# A human-readable description.
+		description: String
+	): ExternalNode!
 }
 
 interface Function @aws_cognito_user_pools {
@@ -1380,7 +1463,24 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
+	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	ListLogEvents(
+		# The end date/time, inclusive, to list the log events to. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The filter pattern to apply, in AWS Cloudwatch Logs filter pattern format ( https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html ).
+		filterPattern: String,
+
+		# The number of log events to return. Maximum 10,000.
+		limit: Int,
+
+		# The nextToken returned from a previous call to ListLogEvents.
+		nextToken: String,
+
+		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): LogEventResults!
+
 
 	Update(config: AWSJSON, description: String, loggingLevel: LogLevel, mounts: [MountInput!], ports: [PortInput!]): ManagedNode!
 }
@@ -2188,7 +2288,24 @@ type RouterNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
+	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	ListLogEvents(
+		# The end date/time, inclusive, to list the log events to. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The filter pattern to apply, in AWS Cloudwatch Logs filter pattern format ( https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html ).
+		filterPattern: String,
+
+		# The number of log events to return. Maximum 10,000.
+		limit: Int,
+
+		# The nextToken returned from a previous call to ListLogEvents.
+		nextToken: String,
+
+		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): LogEventResults!
+
 
 	Update(config: AWSJSON, description: String, inlineBitmapper: String, loggingLevel: LogLevel, managedBitmapper: String, requirements: [String!], routeTable: AWSJSON): RouterNode!
 
@@ -2476,6 +2593,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String
 
+	# The inlineTransformer. Mutually exclusive with managedTransformer.
 	inlineTransformer: String
 
 	# When and who modified.
@@ -2483,6 +2601,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 
 	loggingLevel: LogLevel
 
+	# The manageTransformer. Mutually exclusive with the inlineTransformer.
 	managedTransformer: TransformerFunction
 
 	# The name.
@@ -2503,6 +2622,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 
+	# True if messages should not be processed concurrently. If False, messages are processed concurrently.
 	sequentialProcessing: Boolean
 
 	# The Tenant.
@@ -2532,9 +2652,47 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
+	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	ListLogEvents(
+		# The end date/time, inclusive, to list the log events to. Defaults to now.
+		endDateTime: AWSDateTime,
 
-	Update(config: AWSJSON, description: String, inlineTransformer: String, loggingLevel: LogLevel, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): TransformerNode!
+		# The filter pattern to apply, in AWS Cloudwatch Logs filter pattern format ( https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html ).
+		filterPattern: String,
+
+		# The number of log events to return. Maximum 10,000.
+		limit: Int,
+
+		# The nextToken returned from a previous call to ListLogEvents.
+		nextToken: String,
+
+		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): LogEventResults!
+
+	# Updates the Node and returns it.
+	Update(
+		# The config, in JSON object format (i.e. - dict, map). 
+		config: AWSJSON,
+
+		# A human-readable description.
+		description: String,
+
+		# The inlineTransformer. Mutually exclusive with managedTransformer.
+		inlineTransformer: String,
+
+		# The logging level applied to the transformer function.
+		loggingLevel: LogLevel,
+
+		# The manageTransformer. Mutually exclusive with the inlineTransformer.
+		managedTransformer: String,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!],
+
+		# True if messages should not be processed concurrently. If False, messages are processed concurrently.
+		sequentialProcessing: Boolean
+	): TransformerNode!
 
 	# Validates the supplied code against the supplied message.
 	Validate(
