@@ -278,7 +278,15 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 	Update(code: String, description: String, readme: String, requirements: [String!]): BitmapperFunction!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The message to use for validation.
+		message: String!,
+		# The code to validate.
+		code: String!,
+		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
 
 type BulkDataStorage @aws_cognito_user_pools {
@@ -549,7 +557,15 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineTransformer: String, loggingLevel: LogLevel, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): CrossTenantSendingNode!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The message to use for validation.
+		message: String!,
+		# The code to validate.
+		code: String!,
+		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
 
 type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
@@ -763,7 +779,15 @@ interface Function @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The message to use for validation.
+		message: String!,
+		# The code to validate.
+		code: String!,
+		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
 
 # A (possibly) paginated result set.
@@ -1102,7 +1126,15 @@ type MessageType @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 	Update(auditor: String, bitmapperTemplate: String, description: String, readme: String, requirements: [String!], sampleMessage: String, transformerTemplate: String): MessageType!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The message to use for validation.
+		message: String!,
+		# The code to validate.
+		code: String!,
+		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
 
 # A (possibly) paginated result set.
@@ -1489,7 +1521,15 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineBitmapper: String, loggingLevel: LogLevel, managedBitmapper: String, requirements: [String!], routeTable: AWSJSON): RouterNode!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The message to use for validation.
+		message: String!,
+		# The code to validate.
+		code: String!,
+		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
 
 type Tenant @aws_cognito_user_pools {
@@ -1673,7 +1713,15 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 	Update(code: String, description: String, readme: String, requirements: [String!]): TransformerFunction!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The message to use for validation.
+		message: String!,
+		# The code to validate.
+		code: String!,
+		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
 
 type TransformerNode implements Node @aws_cognito_user_pools {
@@ -1727,7 +1775,15 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	): ChangeResult!
 	ListLogEvents(endDateTime: AWSDateTime, filterPattern: String, limit: Int, nextToken: String, startDateTime: AWSDateTime): LogEventResults!
 	Update(config: AWSJSON, description: String, inlineTransformer: String, loggingLevel: LogLevel, managedTransformer: String, requirements: [String!], sequentialProcessing: Boolean): TransformerNode!
-	Validate(message: String!, code: String, loggingLevel: LogLevel): ValidationResult!
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The message to use for validation.
+		message: String!,
+		# The code to validate.
+		code: String!,
+		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
 
 enum UserRole {
