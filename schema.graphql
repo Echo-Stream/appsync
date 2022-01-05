@@ -251,7 +251,9 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	name: String!
 	# README in MarkDown format.
 	readme: String
+	# The list of Python requirements, in pip format.
 	requirements: [String!]
+	# True if this is an EchoStream system resource.
 	system: Boolean
 	# The Tenant.
 	tenant: Tenant
@@ -517,6 +519,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	receiveEdges: [Edge]
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
+	# The list of Python requirements, in pip format.
 	requirements: [String!]
 	sequentialProcessing: Boolean
 	# The Tenant.
@@ -734,7 +737,9 @@ interface Function @aws_cognito_user_pools {
 	lastModified: AtBy!
 	# README in MarkDown format.
 	readme: String
+	# The list of Python requirements, in pip format.
 	requirements: [String!]
+	# True if this is an EchoStream system resource.
 	system: Boolean
 	# The Tenant.
 	tenant: Tenant
@@ -1012,6 +1017,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	receiveMessageType: MessageType
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
+	# True if this is an EchoStream system resource.
 	system: Boolean
 	# The Tenant.
 	tenant: Tenant
@@ -1067,8 +1073,10 @@ type MessageType @aws_cognito_user_pools {
 	name: String!
 	# README in MarkDown format.
 	readme: String
+	# The list of Python requirements, in pip format.
 	requirements: [String!]
 	sampleMessage: String!
+	# True if this is an EchoStream system resource.
 	system: Boolean
 	# The Tenant.
 	tenant: Tenant
@@ -1154,6 +1162,7 @@ type Mutation @aws_cognito_user_pools {
 		description: String!,
 		argumentMessageType: String!,
 		readme: String,
+		# The list of Python requirements, in pip format.
 		requirements: [String!]
 	): BitmapperFunction!
 	CreateCrossAccountApp(
@@ -1183,10 +1192,11 @@ type Mutation @aws_cognito_user_pools {
 		tenant: String!,
 		config: AWSJSON,
 		# A human-readable description.
-	description: String,
+		description: String,
 		inlineTransformer: String,
 		loggingLevel: LogLevel,
 		managedTransformer: String,
+		# The list of Python requirements, in pip format.
 		requirements: [String!]
 		sendMessageType: String,
 		sequentialProcessing: Boolean
@@ -1262,6 +1272,7 @@ type Mutation @aws_cognito_user_pools {
 		tenant: String!,
 		transformerTemplate: String!,
 		readme: String,
+		# The list of Python requirements, in pip format.
 		requirements: [String!]
 	): MessageType!
 	CreateRouterNode(
@@ -1275,6 +1286,7 @@ type Mutation @aws_cognito_user_pools {
 		inlineBitmapper: String,
 		loggingLevel: LogLevel,
 		managedBitmapper: String,
+		# The list of Python requirements, in pip format.
 		requirements: [String!]
 	): RouterNode!
 	CreateTenant(name: String!, region: String!, config: AWSJSON): Tenant!
@@ -1443,6 +1455,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	receiveEdges: [Edge]
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
+	# The list of Python requirements, in pip format.
 	requirements: [String!]
 	routeTable: AWSJSON!
 	# A list of the Edges messages are sent on.
@@ -1632,8 +1645,10 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 	name: String!
 	# README in MarkDown format.
 	readme: String
+	# The list of Python requirements, in pip format.
 	requirements: [String!]
 	returnMessageType: MessageType
+	# True if this is an EchoStream system resource.
 	system: Boolean
 	# The Tenant.
 	tenant: Tenant
@@ -1678,6 +1693,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	receiveEdges: [Edge]
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
+	# The list of Python requirements, in pip format.
 	requirements: [String!]
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
