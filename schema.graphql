@@ -43,7 +43,6 @@ type AuditEmitterNode implements Node @aws_cognito_user_pools {
 # A programmatic user of the EchoStream API.
 type ApiUser @aws_cognito_user_pools {
 	# When and who created.
-	# When and who created.
 	created: AtBy!
 	
 	# The credentials required to log into Cognito to get JWT's.
@@ -168,6 +167,7 @@ type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	lastModified: AtBy!
 	# The name.
 	name: String!
+	# The Edge that messages are received on.
 	receiveEdge: Edge!
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
@@ -186,6 +186,7 @@ type AppChangeRouterNode implements Node @aws_cognito_user_pools {
 	lastModified: AtBy!
 	# The name.
 	name: String!
+	# The Edge that messages are received on.
 	receiveEdge: Edge!
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
@@ -497,6 +498,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	managedTransformer: TransformerFunction
 	# The name.
 	name: String!
+	# A list of the Edges messages are received on.
 	receiveEdges: [Edge]
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
@@ -657,6 +659,7 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	lastModified: AtBy!
 	# The name.
 	name: String!
+	# A list of the Edges messages are received on.
 	receiveEdges: [Edge]
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType
@@ -912,6 +915,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	# The name.
 	name: String!
 	ports: [Port!]
+	# A list of the Edges messages are received on.
 	receiveEdges: [Edge]
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType
@@ -1381,6 +1385,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	managedBitmapper: BitmapperFunction
 	# The name.
 	name: String!
+	# A list of the Edges messages are received on.
 	receiveEdges: [Edge]
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
@@ -1606,6 +1611,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	managedTransformer: TransformerFunction
 	# The name.
 	name: String!
+	# A list of the Edges messages are received on.
 	receiveEdges: [Edge]
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType!
