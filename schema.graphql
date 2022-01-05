@@ -117,13 +117,8 @@ type ApiUserResult @aws_cognito_user_pools {
 
 # The allowed roles for an API User
 enum ApiUserRole {
-	# All operations EXCEPT deleting the tenant.
 	admin
-
-	# Only get and list operations are allowed, as well as retriving attributes.
 	read_only
-
-	# All operations EXCEPT manipulating users or deleting the tenant.
 	user
 }
 
@@ -441,10 +436,7 @@ type CognitoCredentials @aws_cognito_user_pools {
 
 # Content encoding types supported by BulkDataStorage.
 enum ContentEncoding {
-	# GZIP content encoding.
 	gzip
-
-	# DEFLATE content encoding.
 	deflate
 }
 
