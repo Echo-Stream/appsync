@@ -245,6 +245,7 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	lastModified: AtBy!
 	# The name.
 	name: String!
+	# README in MarkDown format.
 	readme: String
 	requirements: [String!]
 	system: Boolean
@@ -719,6 +720,7 @@ interface Function @aws_cognito_user_pools {
 	name: String!
 	# When and who modified.
 	lastModified: AtBy!
+	# README in MarkDown format.
 	readme: String
 	requirements: [String!]
 	system: Boolean
@@ -984,6 +986,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	# The name.
 	name: String!
 	portRequirements: [PortRequirement!]
+	# README in MarkDown format.
 	readme: String
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType
@@ -1038,6 +1041,7 @@ type MessageType @aws_cognito_user_pools {
 	lastModified: AtBy!
 	# The name.
 	name: String!
+	# README in MarkDown format.
 	readme: String
 	requirements: [String!]
 	sampleMessage: String!
@@ -1586,6 +1590,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 	lastModified: AtBy!
 	# The name.
 	name: String!
+	# README in MarkDown format.
 	readme: String
 	requirements: [String!]
 	returnMessageType: MessageType
