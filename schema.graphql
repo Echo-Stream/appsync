@@ -61,7 +61,7 @@ type ApiUser @aws_cognito_user_pools {
 	# The username.
 	username: String!
 
-	# Deletes this APIUser
+	# Deletes this.
 	Delete: Boolean!
 
 	# Lists the changes.
@@ -233,6 +233,7 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant
 
+	# Deletes this.
 	Delete: Boolean!
 	# Lists the changes.
 	ListChanges(
@@ -641,6 +642,7 @@ interface Function @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant
 
+	# Deletes this.
 	Delete: Boolean!
 	# Lists the changes.
 	ListChanges(
@@ -685,6 +687,7 @@ type KmsKey @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
+	# Deletes this.
 	Delete: Boolean!
 	# Lists the changes.
 	ListChanges(
@@ -872,6 +875,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant
 
+	# Deletes this.
 	Delete: Boolean!
 	# Lists the changes.
 	ListChanges(
@@ -923,6 +927,7 @@ type MessageType @aws_cognito_user_pools {
 	tenant: Tenant
 	transformerTemplate: String!
 
+	# Deletes this.
 	Delete: Boolean!
 	# Lists the changes.
 	ListChanges(
@@ -1323,6 +1328,7 @@ type Tenant @aws_cognito_user_pools {
 	users: [TenantUser!]
 
 	AddUser(email: String!, role: UserRole!): TenantUser!
+	# Deletes this.
 	Delete: Boolean!
 	# Lists the changes.
 	ListChanges(
@@ -1367,6 +1373,7 @@ type TenantUser @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
+	# Deletes this.
 	Delete: Boolean!
 	DeleteGraphLayout(name: String!): Boolean!
 	# Lists the changes.
@@ -1448,6 +1455,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant
 
+	# Deletes this.
 	Delete: Boolean!
 	# Lists the changes.
 	ListChanges(
