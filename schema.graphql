@@ -1089,6 +1089,7 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	): ExternalNode!
 }
 
+# Describes common attributes and methods supported by Functions.
 interface Function @aws_cognito_user_pools {
 	# The MessageType passed in to the Function.
 	argumentMessageType: MessageType!
@@ -1166,29 +1167,34 @@ type FunctionResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+# Layout information in the EchoStream UI. Only to be used by the UI.
 type GraphLayout @aws_cognito_user_pools {
 	# The name.
 	name: String!
 
+	# The actual layout structure as a JSON string.
 	layout: AWSJSON!
 }
 
+# An encryption key. Each Tenant has a default key used when another key is not specified.
+# Other KmsKeys added to a Tenant can be used to selectively encrypt Edges at rest.
 type KmsKey @aws_cognito_user_pools {
+	# The AWS Resource Name of the actual AWS KMS Key.
 	arn: String!
+
 	# When and who created.
-
 	created: AtBy!
+
 	# A human-readable description.
-
 	description: String
+
 	# When and who modified.
-
 	lastModified: AtBy!
+
 	# The name.
-
 	name: String!
-	# The Tenant.
 
+	# The Tenant.
 	tenant: Tenant!
 
 	# Deletes this.
@@ -1212,7 +1218,11 @@ type KmsKey @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	Update(description: String): KmsKey!
+	# Updates and returns the KmsKey.
+	Update(
+		# A human-readable description.
+		description: String
+	): KmsKey!
 }
 
 # A (possibly) paginated result set.
@@ -1227,6 +1237,7 @@ type KmsKeyResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+# Emits log messages created by various Node types.  One per Tenant, automatically created when the Tenant is created.
 type LogEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -1250,38 +1261,52 @@ type LogEmitterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 }
 
+# Represents a User in EchoStream that can log into the EchoStream UI.
 type LoginUser @aws_cognito_user_pools {
-	activeAt: String
+	# The date/time that the LoginUser became active.
+	activeAt: AWSDateTime
 
 	# When and who created.
 	created: AtBy!
 
+	# The email address.
 	email: AWSEmail!
 
+	# The first name.
 	firstName: String!
 
 	# When and who modified.
 	lastModified: AtBy!
 
+	# The last name.
 	lastName: String!
 
+	# A list of TenantUsers linked to this LoginUser.
 	tenantUsers: [TenantUser!]
 }
 
+# A log event recorded by certain Nodes.
 type LogEvent @aws_cognito_user_pools {
+	# The date/time of the log event.
 	timestamp: AWSDateTime!
 
+	# The actual logged message.
 	message: String!
 
+	# The date/time that the log event was recorded.
 	ingestionTime: AWSDateTime!
 }
 
+# A (possibly) paginated set of LogEvents.
 type LogEventResults @aws_cognito_user_pools {
+	# The Events.
 	events: [LogEvent]!
 
+	# The next token for pagination.
 	nextToken: String
 }
 
+# Supported logging levels.
 enum LogLevel {
 	DEBUG
 	ERROR
