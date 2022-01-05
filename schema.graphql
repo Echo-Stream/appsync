@@ -90,7 +90,7 @@ type ApiUser @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	# Resets the password and returns this APIUser
+	# Resets the password used in credentials and returns the ApiUser.
 	ResetPassword: ApiUser!
 
 	# Updates and returns this APIUser
@@ -448,6 +448,8 @@ enum ContentEncoding {
 	deflate
 }
 
+# CrossAccountApps are external to the EchoStream Cloud. They utilize IAM cross-account permissions to access Edges in the EchoStream cloud.
+# This is required if you have an AWS account and wish to implement your ExternalNodes as either on EC2 or Lambda and intend to use IAM roles to provide permissions into EchoStream.
 type CrossAccountApp implements App @aws_cognito_user_pools {
 	# The AWS account number that is authorized to use this App's EchoStream Cloud resources.
 	account: String!
@@ -512,6 +514,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
+	# Resets the password used in credentials and returns the App.
 	ResetPassword: CrossAccountApp!
 
 	# Update this App.
@@ -857,7 +860,10 @@ type ExternalApp implements App @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
+	# Resets the password used in credentials and returns the App.
 	ResetPassword: ExternalApp!
+
 	# Update this App.
 	Update(
 		# The config, in JSON object format (i.e. - dict, map). Null is ignored.
@@ -1138,7 +1144,10 @@ type ManagedApp implements App @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
+	# Resets the password used in credentials and returns the App.
 	ResetPassword: ManagedApp!
+
 	# Update this App.
 	Update(
 		# The config, in JSON object format (i.e. - dict, map). Null is ignored.
