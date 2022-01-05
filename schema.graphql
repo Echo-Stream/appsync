@@ -314,6 +314,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
+	# The credentials required to log into Cognito to get JWT's.
 	credentials: CognitoCredentials!
 	# A human-readable description.
 	description: String
@@ -332,7 +333,11 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
-	GetAwsCredentials(duration: Int): AwsCredentials!
+	# Returns that AwsCredentials required to access the EchoStream resources assigned to this App.
+	GetAwsCredentials(
+		# The length of time, in seconds, that the returned credentials are valid for. Between 900 and 43,200. Defaults to 3,600.
+		duration: Int
+	): AwsCredentials!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -593,6 +598,7 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
+	# The credentials required to log into Cognito to get JWT's.
 	credentials: CognitoCredentials!
 	# A human-readable description.
 	description: String
@@ -610,7 +616,11 @@ type ExternalApp implements App @aws_cognito_user_pools {
 		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
-	GetAwsCredentials(duration: Int): AwsCredentials!
+	# Returns that AwsCredentials required to access the EchoStream resources assigned to this App.
+	GetAwsCredentials(
+		# The length of time, in seconds, that the returned credentials are valid for. Between 900 and 43,200. Defaults to 3,600.
+		duration: Int
+	): AwsCredentials!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -820,10 +830,13 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	config: AWSJSON
 	# When and who created.
 	created: AtBy!
+	# The credentials required to log into Cognito to get JWT's.
 	credentials: CognitoCredentials!
 	# A human-readable description.
 	description: String
+	# A list of registered instances.
 	managedInstances: [ManagedInstance]
+	# The iso image. Used to install and setup the ManagedApp virtual machine.
 	iso: String!
 	# When and who modified.
 	lastModified: AtBy!
@@ -840,7 +853,11 @@ type ManagedApp implements App @aws_cognito_user_pools {
 		drainEdges: Boolean
 	): Boolean!
 	DeregisterManagedInstance(instanceId: String!): Boolean!
-	GetAwsCredentials(duration: Int): AwsCredentials!
+	# Returns that AwsCredentials required to access the EchoStream resources assigned to this App.
+	GetAwsCredentials(
+		# The length of time, in seconds, that the returned credentials are valid for. Between 900 and 43,200. Defaults to 3,600.
+		duration: Int
+	): AwsCredentials!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
