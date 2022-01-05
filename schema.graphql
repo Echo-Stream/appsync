@@ -135,7 +135,7 @@ interface App @aws_cognito_user_pools {
 
 	# Deletes this App and all of its Nodes.
 	Delete(
-		# If sending Edges attached to Nodes in this App should be drained. Defaults to True
+		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
 		drainEdges: Boolean
 	): Boolean!
 	# Lists the changes.
@@ -327,7 +327,11 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this App and all of its Nodes.
+	Delete(
+		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	GetAwsCredentials(duration: Int): AwsCredentials!
 	# Lists the changes.
 	ListChanges(
@@ -365,7 +369,11 @@ type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this App and all of its Nodes.
+	Delete(
+		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -402,7 +410,11 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this Node and all of its Edges.
+	Delete(
+		# If sending Edges attached to this Nodes should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -438,7 +450,11 @@ type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this App and all of its Nodes.
+	Delete(
+		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -481,7 +497,11 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this Node and all of its Edges.
+	Delete(
+		# If sending Edges attached to this Nodes should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -585,7 +605,11 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this App and all of its Nodes.
+	Delete(
+		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	GetAwsCredentials(duration: Int): AwsCredentials!
 	# Lists the changes.
 	ListChanges(
@@ -629,7 +653,11 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this Node and all of its Edges.
+	Delete(
+		# If sending Edges attached to this Nodes should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -806,7 +834,11 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this App and all of its Nodes.
+	Delete(
+		# If sending Edges attached to Nodes in this App should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	DeregisterManagedInstance(instanceId: String!): Boolean!
 	GetAwsCredentials(duration: Int): AwsCredentials!
 	# Lists the changes.
@@ -867,7 +899,11 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 
 	CreateAuditRecords(messageType: String!, auditRecords: [AuditRecord!]!): Boolean!
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this Node and all of its Edges.
+	Delete(
+		# If sending Edges attached to this Nodes should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1332,7 +1368,11 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this Node and all of its Edges.
+	Delete(
+		# If sending Edges attached to this Nodes should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1461,7 +1501,11 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this Node and all of its Edges.
+	Delete(
+		# If sending Edges attached to this Nodes should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -1547,7 +1591,11 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant!
 
-	Delete(drainEdges: Boolean): Boolean!
+	# Deletes this Node and all of its Edges.
+	Delete(
+		# If sending Edges attached to this Nodes should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
