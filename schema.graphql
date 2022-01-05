@@ -1,4 +1,4 @@
-# An Internal Node that emits alert messages.
+# Emits alert messages. One per Tenant, automatically created when the Tenant is created.
 type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -22,7 +22,7 @@ type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 }
 
-# An Internal Node that emits audit messages.
+# Emits audit messages. One per Tenant, automatically created when the Tenant is created.
 type AuditEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -168,6 +168,7 @@ interface App @aws_cognito_user_pools {
 	): ChangeResult!
 }
 
+# Receives change messages from the AppChangeRouterNode. One per App, created when the App is created.
 type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	# The App.
 	app: App!
@@ -203,6 +204,7 @@ type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	): Boolean!
 }
 
+# Routes change messages to the appropriate App. One per Tenant, automatically created when the Tenant is created.
 type AppChangeRouterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -287,8 +289,12 @@ type AwsCredentials @aws_cognito_user_pools {
 	sessionToken: String!
 }
 
+# Represents a bitmapper function in the Function library. BitmapperFunctions are used in RouterNodes.
 type BitmapperFunction implements Function @aws_cognito_user_pools {
+	# The MessageType passed in to the Function.
 	argumentMessageType: MessageType!
+
+	# The code of the Function in Python string format.
 	code: String!
 
 	# When and who created.
@@ -317,6 +323,7 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 
 	# Deletes this.
 	Delete: Boolean!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
@@ -334,7 +341,21 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
-	Update(code: String, description: String, readme: String, requirements: [String!]): BitmapperFunction!
+
+	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
+	Update(
+		# The code. Must be compilable Python code containing a single top-level function definition. Null is ignored.
+		code: String,
+
+		# The description. Null is ignored.
+		description: String,
+
+		# The README. Must be in MarkDown format. Null removes the readme.
+		readme: String,
+
+		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
+		requirements: [String!]
+	): BitmapperFunction!
 
 	# Validates the supplied code against the supplied message.
 	Validate(
@@ -349,16 +370,25 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	): ValidationResult!
 }
 
+# Bulk data storage URLs.
 type BulkDataStorage @aws_cognito_user_pools {
+	# The presigned GET URL. Intended on being embedded in a message as a "ticket". Will return the data stored using the presignedPost.
 	presignedGet: AWSURL!
+
+	# The presigned POST URL. Used to store bulk data for retrieval by presignedGet.
 	presignedPost: PresignedPost!
 }
 
+# Represents a Change to a resource in EchoStream.
 type Change @aws_cognito_user_pools {
+	# The new Echo object.
 	new: Echo
+
+	# The old Echo object.
 	old: Echo
 }
 
+# Emits change messages. One per Tenant, automatically created when the Tenant is created.
 type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -371,6 +401,8 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 
 	# The name.
 	name: String!
+
+	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]!
 
 	# The MessageType that this Node is capable of sending.
@@ -392,15 +424,27 @@ type ChangeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+# Cognito login credentials. Used by APIUsers and Apps.
 type CognitoCredentials @aws_cognito_user_pools {
+	# The Application Client Id authorized for the username in the Cognito User Pool.
 	clientId: String!
+
+	# The password.
 	password: String!
+
+	# The Cognito User Pool id.
 	userPoolId: String!
+
+	# The username.
 	username: String!
 }
 
+# Content encoding types supported by BulkDataStorage.
 enum ContentEncoding {
+	# GZIP content encoding.
 	gzip
+
+	# DEFLATE content encoding.
 	deflate
 }
 
@@ -820,7 +864,9 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 }
 
 interface Function @aws_cognito_user_pools {
+	# The MessageType passed in to the Function.
 	argumentMessageType: MessageType!
+	# The code of the Function in Python string format.
 	code: String!
 	# When and who created.
 	created: AtBy!
@@ -1752,7 +1798,9 @@ type TimerNode implements Node @aws_cognito_user_pools {
 }
 
 type TransformerFunction implements Function @aws_cognito_user_pools {
+	# The MessageType passed in to the Function.
 	argumentMessageType: MessageType!
+	# The code of the Function in Python string format.
 	code: String!
 	# When and who created.
 	created: AtBy!
@@ -1791,7 +1839,20 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
-	Update(code: String, description: String, readme: String, requirements: [String!]): TransformerFunction!
+	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
+	Update(
+		# The code. Must be compilable Python code containing a single top-level function definition. Null is ignored.
+		code: String,
+
+		# The description. Null is ignored.
+		description: String,
+
+		# The README. Must be in MarkDown format. Null removes the readme.
+		readme: String,
+
+		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
+		requirements: [String!]
+	): TransformerFunction!
 	# Validates the supplied code against the supplied message.
 	Validate(
 		# The message to use for validation.
