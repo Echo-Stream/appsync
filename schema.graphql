@@ -27,6 +27,7 @@ type AuditEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	sendEdges: [Edge]
@@ -120,6 +121,7 @@ interface App @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	tenant: Tenant!
@@ -133,6 +135,7 @@ type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	receiveEdge: Edge!
@@ -146,6 +149,7 @@ type AppChangeRouterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	receiveEdge: Edge!
@@ -191,6 +195,7 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String!
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	readme: String
@@ -218,6 +223,7 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	sendEdges: [Edge]!
@@ -251,6 +257,7 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	credentials: CognitoCredentials!
 	description: String
 	iamPolicy: AWSJSON!
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	nodes: [RemoteAppNode]!
@@ -268,6 +275,7 @@ type CrossTenantReceivingApp implements App @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	nodes: [CrossTenantReceivingNode]
@@ -285,6 +293,7 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	sendEdges: [Edge]
@@ -300,6 +309,7 @@ type CrossTenantSendingApp implements App @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	nodes: [CrossTenantSendingNode]
@@ -319,6 +329,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	inlineTransformer: String
+	# When and who modified.
 	lastModified: AtBy!
 	loggingLevel: LogLevel
 	managedTransformer: TransformerFunction
@@ -340,6 +351,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	sendEdges: [Edge]
@@ -355,6 +367,7 @@ type Edge @aws_cognito_user_pools {
 	description: String
 	draining: Boolean!
 	kmsKey: KmsKey
+	# When and who modified.
 	lastModified: AtBy!
 	maxReceiveCount: Int
 	messageCounts: MessageCounts!
@@ -383,6 +396,7 @@ type ExternalApp implements App @aws_cognito_user_pools {
 	created: AtBy!
 	credentials: CognitoCredentials!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	nodes: [RemoteAppNode]!
@@ -402,6 +416,7 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	receiveEdges: [Edge]
@@ -423,6 +438,7 @@ interface Function @aws_cognito_user_pools {
 	created: AtBy!
 	description: String!
 	name: String!
+	# When and who modified.
 	lastModified: AtBy!
 	readme: String
 	requirements: [String!]
@@ -450,6 +466,7 @@ type KmsKey @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	tenant: Tenant!
@@ -469,6 +486,7 @@ type LogEmitterNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	sendEdges: [Edge]
@@ -482,6 +500,7 @@ type LoginUser @aws_cognito_user_pools {
 	created: AtBy!
 	email: AWSEmail!
 	firstName: String!
+	# When and who modified.
 	lastModified: AtBy!
 	lastName: String!
 	tenantUsers: [TenantUser!]
@@ -513,6 +532,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	description: String
 	managedInstances: [ManagedInstance]
 	iso: String!
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	nodes: [ManagedAppNode]!
@@ -545,6 +565,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	loggingLevel: LogLevel
 	managedNodeType: ManagedNodeType!
@@ -570,6 +591,7 @@ type ManagedNodeType @aws_cognito_user_pools {
 	created: AtBy!
 	description: String!
 	imageUri: String!
+	# When and who modified.
 	lastModified: AtBy!
 	mountRequirements: [MountRequirement!]
 	name: String!
@@ -603,6 +625,7 @@ type MessageType @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String!,
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	readme: String
@@ -815,6 +838,7 @@ interface Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	tenant: Tenant!
@@ -919,6 +943,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	inlineBitmapper: String
+	# When and who modified.
 	lastModified: AtBy!
 	loggingLevel: LogLevel
 	managedBitmapper: BitmapperFunction
@@ -943,6 +968,7 @@ type Tenant @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	region: String!
@@ -970,6 +996,7 @@ type TenantUser @aws_cognito_user_pools {
 	graphLayouts: [GraphLayout!]
 	invitationAt: String
 	invitationToken: String
+	# When and who modified.
 	lastModified: AtBy!
 	lastName: String
 	role: UserRole!
@@ -993,6 +1020,7 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	scheduleExpression: String!
@@ -1011,6 +1039,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
 	description: String!
+	# When and who modified.
 	lastModified: AtBy!
 	name: String!
 	readme: String
@@ -1031,6 +1060,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	created: AtBy!
 	description: String
 	inlineTransformer: String
+	# When and who modified.
 	lastModified: AtBy!
 	loggingLevel: LogLevel
 	managedTransformer: TransformerFunction
