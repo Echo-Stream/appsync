@@ -346,6 +346,7 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 		description: String,
 
 		# The README. Must be in MarkDown format. Null removes the readme.
+		# The README in MarkDown format.
 		readme: String,
 
 		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
@@ -707,16 +708,20 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String
 
-	# The inlineTransformer. Mutually exclusive with managedTransformer.
+	# A Python code string that contains a single top-level function definition.
+	# This function is used as a template when creating custom transformations in TransformerNodes
+	# that use this MessageType. This function must have the signature
+	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+	# Mutually exclusive with managedTransformer.
 	inlineTransformer: String
 
 	# When and who modified.
 	lastModified: AtBy!
 
-	# The logging level applied to the transformer function.
+	# The logging level.
 	loggingLevel: LogLevel
 
-	# The manageTransformer. Mutually exclusive with the inlineTransformer.
+	# The managedTransformer. Mutually exclusive with the inlineTransformer.
 	managedTransformer: TransformerFunction
 
 	# The name.
@@ -787,13 +792,17 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 		# A human-readable description.
 		description: String,
 
-		# The inlineTransformer. Mutually exclusive with managedTransformer.
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom transformations in TransformerNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		# Mutually exclusive with managedTransformer.
 		inlineTransformer: String,
 
-		# The logging level applied to the transformer function.
+		# The logging level.
 		loggingLevel: LogLevel,
 
-		# The manageTransformer. Mutually exclusive with the inlineTransformer.
+		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
 		managedTransformer: String,
 
 		# The list of Python requirements, in pip format.
@@ -1410,7 +1419,7 @@ type ManagedInstance @aws_cognito_user_pools {
 	# The AWS SSM activation id.
 	activationId: String!
 
-	# The hostname .
+	# The hostname.
 	hostname: String!
 
 	# The unique instance id.
@@ -1733,6 +1742,7 @@ type MessageType @aws_cognito_user_pools {
 		description: String,
 
 		# README in MarkDown format.
+		# The README in MarkDown format.
 		readme: String,
 
 		# The list of Python requirements, in pip format.
@@ -1822,131 +1832,188 @@ input MountRequirementInput {
 type Mutation @aws_cognito_user_pools {
 	# Creates a new APIUser and returns it.
 	CreateApiUser(
-		# The Tenant to create the APIUser in.
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
 		# The role of the new API User.
 		role: ApiUserRole!,
+
 		# A human-readable description.
 		description: String
 	): ApiUser!
 
+	# Creates a new BitmapperFunction and returns it.
 	CreateBitmapperFunction(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom routing rules in RouterNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return an integer.
 		code: String!,
 
 		# A human-readable description.
 		description: String!,
 
+		# The name of the MessageType.
 		argumentMessageType: String!,
 
+		# The README in MarkDown format.
 		readme: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
 	): BitmapperFunction!
 
+	# Creates a new CrossAccountApp and returns it.
 	CreateCrossAccountApp(
+		# The AWS account number that is authorized to use this App's EchoStream Cloud resources.
 		account: String!,
 
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON,
 
 		# A human-readable description.
 		description: String,
 
+		# True if this App can access the Tenant's table. Defaults to False.
 		tableAccess: Boolean
 	): CrossAccountApp!
 
+	# Creates a new CrossTenantReceivingApp and returns it.
 	CreateCrossTenantReceivingApp(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# The name of the Tenant that will be sending messages.
 		sendingTenant: String!
 	): CrossTenantReceivingApp!
 
+	# Creates a new CrossTenantSendingApp and returns it.
 	CreateCrossTenantSendingApp(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# The name of the Tenant that will be receiving messages.
 		receivingTenant: String!,
 
+		# The name of the CrossTenantReceivingApp in the receivingTenant. 
 		receivingApp: String!
 	): CrossTenantSendingApp!
 
+	# Creates a new CrossTenantSendingNode and returns it.
 	CreateCrossTenantSendingNode(
+		# The name of the CrossTenantSendingApp.
 		app: String!,
 
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# The name of the MessageType.
 		receiveMessageType: String!,
 
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON,
 
 		# A human-readable description.
 		description: String,
 
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom transformations in TransformerNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		# Mutually exclusive with managedTransformer.
 		inlineTransformer: String,
 
+		# The logging level. Defaults to INFO.
 		loggingLevel: LogLevel,
 
+		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
 		managedTransformer: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
 
+		# The name of the MessageType. Defaults to receiveMessageType.
 		sendMessageType: String,
 
+		# True if messages should not be processed concurrently. If False, messages are processed concurrently. Defaults to False.
 		sequentialProcessing: Boolean
 	): CrossTenantSendingNode!
 
+	# Creates an Edge and returns it.
 	CreateEdge(
+		# The name of the Node that will be sending messages. Must have the same MessageType as the target.
 		source: String!,
 
+		# The name of the Node that will be receiving messages. Must have the same MessageType as the source.
 		target: String!,
 
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
 		# A human-readable description.
 		description: String,
 
+		# The name of the KmsKey to use for at-rest encryption of the messages. Defaults to the Tenant's default key.
 		kmsKey: String,
 
+		# The number of delivery attempts to make before sending a message to the DeadLetterEmitter. Defaults to infinity.
 		maxReceiveCount: Int
 	): Edge!
 
+	# Creates an ExternalApp and returns it.
 	CreateExternalApp(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON,
 
 		# A human-readable description.
 		description: String,
 
+		# True if this App can access the Tenant's table. Defaults to False.
 		tableAccess: Boolean
 	): ExternalApp!
 
+	# Creates an ExternalNode and returns it.
 	CreateExternalNode(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# The name of the ExternalApp or CrossAccountApp.
 		app: String!,
 
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# The name of the MessageType that will be received.
 		receiveMessageType: String,
 
+		# The name of the MessageType that will be sent.
 		sendMessageType: String
 
 		# A human-readable description.
@@ -1956,181 +2023,269 @@ type Mutation @aws_cognito_user_pools {
 		config: AWSJSON
 	): ExternalNode!
 
+	# Create a KmsKey and return it.
 	CreateKmsKey(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 	
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9:/_\-]{3,80}$"
 		name: String!, 
 	
+		# A human-readable description.
 		description: String
 	): KmsKey!
 
+	# Creates a ManagedApp and returns it.
 	CreateManagedApp(
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\-]{3,80}$".
 		name: String!, 
 	
+		# The name of the Tenant to create this in.
 		tenant: String!,
 	
-		config: AWSJSON, 
+		# The config, in JSON object format (i.e. - dict, map).
+		config: AWSJSON,
 	
 		# A human-readable description.
 		description: String
 	
+		# True if this App can access the Tenant's table. Defaults to False.
 		tableAccess: Boolean
 	): ManagedApp!
 	
+	# Creates a ManagedNode and returns it.
 	CreateManagedNode(
+		# The name of the ManagedApp.
 		app: String!,
 	
+		# The name of the ManagedNodeType.
 		managedNodeType: String!,
 	
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\-]{3,80}$".
 		name: String!,
 	
+		# The name of the Tenant to create this in.
 		tenant: String!,
 	
+		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON,
 	
 		# A human-readable description.
 		description: String,
 	
+		# The logging level. Defaults to INFO.
 		loggingLevel: LogLevel,
 	
+		# The mounts to create. Must conform to the mount requirements of the ManagedNodeType.
 		mounts: [MountInput!],
 	
+		# The ports to expose. Must conform to the port requirements of the ManagedNodeType
 		ports: [PortInput!]
 	): ManagedNode!
 	
+	# Creates a ManagedNodeType and returns it.
 	CreateManagedNodeType(
 		# A human-readable description.
 		description: String!,
 	
+		# The URI of the Docker image. Must be a public or a private AWS ECR repository.
 		imageUri: String!
 	
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 	
+		# The name of the Tenant to create this in.
 		tenant: String!,
 	
+		# A JSON Schema ( https://json-schema.org/ ) document that specifies the requirements for the config attribute of ManagedNodes created using this ManagedNodeType.
 		configTemplate: AWSJSON,
 	
+		# The mount (i.e. - volume) requirements of the Docker image.
 		mountRequirements: [MountRequirementInput!],
 	
+		# The port requirements of the Docker image.
 		portRequirements: [PortRequirementInput!],
 	
+		# The README in MarkDown format.
 		readme: String,
 	
+		# The name of the MessageType that will be received.
 		receiveMessageType: String,
 	
+		# The name of the MessageType that will be sent.
 		sendMessageType: String,
 	): ManagedNodeType!
 
+	# Creates a MessageType and returns it.
 	CreateMessageType(
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, message, **kwargs) where
+		# message is a string and must return a flat dictionary.
 		auditor: String!,
 
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom routing rules in RouterNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return an integer.
 		bitmapperTemplate: String!,
 
 		# A human-readable description.
 		description: String!,
 
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z][A-Za-z0-9\-_\.]{3,24}$"
 		name: String!,
 
+		# A sample message.
 		sampleMessage: String!,
 
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom transformations in TransformerNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
 		transformerTemplate: String!,
 
+		# The README in MarkDown format.
 		readme: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
 	): MessageType!
 
+	# Creates a RouterNode and returns it.
 	CreateRouterNode(
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# The name of the MessageType that will be received.
 		receiveMessageType: String!,
 
+		# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
 		routeTable: AWSJSON!,
 
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON,
 
 		# A human-readable description.
 		description: String,
 
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
+		# Mutually exclusive with managedBitmapper.
 		inlineBitmapper: String,
 
+		# The logging level. Defaults to INFO.
 		loggingLevel: LogLevel,
 
+		# The name of the BitmapperFunction. Mutually exclusive with inlineBitmapper.
 		managedBitmapper: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
 	): RouterNode!
 
+	# Creates a Tenant and returns it.
 	CreateTenant(
+		# The name. Must be unique within the EchoStream. Must conform to the regular expression "^[A-Za-z0-9:/_\-]{8,80}$"
 		name: String!,
 
+		# The AWS region.
 		region: String!,
 
+		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON
 	): Tenant!
 
+	# Creates a TimerNode and returns it.
 	CreateTimerNode(
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# An Amazon Event Bridge cron expression ( https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-rule-schedule.html#eb-cron-expressions )
 		scheduleExpression: String!,
 
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
 		# A human-readable description.
 		description: String
 	): TimerNode!
 
+	# Creates a TransformerFunction and returns it.
 	CreateTransformerFunction(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, message, source, **kwargs) and return None, a string or a list of strings.
 		code: String!,
 
 		# A human-readable description.
 		description: String!,
 
+		# The name of the MessageType.
 		argumentMessageType: String!,
 
+		# The README in MarkDown format.
 		readme: String,
 
+		# The list of Python requirements, in pip format.
 		requirements: [String!],
 
+		# The name of the MessageType that is returned.
 		returnMessageType: String
 	): TransformerFunction!
 
+	# Creates a TransformerNode and returns it.
 	CreateTransformerNode(
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
 		name: String!,
 
+		# The name of the MessageType that will be received.
 		receiveMessageType: String!,
 
+		# The name of the Tenant to create this in.
 		tenant: String!,
 
+		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON,
 
 		# A human-readable description.
 		description: String,
 
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom transformations in TransformerNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		# Mutually exclusive with managedTransformer.
 		inlineTransformer: String,
 
+		# The logging level. Defaults to INFO.
 		loggingLevel: LogLevel,
 
+		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
 		managedTransformer: String,
 
+		# The list of Python requirements, in pip format.
 		requirements: [String!],
 
+		# The name of the MessageType that will be sent. Defaults to null.
 		sendMessageType: String,
 
+		# True if messages should not be processed concurrently. If False, messages are processed concurrently. Defaults to False.
 		sequentialProcessing: Boolean
 	): TransformerNode!
 }
 
+# Defines the requirements for all Node types
 interface Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -2160,65 +2315,86 @@ type NodeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
-# The possible status codes for instances of ManagedApps in EchoStream.
+# The status codes for instances of ManagedApps in EchoStream.
 enum PingStatus {
 	ConnectionLost
 	Inactive
 	Online
 }
 
+# A mapped port in a ManagedNode
 type Port @aws_cognito_user_pools {
+	# The exposed container port.
 	containerPort: Int!
 
 	# A human-readable description.
 	description: String!
 
+	# The host address the port is exposed on.
 	hostAddress: AWSIPAddress
 
+	# The exposed host port.
 	hostPort: Int!
 
+	# The protocol that will be used by the port.
 	protocol: Protocol!
 }
 
+# Input for a mapped port in a ManagedNode
 input PortInput {
+	# The exposed container port.
 	containerPort: Int!
 
 	# A human-readable description.
 	description: String!
 
+	# The host address the port is exposed on. Defaults to 0.0.0.0.
 	hostAddress: AWSIPAddress
 
+	# The exposed host port.
 	hostPort: Int!
 
+	# The protocol that will be used by the port.
 	protocol: Protocol!
 }
 
+# A port requirement for a ManagedNodeType
 type PortRequirement @aws_cognito_user_pools {
+	# The exposed container port.
 	containerPort: Int!
 
 	# A human-readable description.
 	description: String!
 
+	# The protocol that will be used by the port.
 	protocol: Protocol!
 }
 
+# Input for a port requirement for a ManagedNodeType
 input PortRequirementInput {
+	# The exposed container port.
 	containerPort: Int!
 
 	# A human-readable description.
 	description: String!
 
+	# The protocol that will be used by the port.
 	protocol: Protocol!
 }
 
+# Pre-signed POST for BulkDataStorage
 type PresignedPost @aws_cognito_user_pools {
+	# The expiration.
 	expiration: AWSTimestamp!
 
+	# The fields that must be passed in the Header when POSTing.
 	fields: AWSJSON!
 
+	# The URL to POST to.
 	url: AWSURL!
 }
 
+# Protocols supported by ManagedNodeType/ManageNode Ports.
 enum Protocol {
 	sctp
 	tcp
@@ -2228,11 +2404,13 @@ enum Protocol {
 # Root Query
 type Query @aws_cognito_user_pools {
 	GetApiUser(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 		username: String!
 	): ApiUser
 
 	GetApp(
+		# The name. Must be unique within the Tenant.
 		name: String!,
 		tenant: String!
 	): App
@@ -2240,6 +2418,7 @@ type Query @aws_cognito_user_pools {
 	# Gets between 1 and 100 BulkDataStorage objects.
 	GetBulkDataStorage(
 		# The Tenant to get the BulkDataStorage objects for.
+		# The name of the Tenant to create this in.
 		tenant: String!,
 	
 		# The content encoding to use for the returned BulkDataStorage.
@@ -2256,26 +2435,31 @@ type Query @aws_cognito_user_pools {
 	): Edge
 	
 	GetFunction(
+		# The name. Must be unique within the Tenant.
 		name: String!,
 		tenant: String
 	): Function
 	
 	GetKmsKey(
+		# The name. Must be unique within the Tenant.
 		name: String!,
 		tenant: String!
 	): KmsKey
 	
 	GetManagedNodeType(
+		# The name. Must be unique within the Tenant.
 		name: String!,
 		tenant: String
 	): ManagedNodeType
 
 	GetMessageType(
+		# The name. Must be unique within the Tenant.
 		name: String!,
 		tenant: String
 	): MessageType
 	
 	GetNode(
+		# The name. Must be unique within the Tenant.
 		name: String!,
 		tenant: String!
 	): Node
@@ -2287,6 +2471,7 @@ type Query @aws_cognito_user_pools {
 	): Tenant
 	
 	GetTenantUser(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 		email: AWSEmail!
 	): TenantUser
@@ -2294,6 +2479,7 @@ type Query @aws_cognito_user_pools {
 	GetUser: LoginUser
 
 	ListApiUsers(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 		exclusiveStartKey: AWSJSON,
 		limit: Int
@@ -2306,6 +2492,7 @@ type Query @aws_cognito_user_pools {
 	): AppResult!
 	
 	ListChanges(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 		endDateTime: AWSDateTime,
 		exclusiveStartKey: AWSJSON,
@@ -2321,6 +2508,7 @@ type Query @aws_cognito_user_pools {
 	): FunctionResult!
 	
 	ListKmsKeys(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 		exclusiveStartKey: AWSJSON,
 		limit: Int
@@ -2350,6 +2538,7 @@ type Query @aws_cognito_user_pools {
 	): TenantResult!
 	
 	ListTenantUsers(
+		# The name of the Tenant to create this in.
 		tenant: String!,
 		exclusiveStartKey: AWSJSON,
 		limit: Int
@@ -2372,11 +2561,15 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String
 
+	# A Python code string that contains a single top-level function definition.
+	# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
+	# Mutually exclusive with managedBitmapper.
 	inlineBitmapper: String
 
 	# When and who modified.
 	lastModified: AtBy!
 
+	# The logging level.
 	loggingLevel: LogLevel
 
 	managedBitmapper: BitmapperFunction
@@ -2393,6 +2586,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
 
+	# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
 	routeTable: AWSJSON!
 
 	# A list of the Edges messages are sent on.
@@ -2447,7 +2641,23 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	): LogEventResults!
 
 
-	Update(config: AWSJSON, description: String, inlineBitmapper: String, loggingLevel: LogLevel, managedBitmapper: String, requirements: [String!], routeTable: AWSJSON): RouterNode!
+	Update(
+		config: AWSJSON,
+		description: String,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
+		# Mutually exclusive with managedBitmapper.
+		inlineBitmapper: String,
+
+		# The logging level.
+		loggingLevel: LogLevel,
+		managedBitmapper: String,
+		requirements: [String!],
+
+		# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
+		routeTable: AWSJSON
+	): RouterNode!
 
 	# Validates the supplied code against the supplied message.
 	Validate(
@@ -2603,6 +2813,7 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	# The name.
 	name: String!
 
+	# An Amazon Event Bridge cron expression ( https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-rule-schedule.html#eb-cron-expressions )
 	scheduleExpression: String!
 
 	# A list of the Edges messages are sent on.
@@ -2704,6 +2915,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 		description: String,
 
 		# The README. Must be in MarkDown format. Null removes the readme.
+		# The README in MarkDown format.
 		readme: String,
 
 		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
@@ -2733,15 +2945,20 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String
 
-	# The inlineTransformer. Mutually exclusive with managedTransformer.
+	# A Python code string that contains a single top-level function definition.
+	# This function is used as a template when creating custom transformations in TransformerNodes
+	# that use this MessageType. This function must have the signature
+	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+	# Mutually exclusive with managedTransformer.
 	inlineTransformer: String
 
 	# When and who modified.
 	lastModified: AtBy!
 
+	# The logging level.
 	loggingLevel: LogLevel
 
-	# The manageTransformer. Mutually exclusive with the inlineTransformer.
+	# The managedTransformer. Mutually exclusive with the inlineTransformer.
 	managedTransformer: TransformerFunction
 
 	# The name.
@@ -2818,13 +3035,17 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 		# A human-readable description.
 		description: String,
 
-		# The inlineTransformer. Mutually exclusive with managedTransformer.
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom transformations in TransformerNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		# Mutually exclusive with managedTransformer.
 		inlineTransformer: String,
 
 		# The logging level applied to the transformer function.
 		loggingLevel: LogLevel,
 
-		# The manageTransformer. Mutually exclusive with the inlineTransformer.
+		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
 		managedTransformer: String,
 
 		# The list of Python requirements, in pip format.
