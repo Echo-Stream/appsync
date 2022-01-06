@@ -1314,6 +1314,8 @@ enum LogLevel {
 	WARNING
 }
 
+# Represents an App that exists outside the EchoStream Cloud but is fully managed by EchoStream.
+# ManagedApps are implemented as virtual machines within a customer or client datacenter.
 type ManagedApp implements App @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
@@ -1354,7 +1356,11 @@ type ManagedApp implements App @aws_cognito_user_pools {
 		drainEdges: Boolean
 	): Boolean!
 
-	DeregisterManagedInstance(instanceId: String!): Boolean!
+	# Deregisters the specified instance of the ManagedApp. Instance ids can be obtained from managedInstances.
+	DeregisterManagedInstance(
+		# The instance id to deregister.
+		instanceId: String!
+	): Boolean!
 
 	# Returns that AwsCredentials required to access the EchoStream resources assigned to this App.
 	GetAwsCredentials(
@@ -1399,19 +1405,27 @@ type ManagedApp implements App @aws_cognito_user_pools {
 # Union of AppChangeReceiverNode and ManagedNode
 union ManagedAppNode = AppChangeReceiverNode | ManagedNode
 
+# Represents an virtual machine instance implementing a ManagedApp.
 type ManagedInstance @aws_cognito_user_pools {
+	# The AWS SSM activation id.
 	activationId: String!
 
+	# The hostname .
 	hostname: String!
 
+	# The unique instance id.
 	instanceId: String!
 
+	# The IP address.
 	ipAddress: AWSIPAddress!
 
+	# The last date/time that the instance checked in with EchoStream.
 	lastPingDateTime: AWSDateTime!
 
+	# The status of the last ping.
 	pingStatus: PingStatus!
 
+	# The date/time that the instance was registered with EchoStream.
 	registrationDate: AWSDateTime!
 }
 
