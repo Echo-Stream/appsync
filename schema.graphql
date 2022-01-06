@@ -16,7 +16,7 @@ type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	sendEdges: [Edge]
 	
 	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 	
 	# The Tenant.
 	tenant: Tenant!
@@ -40,7 +40,7 @@ type AuditEmitterNode implements Node @aws_cognito_user_pools {
 	sendEdges: [Edge]
 
 	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 
 	# The Tenant.
 	tenant: Tenant!
@@ -184,7 +184,7 @@ type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	receiveEdge: Edge!
 
 	# The MessageType that this Node is capable of receiving.
-	receiveMessageType: MessageType!
+	receiveMessageType: MessageType
 
 	# The Tenant.
 	tenant: Tenant!
@@ -217,13 +217,13 @@ type AppChangeRouterNode implements Node @aws_cognito_user_pools {
 	receiveEdge: Edge!
 
 	# The MessageType that this Node is capable of receiving.
-	receiveMessageType: MessageType!
+	receiveMessageType: MessageType
 
 	# A list of the Edges messages are sent on.
 	sendEdges: [Edge]
 
 	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 
 	# The Tenant.
 	tenant: Tenant!
@@ -398,10 +398,10 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 	name: String!
 
 	# A list of the Edges messages are sent on.
-	sendEdges: [Edge]!
+	sendEdges: [Edge]
 
 	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 
 	# The Tenant.
 	tenant: Tenant!
@@ -600,7 +600,7 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	sendEdges: [Edge]
 
 	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 
 	# The Tenant.
 	tenant: Tenant!
@@ -726,7 +726,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	receiveEdges: [Edge]
 
 	# The MessageType that this Node is capable of receiving.
-	receiveMessageType: MessageType!
+	receiveMessageType: MessageType
 
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
@@ -834,7 +834,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 	sendEdges: [Edge]
 
 	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 
 	# The Tenant.
 	tenant: Tenant!
@@ -1255,7 +1255,7 @@ type LogEmitterNode implements Node @aws_cognito_user_pools {
 	sendEdges: [Edge]
 
 	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 
 	# The Tenant.
 	tenant: Tenant!
@@ -1428,6 +1428,7 @@ type ManagedInstance @aws_cognito_user_pools {
 	# The date/time that the instance was registered with EchoStream.
 	registrationDate: AWSDateTime!
 }
+
 
 type ManagedNode implements Node @aws_cognito_user_pools {
 	app: ManagedApp!
@@ -2060,6 +2061,7 @@ type NodeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+# The possible status codes for instances of ManagedApps in EchoStream.
 enum PingStatus {
 	ConnectionLost
 	Inactive
@@ -2287,7 +2289,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	receiveEdges: [Edge]
 
 	# The MessageType that this Node is capable of receiving.
-	receiveMessageType: MessageType!
+	receiveMessageType: MessageType
 
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
@@ -2298,7 +2300,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 	sendEdges: [Edge]
 
 	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 
 	# The Tenant.
 	tenant: Tenant!
@@ -2508,7 +2510,7 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	sendEdges: [Edge]
 
 	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType!
+	sendMessageType: MessageType
 
 	# The Tenant.
 	tenant: Tenant!
@@ -2650,7 +2652,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	receiveEdges: [Edge]
 
 	# The MessageType that this Node is capable of receiving.
-	receiveMessageType: MessageType!
+	receiveMessageType: MessageType
 
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
