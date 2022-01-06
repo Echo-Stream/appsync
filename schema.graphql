@@ -2403,22 +2403,27 @@ enum Protocol {
 
 # Root Query
 type Query @aws_cognito_user_pools {
+	# Gets the APIUser. Returns null if not found.
 	GetApiUser(
-		# The name of the Tenant to create this in.
+		# The name of the Tenant.
 		tenant: String!,
+
+		# The username.
 		username: String!
 	): ApiUser
 
+	# Gets the App. Returns null if not found.
 	GetApp(
-		# The name. Must be unique within the Tenant.
+		# The name.
 		name: String!,
+
+		# The name of the Tenant.
 		tenant: String!
 	): App
 
 	# Gets between 1 and 100 BulkDataStorage objects.
 	GetBulkDataStorage(
-		# The Tenant to get the BulkDataStorage objects for.
-		# The name of the Tenant to create this in.
+		# The name of the Tenant.
 		tenant: String!,
 	
 		# The content encoding to use for the returned BulkDataStorage.
@@ -2428,119 +2433,207 @@ type Query @aws_cognito_user_pools {
 		count: Int
 	): [BulkDataStorage!]!
 	
+	# Gets the Edge. Returns null if not found.
 	GetEdge(
+		# The name of the source Node.
 		source: String!,
+
+		# The name of the target Node.
 		target: String!,
+
+		# The name of the Tenant.
 		tenant: String!
 	): Edge
 	
+	# Gets the Function.
 	GetFunction(
-		# The name. Must be unique within the Tenant.
+		# The name.
 		name: String!,
+
+		# The name of the Tenant. If null, looks for EchoStream system Function.
 		tenant: String
 	): Function
 	
+	# Gets the KmsKey. Returns null if not found. The Tenant default KmsKey is not gettable.
 	GetKmsKey(
-		# The name. Must be unique within the Tenant.
+		# The name.
 		name: String!,
+
+		# The name of the Tenant.
 		tenant: String!
 	): KmsKey
 	
+	# Gets the ManagedNodeType. Returns null if not found. 
 	GetManagedNodeType(
-		# The name. Must be unique within the Tenant.
+		# The name.
 		name: String!,
+
+		# The name of the Tenant. If null, looks for EchoStream system ManagedNodeType.
 		tenant: String
 	): ManagedNodeType
 
+	# Gets the MessageType. Returns null if not found. 
 	GetMessageType(
-		# The name. Must be unique within the Tenant.
+		# The name.
 		name: String!,
+
+		# The name of the Tenant. If null, looks for EchoStream system MessageType.
 		tenant: String
 	): MessageType
 	
+	# Gets the Node. Returns null if not found. 
 	GetNode(
-		# The name. Must be unique within the Tenant.
+		# The name.
 		name: String!,
+
+		# The name of the Tenant.
 		tenant: String!
 	): Node
 	
+	# Gets the AWS Tenant Regions that are supported by EchoStream.
 	GetSupportedRegions: [String!]!
 	
+	# Gets the Tenant. Returns null if not found. 
 	GetTenant(
+		# The name.
 		tenant: String!
 	): Tenant
 	
+	# Gets the TenantUser. Returns null if not found. 
 	GetTenantUser(
-		# The name of the Tenant to create this in.
+		# The name of the Tenant.
 		tenant: String!,
+
+		# The email.
 		email: AWSEmail!
 	): TenantUser
 	
+	# Gets the current User. 
 	GetUser: LoginUser
 
+	# Lists the APIUsers in the Tenant. May paginate.
 	ListApiUsers(
-		# The name of the Tenant to create this in.
+		# The name of the Tenant.
 		tenant: String!,
+
+		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
 		limit: Int
 	): ApiUserResult!
 	
+	# Lists the Apps in the Tenant. May paginate.
 	ListApps(
+		# The name of the Tenant.
 		tenant: String!, 
+
+		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
 		limit: Int
 	): AppResult!
 	
+	# Lists the Changes in the Tenant. May paginate.
 	ListChanges(
-		# The name of the Tenant to create this in.
+		# The name of the Tenant.
 		tenant: String!,
+
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
 		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
 		limit: Int,
+
+		# True for ascending results, False for descending result. Defaults to True.
 		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
 	
+	# Lists the Functions available to the Tenant. May paginate.
 	ListFunctions(
+		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
 		limit: Int,
+
+		# The name of the Tenant. If no name is specificed, will return only the EchoStream system Functions.
 		tenant: String
 	): FunctionResult!
 	
+	# Lists the KmsKeys in the Tenant. The Tenant default KmsKey will not be listed. May paginate.
 	ListKmsKeys(
-		# The name of the Tenant to create this in.
+		# The name of the Tenant.
 		tenant: String!,
+
+		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
 		limit: Int
 	): KmsKeyResult!
 	
+	# Lists the Nodes in the Tenant. May paginate.
 	ListNodes(
+		# The name of the Tenant.
 		tenant: String!, 
+
+		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
 		limit: Int
 	): NodeResult!
 	
+	# Lists the ManagedNodeTypes available to the Tenant. May paginate.
 	ListManagedNodeTypes(
+		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
 		limit: Int,
+
+		# The name of the Tenant. If no name is specificed, will return only the EchoStream system ManagedNodeTypes.
 		tenant: String
 	): ManagedNodeTypeResult!
 	
+	# Lists the MessageTypes available to the Tenant. May paginate.
 	ListMessageTypes(
+		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
 		limit: Int,
+
+		# The name of the Tenant.
 		tenant: String
 	): MessageTypeResult!
 	
+	# Lists the Tenants available to the current User. May paginate.
 	ListTenants(
+		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
 		limit: Int
 	): TenantResult!
 	
+	# Lists the TenantUsers in the Tenant. May paginate.
 	ListTenantUsers(
-		# The name of the Tenant to create this in.
+		# The name of the Tenant.
 		tenant: String!,
+
+		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
 		limit: Int
 	): TenantUserResult!
 }
