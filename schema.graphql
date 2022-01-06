@@ -1429,8 +1429,9 @@ type ManagedInstance @aws_cognito_user_pools {
 	registrationDate: AWSDateTime!
 }
 
-
+# Represents a ManagedNode. ManagedNodes are instances of Docker containers that exist within ManagedApps.
 type ManagedNode implements Node @aws_cognito_user_pools {
+	# The App.
 	app: ManagedApp!
 
 	# The config, in JSON object format (i.e. - dict, map).
@@ -1445,15 +1446,19 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	# When and who modified.
 	lastModified: AtBy!
 
+	# The logging level.
 	loggingLevel: LogLevel
 
+	# The ManagedNodeType.
 	managedNodeType: ManagedNodeType!
 
+	# A list of the mounts (i.e. - volumes) used by the Docker container.
 	mounts: [Mount!]
 
 	# The name.
 	name: String!
 
+	# A list of ports exposed by the Docker container.
 	ports: [Port!]
 
 	# A list of the Edges messages are received on.
@@ -1521,11 +1526,31 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): LogEventResults!
 
+	# Update and return the ManagedNode.
+	Update(
+		# The config, in JSON object format (i.e. - dict, map).
+		config: AWSJSON,
 
-	Update(config: AWSJSON, description: String, loggingLevel: LogLevel, mounts: [MountInput!], ports: [PortInput!]): ManagedNode!
+		# A human-readable description.
+		description: String,
+
+		# The logging level.
+		loggingLevel: LogLevel,
+
+		# A list of the mounts (i.e. - volumes) used by the Docker container.
+		mounts: [MountInput!],
+
+		# A list of ports exposed by the Docker container.
+		ports: [PortInput!]
+	): ManagedNode!
 }
 
+# Represents a ManagedNodeType which may be used to create ManagedNodes.
+# ManagedNodeTypes are wrappers around Docker image definitions and define the
+# requirements necessary to instanctiate those images as Docker containers inside
+# a ManagedApp.
 type ManagedNodeType @aws_cognito_user_pools {
+	# A JSON Schema ( https://json-schema.org/ ) document that specifies the requirements for the config attribute of ManagedNodes created using this ManagedNodeType.
 	configTemplate: AWSJSON
 
 	# When and who created.
@@ -1534,16 +1559,19 @@ type ManagedNodeType @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String!
 
+	# The URI of the Docker image. Must be a public or a private AWS ECR repository.
 	imageUri: String!
 
 	# When and who modified.
 	lastModified: AtBy!
 
+	# The mount (i.e. - volume) requirements of the Docker image.
 	mountRequirements: [MountRequirement!]
 
 	# The name.
 	name: String!
 
+	# The port requirements of the Docker image.
 	portRequirements: [PortRequirement!]
 
 	# README in MarkDown format.
@@ -1582,7 +1610,17 @@ type ManagedNodeType @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	Update(description: String, imageUri: String, readme: String): ManagedNodeType!
+	# Updates and returns the ManagedNodeType.
+	Update(
+		# A human-readable description.
+		description: String,
+
+		# The URI of the Docker image. Must be a public or a private AWS ECR repository.
+		imageUri: String,
+
+		# README in MarkDown format.
+		readme: String
+	): ManagedNodeType!
 }
 
 # A (possibly) paginated result set.
@@ -1597,17 +1635,31 @@ type ManagedNodeTypeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+# Approximate counts of the messages currently on an Edge.
 type MessageCounts @aws_cognito_user_pools {
+	# The approximate total number of messages.
 	approximateNumberOfMessages: Int!
 
+	# The approximate number of messages that have had delivery delayed.
 	approximateNumberOfMessagesDelayed: Int!
 
+	# The approximate number of messages that have been received by a target Node
+	# but have not yet been deleted from the Edge (also known as in-flight).
 	approximateNumberOfMessagesNotVisible: Int!
 }
 
+# Represents a specific MessageType in the system. All messages sent or received
+# must be loosely associated (via Node and Edge typing) with a MessageType.
 type MessageType @aws_cognito_user_pools {
+	# A Python code string that contains a single top-level function definition.
+	# This function must have the signature (*, message, **kwargs) where
+	# message is a string and must return a flat dictionary.
 	auditor: String!
 
+	# A Python code string that contains a single top-level function definition.
+	# This function is used as a template when creating custom routing rules in RouterNodes
+	# that use this MessageType. This function must have the signature
+	# (*, context, message, source, **kwargs) and return an integer.
 	bitmapperTemplate: String!
 
 	# When and who created.
@@ -1628,6 +1680,7 @@ type MessageType @aws_cognito_user_pools {
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
 
+	# A sample message.
 	sampleMessage: String!
 
 	# True if this is an EchoStream system resource.
@@ -1636,6 +1689,10 @@ type MessageType @aws_cognito_user_pools {
 	# The Tenant.
 	tenant: Tenant
 
+	# A Python code string that contains a single top-level function definition.
+	# This function is used as a template when creating custom transformations in TransformerNodes
+	# that use this MessageType. This function must have the signature
+	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
 	transformerTemplate: String!
 
 	# Deletes this.
@@ -1659,7 +1716,37 @@ type MessageType @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	Update(auditor: String, bitmapperTemplate: String, description: String, readme: String, requirements: [String!], sampleMessage: String, transformerTemplate: String): MessageType!
+	# Updates and returns the MessageType.
+	Update(
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, message, **kwargs) where
+		# message is a string and must return a flat dictionary.
+		auditor: String,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom routing rules in RouterNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return an integer.
+		bitmapperTemplate: String,
+
+		# A human-readable description.
+		description: String,
+
+		# README in MarkDown format.
+		readme: String,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!],
+
+		# A sample message.
+		sampleMessage: String,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom transformations in TransformerNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		transformerTemplate: String
+	): MessageType!
 
 	# Validates the supplied code against the supplied message.
 	Validate(
@@ -1686,36 +1773,48 @@ type MessageTypeResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+# A fully defined mount in a ManagedNode's Docker container.
 type Mount @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String!
 
+	# The source of the mount. If not present, an anonymous volume will be created.
 	source: String
 
+	# The path to mount the volume in the Docker contatiner.
 	target: String!
 }
 
+# Mount input for mapping sources to targets in ManagedNodes.
 input MountInput {
+	# The source of the mount. If not present, an anonymous volume will be created.
 	source: String
 
+	# The path to mount the volume in the Docker contatiner.
 	target: String!
 }
 
+# Mount requirements defined in ManagedNodeTypes.
 type MountRequirement @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String!
 
+	# The source of the mount.
 	source: String
 
+	# The path to mount the volume in the Docker contatiner.
 	target: String!
 }
 
+# Mount requirement input for creating and updating ManagedNodeTypes.
 input MountRequirementInput {
 	# A human-readable description.
 	description: String!
 
+	# The source of the mount.
 	source: String
 
+	# The path to mount the volume in the Docker contatiner.
 	target: String!
 }
 
