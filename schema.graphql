@@ -289,7 +289,8 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	# The MessageType passed in to the Function.
 	argumentMessageType: MessageType!
 
-	# The code of the Function in Python string format.
+	# A Python code string that contains a single top-level function definition.
+	# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
 	code: String!
 
 	# When and who created.
@@ -339,7 +340,8 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 
 	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
 	Update(
-		# The code. Must be compilable Python code containing a single top-level function definition. Null is ignored.
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
 		code: String,
 
 		# The description. Null is ignored.
@@ -2949,7 +2951,10 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 	# The MessageType passed in to the Function.
 	argumentMessageType: MessageType!
 
-	# The code of the Function in Python string format.
+	# A Python code string that contains a single top-level function definition.
+	# This function is used as a template when creating custom transformations in TransformerNodes
+	# that use this MessageType. This function must have the signature
+	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
 	code: String!
 
 	# When and who created.
@@ -3001,7 +3006,10 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 
 	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
 	Update(
-		# The code. Must be compilable Python code containing a single top-level function definition. Null is ignored.
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom transformations in TransformerNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
 		code: String,
 
 		# The description. Null is ignored.
