@@ -2156,6 +2156,34 @@ type Mutation @aws_cognito_user_pools {
 		requirements: [String!]
 	): MessageType!
 
+	# Creates a ProcessorFunction and returns it.
+	CreateProcessorFunction(
+		# The name of the Tenant to create this in.
+		tenant: String!,
+
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
+		name: String!,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		code: String!,
+
+		# A human-readable description.
+		description: String!,
+
+		# The name of the MessageType.
+		argumentMessageType: String!,
+
+		# The README in MarkDown format.
+		readme: String,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!],
+
+		# The name of the MessageType that is returned.
+		returnMessageType: String
+	): ProcessorFunction!
+
 	# Creates a RouterNode and returns it.
 	CreateRouterNode(
 		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
@@ -2217,34 +2245,6 @@ type Mutation @aws_cognito_user_pools {
 		# A human-readable description.
 		description: String
 	): TimerNode!
-
-	# Creates a ProcessorFunction and returns it.
-	CreateTransformerFunction(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
-		name: String!,
-
-		# A Python code string that contains a single top-level function definition.
-		# This function must have the signature (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		code: String!,
-
-		# A human-readable description.
-		description: String!,
-
-		# The name of the MessageType.
-		argumentMessageType: String!,
-
-		# The README in MarkDown format.
-		readme: String,
-
-		# The list of Python requirements, in pip format.
-		requirements: [String!],
-
-		# The name of the MessageType that is returned.
-		returnMessageType: String
-	): ProcessorFunction!
 
 	# Creates a TransformerNode and returns it.
 	CreateTransformerNode(
@@ -2394,6 +2394,95 @@ type PresignedPost @aws_cognito_user_pools {
 
 	# The URL to POST to.
 	url: AWSURL!
+}
+
+type ProcessorFunction implements Function @aws_cognito_user_pools {
+	# The MessageType passed in to the Function.
+	argumentMessageType: MessageType!
+
+	# A Python code string that contains a single top-level function definition.
+	# This function is used as a template when creating custom transformations in TransformerNodes
+	# that use this MessageType. This function must have the signature
+	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+	code: String!
+
+	# When and who created.
+	created: AtBy!
+
+	# A human-readable description.
+	description: String!
+
+	# When and who modified.
+	lastModified: AtBy!
+
+	# The name.
+	name: String!
+
+	# README in MarkDown format.
+	readme: String
+
+	# The list of Python requirements, in pip format.
+	requirements: [String!]
+
+	returnMessageType: MessageType
+
+	# True if this is an EchoStream system resource.
+	system: Boolean
+
+	# The Tenant.
+	tenant: Tenant
+
+	# Deletes this.
+	Delete: Boolean!
+
+	# Lists the changes.
+	ListChanges(
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
+		exclusiveStartKey: AWSJSON,
+
+		# Used for limiting the number of results when paginating. Defaults to "all".
+		limit: Int, 
+
+		# True for ascending results, False for descending result. Defaults to True.
+		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): ChangeResult!
+
+	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
+	Update(
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom transformations in TransformerNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		code: String,
+
+		# The description. Null is ignored.
+		description: String,
+
+		# The README. Must be in MarkDown format. Null removes the readme.
+		# The README in MarkDown format.
+		readme: String,
+
+		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
+		requirements: [String!]
+	): ProcessorFunction!
+
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The message to use for validation.
+		message: String!,
+
+		# The code to validate.
+		code: String!,
+
+		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
 
 # Protocols supported by ManagedNodeType/ManageNode Ports.
@@ -2945,95 +3034,6 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	): ChangeResult!
 
 	Update(description: String): TimerNode!
-}
-
-type ProcessorFunction implements Function @aws_cognito_user_pools {
-	# The MessageType passed in to the Function.
-	argumentMessageType: MessageType!
-
-	# A Python code string that contains a single top-level function definition.
-	# This function is used as a template when creating custom transformations in TransformerNodes
-	# that use this MessageType. This function must have the signature
-	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-	code: String!
-
-	# When and who created.
-	created: AtBy!
-
-	# A human-readable description.
-	description: String!
-
-	# When and who modified.
-	lastModified: AtBy!
-
-	# The name.
-	name: String!
-
-	# README in MarkDown format.
-	readme: String
-
-	# The list of Python requirements, in pip format.
-	requirements: [String!]
-
-	returnMessageType: MessageType
-
-	# True if this is an EchoStream system resource.
-	system: Boolean
-
-	# The Tenant.
-	tenant: Tenant
-
-	# Deletes this.
-	Delete: Boolean!
-
-	# Lists the changes.
-	ListChanges(
-		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
-		endDateTime: AWSDateTime,
-
-		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
-		exclusiveStartKey: AWSJSON,
-
-		# Used for limiting the number of results when paginating. Defaults to "all".
-		limit: Int, 
-
-		# True for ascending results, False for descending result. Defaults to True.
-		sortAscending: Boolean,
-
-		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
-		startDateTime: AWSDateTime
-	): ChangeResult!
-
-	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
-	Update(
-		# A Python code string that contains a single top-level function definition.
-		# This function is used as a template when creating custom transformations in TransformerNodes
-		# that use this MessageType. This function must have the signature
-		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		code: String,
-
-		# The description. Null is ignored.
-		description: String,
-
-		# The README. Must be in MarkDown format. Null removes the readme.
-		# The README in MarkDown format.
-		readme: String,
-
-		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
-		requirements: [String!]
-	): ProcessorFunction!
-
-	# Validates the supplied code against the supplied message.
-	Validate(
-		# The message to use for validation.
-		message: String!,
-
-		# The code to validate.
-		code: String!,
-
-		# The loggingLevel to use duuring the validation. Defaults to INFO.
-		loggingLevel: LogLevel
-	): ValidationResult!
 }
 
 type TransformerNode implements Node @aws_cognito_user_pools {
