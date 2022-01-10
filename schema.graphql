@@ -714,8 +714,8 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	# This function is used as a template when creating custom transformations in TransformerNodes
 	# that use this MessageType. This function must have the signature
 	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-	# Mutually exclusive with managedTransformer.
-	inlineTransformer: String
+	# Mutually exclusive with managedProcessor.
+	inlineProcessor: String
 
 	# When and who modified.
 	lastModified: AtBy!
@@ -723,8 +723,8 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	# The logging level.
 	loggingLevel: LogLevel
 
-	# The managedTransformer. Mutually exclusive with the inlineTransformer.
-	managedTransformer: TransformerFunction
+	# The managedProcessor. Mutually exclusive with the inlineProcessor.
+	managedProcessor: ProcessorFunction
 
 	# The name.
 	name: String!
@@ -768,7 +768,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	# Lists log events that are emitted by the inlineProcessor/managedProcessor
 	ListLogEvents(
 		# The end date/time, inclusive, to list the log events to. Defaults to now.
 		endDateTime: AWSDateTime,
@@ -798,14 +798,14 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 		# This function is used as a template when creating custom transformations in TransformerNodes
 		# that use this MessageType. This function must have the signature
 		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		# Mutually exclusive with managedTransformer.
-		inlineTransformer: String,
+		# Mutually exclusive with managedProcessor.
+		inlineProcessor: String,
 
 		# The logging level.
 		loggingLevel: LogLevel,
 
-		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
-		managedTransformer: String,
+		# The name of a ProcessorFunction. Mutually exclusive with the inlineProcessor.
+		managedProcessor: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!],
@@ -852,7 +852,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 }
 
 # A union of all EchoStream object types
-union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | RouterNode | Tenant | TimerNode | TransformerFunction | TransformerNode
+union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | ProcessorFunction | RouterNode | Tenant | TimerNode | TransformerNode
 
 # Transmits messages between Nodes.
 type Edge @aws_cognito_user_pools {
@@ -1519,7 +1519,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	# Lists log events that are emitted by the inlineProcessor/managedProcessor
 	ListLogEvents(
 		# The end date/time, inclusive, to list the log events to. Defaults to now.
 		endDateTime: AWSDateTime,
@@ -1943,14 +1943,14 @@ type Mutation @aws_cognito_user_pools {
 		# This function is used as a template when creating custom transformations in TransformerNodes
 		# that use this MessageType. This function must have the signature
 		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		# Mutually exclusive with managedTransformer.
-		inlineTransformer: String,
+		# Mutually exclusive with managedProcessor.
+		inlineProcessor: String,
 
 		# The logging level. Defaults to INFO.
 		loggingLevel: LogLevel,
 
-		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
-		managedTransformer: String,
+		# The name of a ProcessorFunction. Mutually exclusive with the inlineProcessor.
+		managedProcessor: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
@@ -2218,7 +2218,7 @@ type Mutation @aws_cognito_user_pools {
 		description: String
 	): TimerNode!
 
-	# Creates a TransformerFunction and returns it.
+	# Creates a ProcessorFunction and returns it.
 	CreateTransformerFunction(
 		# The name of the Tenant to create this in.
 		tenant: String!,
@@ -2244,7 +2244,7 @@ type Mutation @aws_cognito_user_pools {
 
 		# The name of the MessageType that is returned.
 		returnMessageType: String
-	): TransformerFunction!
+	): ProcessorFunction!
 
 	# Creates a TransformerNode and returns it.
 	CreateTransformerNode(
@@ -2267,14 +2267,14 @@ type Mutation @aws_cognito_user_pools {
 		# This function is used as a template when creating custom transformations in TransformerNodes
 		# that use this MessageType. This function must have the signature
 		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		# Mutually exclusive with managedTransformer.
-		inlineTransformer: String,
+		# Mutually exclusive with managedProcessor.
+		inlineProcessor: String,
 
 		# The logging level. Defaults to INFO.
 		loggingLevel: LogLevel,
 
-		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
-		managedTransformer: String,
+		# The name of a ProcessorFunction. Mutually exclusive with the inlineProcessor.
+		managedProcessor: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!],
@@ -2717,7 +2717,7 @@ type RouterNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	# Lists log events that are emitted by the inlineProcessor/managedProcessor
 	ListLogEvents(
 		# The end date/time, inclusive, to list the log events to. Defaults to now.
 		endDateTime: AWSDateTime,
@@ -2947,7 +2947,7 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	Update(description: String): TimerNode!
 }
 
-type TransformerFunction implements Function @aws_cognito_user_pools {
+type ProcessorFunction implements Function @aws_cognito_user_pools {
 	# The MessageType passed in to the Function.
 	argumentMessageType: MessageType!
 
@@ -3021,7 +3021,7 @@ type TransformerFunction implements Function @aws_cognito_user_pools {
 
 		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
 		requirements: [String!]
-	): TransformerFunction!
+	): ProcessorFunction!
 
 	# Validates the supplied code against the supplied message.
 	Validate(
@@ -3050,8 +3050,8 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	# This function is used as a template when creating custom transformations in TransformerNodes
 	# that use this MessageType. This function must have the signature
 	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-	# Mutually exclusive with managedTransformer.
-	inlineTransformer: String
+	# Mutually exclusive with managedProcessor.
+	inlineProcessor: String
 
 	# When and who modified.
 	lastModified: AtBy!
@@ -3059,8 +3059,8 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	# The logging level.
 	loggingLevel: LogLevel
 
-	# The managedTransformer. Mutually exclusive with the inlineTransformer.
-	managedTransformer: TransformerFunction
+	# The managedProcessor. Mutually exclusive with the inlineProcessor.
+	managedProcessor: ProcessorFunction
 
 	# The name.
 	name: String!
@@ -3110,7 +3110,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	# Lists log events that are emitted by the inlineProcessor/managedProcessor
 	ListLogEvents(
 		# The end date/time, inclusive, to list the log events to. Defaults to now.
 		endDateTime: AWSDateTime,
@@ -3140,14 +3140,14 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 		# This function is used as a template when creating custom transformations in TransformerNodes
 		# that use this MessageType. This function must have the signature
 		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		# Mutually exclusive with managedTransformer.
-		inlineTransformer: String,
+		# Mutually exclusive with managedProcessor.
+		inlineProcessor: String,
 
 		# The logging level applied to the transformer function.
 		loggingLevel: LogLevel,
 
-		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
-		managedTransformer: String,
+		# The name of a ProcessorFunction. Mutually exclusive with the inlineProcessor.
+		managedProcessor: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!],
