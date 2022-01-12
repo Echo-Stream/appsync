@@ -368,6 +368,127 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	): ValidationResult!
 }
 
+type BitmapRouterNode implements Node @aws_cognito_user_pools {
+	# The config, in JSON object format (i.e. - dict, map).
+	config: AWSJSON
+
+	# When and who created.
+	created: AtBy!
+
+	# A human-readable description.
+	description: String
+
+	# A Python code string that contains a single top-level function definition.
+	# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
+	# Mutually exclusive with managedBitmapper.
+	inlineBitmapper: String
+
+	# When and who modified.
+	lastModified: AtBy!
+
+	# The logging level.
+	loggingLevel: LogLevel
+
+	managedBitmapper: BitmapperFunction
+
+	# The name.
+	name: String!
+
+	# A list of the Edges messages are received on.
+	receiveEdges: [Edge]
+
+	# The MessageType that this Node is capable of receiving.
+	receiveMessageType: MessageType
+
+	# The list of Python requirements, in pip format.
+	requirements: [String!]
+
+	# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
+	routeTable: AWSJSON!
+
+	# A list of the Edges messages are sent on.
+	sendEdges: [Edge]
+
+	# The MessageType that this Node is capable of sending.
+	sendMessageType: MessageType
+
+	# The Tenant.
+	tenant: Tenant!
+
+	# Deletes this Node and all of its Edges.
+	Delete(
+		# If sending Edges attached to this Nodes should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
+
+	# Lists the changes.
+	ListChanges(
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
+		exclusiveStartKey: AWSJSON,
+
+		# Used for limiting the number of results when paginating. Defaults to "all".
+		limit: Int, 
+
+		# True for ascending results, False for descending result. Defaults to True.
+		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): ChangeResult!
+
+	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	ListLogEvents(
+		# The end date/time, inclusive, to list the log events to. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The filter pattern to apply, in AWS Cloudwatch Logs filter pattern format ( https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html ).
+		filterPattern: String,
+
+		# The number of log events to return. Maximum 10,000.
+		limit: Int,
+
+		# The nextToken returned from a previous call to ListLogEvents.
+		nextToken: String,
+
+		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): LogEventResults!
+
+
+	Update(
+		config: AWSJSON,
+		description: String,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
+		# Mutually exclusive with managedBitmapper.
+		inlineBitmapper: String,
+
+		# The logging level.
+		loggingLevel: LogLevel,
+		managedBitmapper: String,
+		requirements: [String!],
+
+		# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
+		routeTable: AWSJSON
+	): BitmapRouterNode!
+
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The message to use for validation.
+		message: String!,
+
+		# The code to validate.
+		code: String!,
+
+		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
+}
+
 # Bulk data storage URLs.
 type BulkDataStorage @aws_cognito_user_pools {
 	# The presigned GET URL. Intended on being embedded in a message as a "ticket". Will return the data stored using the presignedPost.
@@ -852,7 +973,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 }
 
 # A union of all EchoStream object types
-union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | ProcessorFunction | ProcessorNode | RouterNode | Tenant | TimerNode
+union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | BitmapRouterNode | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | ProcessorFunction | ProcessorNode | Tenant | TimerNode
 
 # Transmits messages between Nodes.
 type Edge @aws_cognito_user_pools {
@@ -1871,6 +1992,41 @@ type Mutation @aws_cognito_user_pools {
 		requirements: [String!]
 	): BitmapperFunction!
 
+	# Creates a BitmapRouterNode and returns it.
+	CreateBitmapRouterNode(
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
+		name: String!,
+
+		# The name of the MessageType that will be received.
+		receiveMessageType: String!,
+
+		# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
+		routeTable: AWSJSON!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
+
+		# The config, in JSON object format (i.e. - dict, map).
+		config: AWSJSON,
+
+		# A human-readable description.
+		description: String,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
+		# Mutually exclusive with managedBitmapper.
+		inlineBitmapper: String,
+
+		# The logging level. Defaults to INFO.
+		loggingLevel: LogLevel,
+
+		# The name of the BitmapperFunction. Mutually exclusive with inlineBitmapper.
+		managedBitmapper: String,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!]
+	): BitmapRouterNode!
+
 	# Creates a new CrossAccountApp and returns it.
 	CreateCrossAccountApp(
 		# The AWS account number that is authorized to use this App's EchoStream Cloud resources.
@@ -2734,127 +2890,6 @@ union RemoteApp = CrossAccountApp | ExternalApp
 
 # union of AppChangeReceiverNode and ExternalNode
 union RemoteAppNode = AppChangeReceiverNode | ExternalNode
-
-type RouterNode implements Node @aws_cognito_user_pools {
-	# The config, in JSON object format (i.e. - dict, map).
-	config: AWSJSON
-
-	# When and who created.
-	created: AtBy!
-
-	# A human-readable description.
-	description: String
-
-	# A Python code string that contains a single top-level function definition.
-	# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
-	# Mutually exclusive with managedBitmapper.
-	inlineBitmapper: String
-
-	# When and who modified.
-	lastModified: AtBy!
-
-	# The logging level.
-	loggingLevel: LogLevel
-
-	managedBitmapper: BitmapperFunction
-
-	# The name.
-	name: String!
-
-	# A list of the Edges messages are received on.
-	receiveEdges: [Edge]
-
-	# The MessageType that this Node is capable of receiving.
-	receiveMessageType: MessageType
-
-	# The list of Python requirements, in pip format.
-	requirements: [String!]
-
-	# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
-	routeTable: AWSJSON!
-
-	# A list of the Edges messages are sent on.
-	sendEdges: [Edge]
-
-	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType
-
-	# The Tenant.
-	tenant: Tenant!
-
-	# Deletes this Node and all of its Edges.
-	Delete(
-		# If sending Edges attached to this Nodes should be drained. Defaults to True.
-		drainEdges: Boolean
-	): Boolean!
-
-	# Lists the changes.
-	ListChanges(
-		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
-		endDateTime: AWSDateTime,
-
-		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
-		exclusiveStartKey: AWSJSON,
-
-		# Used for limiting the number of results when paginating. Defaults to "all".
-		limit: Int, 
-
-		# True for ascending results, False for descending result. Defaults to True.
-		sortAscending: Boolean,
-
-		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
-		startDateTime: AWSDateTime
-	): ChangeResult!
-
-	# Lists log events that are emitted by the inlineProcessor/managedProcessor
-	ListLogEvents(
-		# The end date/time, inclusive, to list the log events to. Defaults to now.
-		endDateTime: AWSDateTime,
-
-		# The filter pattern to apply, in AWS Cloudwatch Logs filter pattern format ( https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html ).
-		filterPattern: String,
-
-		# The number of log events to return. Maximum 10,000.
-		limit: Int,
-
-		# The nextToken returned from a previous call to ListLogEvents.
-		nextToken: String,
-
-		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
-		startDateTime: AWSDateTime
-	): LogEventResults!
-
-
-	Update(
-		config: AWSJSON,
-		description: String,
-
-		# A Python code string that contains a single top-level function definition.
-		# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
-		# Mutually exclusive with managedBitmapper.
-		inlineBitmapper: String,
-
-		# The logging level.
-		loggingLevel: LogLevel,
-		managedBitmapper: String,
-		requirements: [String!],
-
-		# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
-		routeTable: AWSJSON
-	): RouterNode!
-
-	# Validates the supplied code against the supplied message.
-	Validate(
-		# The message to use for validation.
-		message: String!,
-
-		# The code to validate.
-		code: String!,
-
-		# The loggingLevel to use duuring the validation. Defaults to INFO.
-		loggingLevel: LogLevel
-	): ValidationResult!
-}
 
 type Tenant @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
