@@ -832,11 +832,11 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	description: String
 
 	# A Python code string that contains a single top-level function definition.
-	# This function is used as a template when creating custom transformations in TransformerNodes
+	# This function is used as a template when creating custom processing in ProcessorNodes
 	# that use this MessageType. This function must have the signature
 	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-	# Mutually exclusive with managedTransformer.
-	inlineTransformer: String
+	# Mutually exclusive with managedProcessor.
+	inlineProcessor: String
 
 	# When and who modified.
 	lastModified: AtBy!
@@ -844,8 +844,8 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	# The logging level.
 	loggingLevel: LogLevel
 
-	# The managedTransformer. Mutually exclusive with the inlineTransformer.
-	managedTransformer: TransformerFunction
+	# The managedProcessor. Mutually exclusive with the inlineProcessor.
+	managedProcessor: ProcessorFunction
 
 	# The name.
 	name: String!
@@ -889,7 +889,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	# Lists log events that are emitted by the inlineProcessor/managedProcessor
 	ListLogEvents(
 		# The end date/time, inclusive, to list the log events to. Defaults to now.
 		endDateTime: AWSDateTime,
@@ -916,17 +916,17 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 		description: String,
 
 		# A Python code string that contains a single top-level function definition.
-		# This function is used as a template when creating custom transformations in TransformerNodes
+		# This function is used as a template when creating custom processing in ProcessorNodes
 		# that use this MessageType. This function must have the signature
 		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		# Mutually exclusive with managedTransformer.
-		inlineTransformer: String,
+		# Mutually exclusive with managedProcessor.
+		inlineProcessor: String,
 
 		# The logging level.
 		loggingLevel: LogLevel,
 
-		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
-		managedTransformer: String,
+		# The name of a ProcessorFunction. Mutually exclusive with the inlineProcessor.
+		managedProcessor: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!],
@@ -973,7 +973,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 }
 
 # A union of all EchoStream object types
-union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | BitmapRouterNode | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | Tenant | TimerNode | TransformerFunction | TransformerNode
+union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | BitmapRouterNode | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | ProcessorFunction | ProcessorNode | Tenant | TimerNode
 
 # Transmits messages between Nodes.
 type Edge @aws_cognito_user_pools {
@@ -1640,7 +1640,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	# Lists log events that are emitted by the inlineProcessor/managedProcessor
 	ListLogEvents(
 		# The end date/time, inclusive, to list the log events to. Defaults to now.
 		endDateTime: AWSDateTime,
@@ -1806,6 +1806,12 @@ type MessageType @aws_cognito_user_pools {
 	# The name.
 	name: String!
 
+	# A Python code string that contains a single top-level function definition.
+	# This function is used as a template when creating custom processing in ProcessorNodes
+	# that use this MessageType. This function must have the signature
+	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+	processorTemplate: String!
+
 	# README in MarkDown format.
 	readme: String
 
@@ -1820,12 +1826,6 @@ type MessageType @aws_cognito_user_pools {
 
 	# The Tenant.
 	tenant: Tenant
-
-	# A Python code string that contains a single top-level function definition.
-	# This function is used as a template when creating custom transformations in TransformerNodes
-	# that use this MessageType. This function must have the signature
-	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-	transformerTemplate: String!
 
 	# Deletes this.
 	Delete: Boolean!
@@ -1864,6 +1864,12 @@ type MessageType @aws_cognito_user_pools {
 		# A human-readable description.
 		description: String,
 
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom processing in ProcessorNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		processorTemplate: String
+
 		# README in MarkDown format.
 		# The README in MarkDown format.
 		readme: String,
@@ -1873,12 +1879,6 @@ type MessageType @aws_cognito_user_pools {
 
 		# A sample message.
 		sampleMessage: String,
-
-		# A Python code string that contains a single top-level function definition.
-		# This function is used as a template when creating custom transformations in TransformerNodes
-		# that use this MessageType. This function must have the signature
-		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		transformerTemplate: String
 	): MessageType!
 
 	# Validates the supplied code against the supplied message.
@@ -2096,17 +2096,17 @@ type Mutation @aws_cognito_user_pools {
 		description: String,
 
 		# A Python code string that contains a single top-level function definition.
-		# This function is used as a template when creating custom transformations in TransformerNodes
+		# This function is used as a template when creating custom processing in ProcessorNodes
 		# that use this MessageType. This function must have the signature
 		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		# Mutually exclusive with managedTransformer.
-		inlineTransformer: String,
+		# Mutually exclusive with managedProcessor.
+		inlineProcessor: String,
 
 		# The logging level. Defaults to INFO.
 		loggingLevel: LogLevel,
 
-		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
-		managedTransformer: String,
+		# The name of a ProcessorFunction. Mutually exclusive with the inlineProcessor.
+		managedProcessor: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
@@ -2293,17 +2293,17 @@ type Mutation @aws_cognito_user_pools {
 		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z][A-Za-z0-9\-_\.]{3,24}$"
 		name: String!,
 
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom processing in ProcessorNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		processorTemplate: String!,
+
 		# A sample message.
 		sampleMessage: String!,
 
 		# The name of the Tenant to create this in.
 		tenant: String!,
-
-		# A Python code string that contains a single top-level function definition.
-		# This function is used as a template when creating custom transformations in TransformerNodes
-		# that use this MessageType. This function must have the signature
-		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		transformerTemplate: String!,
 
 		# The README in MarkDown format.
 		readme: String,
@@ -2311,6 +2311,109 @@ type Mutation @aws_cognito_user_pools {
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
 	): MessageType!
+
+	# Creates a ProcessorFunction and returns it.
+	CreateProcessorFunction(
+		# The name of the Tenant to create this in.
+		tenant: String!,
+
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
+		name: String!,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		code: String!,
+
+		# A human-readable description.
+		description: String!,
+
+		# The name of the MessageType.
+		argumentMessageType: String!,
+
+		# The README in MarkDown format.
+		readme: String,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!],
+
+		# The name of the MessageType that is returned.
+		returnMessageType: String
+	): ProcessorFunction!
+
+	# Creates a ProcessorNode and returns it.
+	CreateProcessorNode(
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
+		name: String!,
+
+		# The name of the MessageType that will be received.
+		receiveMessageType: String!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
+
+		# The config, in JSON object format (i.e. - dict, map).
+		config: AWSJSON,
+
+		# A human-readable description.
+		description: String,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom processing in ProcessorNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		# Mutually exclusive with managedProcessor.
+		inlineProcessor: String,
+
+		# The logging level. Defaults to INFO.
+		loggingLevel: LogLevel,
+
+		# The name of a ProcessorFunction. Mutually exclusive with the inlineProcessor.
+		managedProcessor: String,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!],
+
+		# The name of the MessageType that will be sent. Defaults to null.
+		sendMessageType: String,
+
+		# True if messages should not be processed concurrently. If False, messages are processed concurrently. Defaults to False.
+		sequentialProcessing: Boolean
+	): ProcessorNode!
+
+	# Creates a RouterNode and returns it.
+	CreateRouterNode(
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
+		name: String!,
+
+		# The name of the MessageType that will be received.
+		receiveMessageType: String!,
+
+		# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
+		routeTable: AWSJSON!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
+
+		# The config, in JSON object format (i.e. - dict, map).
+		config: AWSJSON,
+
+		# A human-readable description.
+		description: String,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
+		# Mutually exclusive with managedBitmapper.
+		inlineBitmapper: String,
+
+		# The logging level. Defaults to INFO.
+		loggingLevel: LogLevel,
+
+		# The name of the BitmapperFunction. Mutually exclusive with inlineBitmapper.
+		managedBitmapper: String,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!]
+	): RouterNode!
 
 	# Creates a Tenant and returns it.
 	CreateTenant(
@@ -2338,74 +2441,6 @@ type Mutation @aws_cognito_user_pools {
 		# A human-readable description.
 		description: String
 	): TimerNode!
-
-	# Creates a TransformerFunction and returns it.
-	CreateTransformerFunction(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
-		name: String!,
-
-		# A Python code string that contains a single top-level function definition.
-		# This function must have the signature (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		code: String!,
-
-		# A human-readable description.
-		description: String!,
-
-		# The name of the MessageType.
-		argumentMessageType: String!,
-
-		# The README in MarkDown format.
-		readme: String,
-
-		# The list of Python requirements, in pip format.
-		requirements: [String!],
-
-		# The name of the MessageType that is returned.
-		returnMessageType: String
-	): TransformerFunction!
-
-	# Creates a TransformerNode and returns it.
-	CreateTransformerNode(
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
-		name: String!,
-
-		# The name of the MessageType that will be received.
-		receiveMessageType: String!,
-
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
-		# The config, in JSON object format (i.e. - dict, map).
-		config: AWSJSON,
-
-		# A human-readable description.
-		description: String,
-
-		# A Python code string that contains a single top-level function definition.
-		# This function is used as a template when creating custom transformations in TransformerNodes
-		# that use this MessageType. This function must have the signature
-		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		# Mutually exclusive with managedTransformer.
-		inlineTransformer: String,
-
-		# The logging level. Defaults to INFO.
-		loggingLevel: LogLevel,
-
-		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
-		managedTransformer: String,
-
-		# The list of Python requirements, in pip format.
-		requirements: [String!],
-
-		# The name of the MessageType that will be sent. Defaults to null.
-		sendMessageType: String,
-
-		# True if messages should not be processed concurrently. If False, messages are processed concurrently. Defaults to False.
-		sequentialProcessing: Boolean
-	): TransformerNode!
 }
 
 # Defines the requirements for all Node types
@@ -2515,6 +2550,95 @@ type PresignedPost @aws_cognito_user_pools {
 
 	# The URL to POST to.
 	url: AWSURL!
+}
+
+type ProcessorFunction implements Function @aws_cognito_user_pools {
+	# The MessageType passed in to the Function.
+	argumentMessageType: MessageType!
+
+	# A Python code string that contains a single top-level function definition.
+	# This function is used as a template when creating custom processing in ProcessorNodes
+	# that use this MessageType. This function must have the signature
+	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+	code: String!
+
+	# When and who created.
+	created: AtBy!
+
+	# A human-readable description.
+	description: String!
+
+	# When and who modified.
+	lastModified: AtBy!
+
+	# The name.
+	name: String!
+
+	# README in MarkDown format.
+	readme: String
+
+	# The list of Python requirements, in pip format.
+	requirements: [String!]
+
+	returnMessageType: MessageType
+
+	# True if this is an EchoStream system resource.
+	system: Boolean
+
+	# The Tenant.
+	tenant: Tenant
+
+	# Deletes this.
+	Delete: Boolean!
+
+	# Lists the changes.
+	ListChanges(
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
+		exclusiveStartKey: AWSJSON,
+
+		# Used for limiting the number of results when paginating. Defaults to "all".
+		limit: Int, 
+
+		# True for ascending results, False for descending result. Defaults to True.
+		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): ChangeResult!
+
+	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
+	Update(
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom processing in ProcessorNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		code: String,
+
+		# The description. Null is ignored.
+		description: String,
+
+		# The README. Must be in MarkDown format. Null removes the readme.
+		# The README in MarkDown format.
+		readme: String,
+
+		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
+		requirements: [String!]
+	): ProcessorFunction!
+
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The message to use for validation.
+		message: String!,
+
+		# The code to validate.
+		code: String!,
+
+		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
 
 # Protocols supported by ManagedNodeType/ManageNode Ports.
@@ -2947,96 +3071,7 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	Update(description: String): TimerNode!
 }
 
-type TransformerFunction implements Function @aws_cognito_user_pools {
-	# The MessageType passed in to the Function.
-	argumentMessageType: MessageType!
-
-	# A Python code string that contains a single top-level function definition.
-	# This function is used as a template when creating custom transformations in TransformerNodes
-	# that use this MessageType. This function must have the signature
-	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-	code: String!
-
-	# When and who created.
-	created: AtBy!
-
-	# A human-readable description.
-	description: String!
-
-	# When and who modified.
-	lastModified: AtBy!
-
-	# The name.
-	name: String!
-
-	# README in MarkDown format.
-	readme: String
-
-	# The list of Python requirements, in pip format.
-	requirements: [String!]
-
-	returnMessageType: MessageType
-
-	# True if this is an EchoStream system resource.
-	system: Boolean
-
-	# The Tenant.
-	tenant: Tenant
-
-	# Deletes this.
-	Delete: Boolean!
-
-	# Lists the changes.
-	ListChanges(
-		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
-		endDateTime: AWSDateTime,
-
-		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
-		exclusiveStartKey: AWSJSON,
-
-		# Used for limiting the number of results when paginating. Defaults to "all".
-		limit: Int, 
-
-		# True for ascending results, False for descending result. Defaults to True.
-		sortAscending: Boolean,
-
-		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
-		startDateTime: AWSDateTime
-	): ChangeResult!
-
-	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
-	Update(
-		# A Python code string that contains a single top-level function definition.
-		# This function is used as a template when creating custom transformations in TransformerNodes
-		# that use this MessageType. This function must have the signature
-		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		code: String,
-
-		# The description. Null is ignored.
-		description: String,
-
-		# The README. Must be in MarkDown format. Null removes the readme.
-		# The README in MarkDown format.
-		readme: String,
-
-		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
-		requirements: [String!]
-	): TransformerFunction!
-
-	# Validates the supplied code against the supplied message.
-	Validate(
-		# The message to use for validation.
-		message: String!,
-
-		# The code to validate.
-		code: String!,
-
-		# The loggingLevel to use duuring the validation. Defaults to INFO.
-		loggingLevel: LogLevel
-	): ValidationResult!
-}
-
-type TransformerNode implements Node @aws_cognito_user_pools {
+type ProcessorNode implements Node @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 
@@ -3047,11 +3082,11 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	description: String
 
 	# A Python code string that contains a single top-level function definition.
-	# This function is used as a template when creating custom transformations in TransformerNodes
+	# This function is used as a template when creating custom processing in ProcessorNodes
 	# that use this MessageType. This function must have the signature
 	# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-	# Mutually exclusive with managedTransformer.
-	inlineTransformer: String
+	# Mutually exclusive with managedProcessor.
+	inlineProcessor: String
 
 	# When and who modified.
 	lastModified: AtBy!
@@ -3059,8 +3094,8 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 	# The logging level.
 	loggingLevel: LogLevel
 
-	# The managedTransformer. Mutually exclusive with the inlineTransformer.
-	managedTransformer: TransformerFunction
+	# The managedProcessor. Mutually exclusive with the inlineProcessor.
+	managedProcessor: ProcessorFunction
 
 	# The name.
 	name: String!
@@ -3110,7 +3145,7 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	# Lists log events that are emitted by the inlineTransformer/managedTransformer
+	# Lists log events that are emitted by the inlineProcessor/managedProcessor
 	ListLogEvents(
 		# The end date/time, inclusive, to list the log events to. Defaults to now.
 		endDateTime: AWSDateTime,
@@ -3137,24 +3172,24 @@ type TransformerNode implements Node @aws_cognito_user_pools {
 		description: String,
 
 		# A Python code string that contains a single top-level function definition.
-		# This function is used as a template when creating custom transformations in TransformerNodes
+		# This function is used as a template when creating custom processing in ProcessorNodes
 		# that use this MessageType. This function must have the signature
 		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		# Mutually exclusive with managedTransformer.
-		inlineTransformer: String,
+		# Mutually exclusive with managedProcessor.
+		inlineProcessor: String,
 
-		# The logging level applied to the transformer function.
+		# The logging level applied to the processor function.
 		loggingLevel: LogLevel,
 
-		# The name of a TransformerFunction. Mutually exclusive with the inlineTransformer.
-		managedTransformer: String,
+		# The name of a ProcessorFunction. Mutually exclusive with the inlineProcessor.
+		managedProcessor: String,
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!],
 
 		# True if messages should not be processed concurrently. If False, messages are processed concurrently.
 		sequentialProcessing: Boolean
-	): TransformerNode!
+	): ProcessorNode!
 
 	# Validates the supplied code against the supplied message.
 	Validate(
