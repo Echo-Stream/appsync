@@ -2380,41 +2380,6 @@ type Mutation @aws_cognito_user_pools {
 		sequentialProcessing: Boolean
 	): ProcessorNode!
 
-	# Creates a RouterNode and returns it.
-	CreateRouterNode(
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\.:/=+\-@ ]{3,80}$"
-		name: String!,
-
-		# The name of the MessageType that will be received.
-		receiveMessageType: String!,
-
-		# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
-		routeTable: AWSJSON!,
-
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
-		# The config, in JSON object format (i.e. - dict, map).
-		config: AWSJSON,
-
-		# A human-readable description.
-		description: String,
-
-		# A Python code string that contains a single top-level function definition.
-		# This function must have the signature (*, context, message, source, **kwargs) and return an integer.
-		# Mutually exclusive with managedBitmapper.
-		inlineBitmapper: String,
-
-		# The logging level. Defaults to INFO.
-		loggingLevel: LogLevel,
-
-		# The name of the BitmapperFunction. Mutually exclusive with inlineBitmapper.
-		managedBitmapper: String,
-
-		# The list of Python requirements, in pip format.
-		requirements: [String!]
-	): RouterNode!
-
 	# Creates a Tenant and returns it.
 	CreateTenant(
 		# The name. Must be unique within the EchoStream. Must conform to the regular expression "^[A-Za-z0-9:/_\-]{8,80}$"
