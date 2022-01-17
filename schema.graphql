@@ -3185,6 +3185,9 @@ type TenantUserResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+# TimerNodes emit echo.timer messages on a time period defined by the
+# scheduleExpression. They can be used to cause other Nodes (normally ProcessorNodes)
+# to perform complex actions on a schedule (e.g. - polling an API every 15 minutes).
 type TimerNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
