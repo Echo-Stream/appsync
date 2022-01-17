@@ -2532,6 +2532,8 @@ type PresignedPost @aws_cognito_user_pools {
 	url: AWSURL!
 }
 
+# A managed Function used in either a ProcessorNode or a
+# CrossTenantSendingNode.
 type ProcessorFunction implements Function @aws_cognito_user_pools {
 	# The MessageType passed in to the Function.
 	argumentMessageType: MessageType!
@@ -2560,6 +2562,7 @@ type ProcessorFunction implements Function @aws_cognito_user_pools {
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
 
+	# The MessageType returned by the Function.
 	returnMessageType: MessageType
 
 	# True if this is an EchoStream system resource.
