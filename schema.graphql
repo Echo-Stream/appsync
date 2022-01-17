@@ -122,6 +122,8 @@ enum ApiUserRole {
 	user
 }
 
+# Apps are containers of Nodes at the edges of a Tenant network. In most cases they provide for a common
+# config and permissions to the contained Nodes.
 interface App @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -368,6 +370,9 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 	): ValidationResult!
 }
 
+# BitMapRouterNodes use a bitmapper function (either inline or referenced) to construct a bitmap
+# of truthy values for each message processed. The message bitmap is then and'ed with route bitmaps. If the result
+# of the and is equal to the route bitmap then the message is sent along that route.
 type BitmapRouterNode implements Node @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
@@ -389,6 +394,7 @@ type BitmapRouterNode implements Node @aws_cognito_user_pools {
 	# The logging level.
 	loggingLevel: LogLevel
 
+	# A managed BitmapperFunction. Mutually exclusive with inlineBitmapper.
 	managedBitmapper: BitmapperFunction
 
 	# The name.
@@ -458,8 +464,12 @@ type BitmapRouterNode implements Node @aws_cognito_user_pools {
 	): LogEventResults!
 
 
+	# Updates and returns the BitmapRouterNode
 	Update(
+		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON,
+
+		# A human-readable description.
 		description: String,
 
 		# A Python code string that contains a single top-level function definition.
@@ -469,7 +479,11 @@ type BitmapRouterNode implements Node @aws_cognito_user_pools {
 
 		# The logging level.
 		loggingLevel: LogLevel,
+
+		# The name of a managed BitmapperFunction. Mutually exclusive with inlineBitmapper.
 		managedBitmapper: String,
+
+		# The list of Python requirements, in pip format.
 		requirements: [String!],
 
 		# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
@@ -1612,6 +1626,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	CreateAuditRecords(
 		# The name of the MessageType of the auditRecords.
 		messageType: String!,
+		
 		# The list of audit records to create
 		auditRecords: [AuditRecord!]!
 	): Boolean!
@@ -2606,6 +2621,8 @@ type ProcessorFunction implements Function @aws_cognito_user_pools {
 	): ValidationResult!
 }
 
+# ProcessorNodes allow for almost any processing of messages, including transformation,
+# augmentation, generation, combination and splitting.
 type ProcessorNode implements Node @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
@@ -2989,6 +3006,9 @@ union RemoteApp = CrossAccountApp | ExternalApp
 # union of AppChangeReceiverNode and ExternalNode
 union RemoteAppNode = AppChangeReceiverNode | ExternalNode
 
+# Tenants contain a network of Nodes. They are constrained to a single
+# AWS region and allow for secure processing of messages within the
+# Network.
 type Tenant @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
@@ -3005,13 +3025,24 @@ type Tenant @aws_cognito_user_pools {
 	# The name.
 	name: String!
 
+	# The AWS region.
 	region: String!
 
+	# The name of the Tenant's DynamoDB table.
 	table: String!
 
+	# A list of users authorized to work in this Tenant.
 	users: [TenantUser!]
 
-	AddUser(email: String!, role: UserRole!): TenantUser!
+	# Adds the specified user to the Tenant. If the user is not already
+	# an EchoStream user an invite will be sent.
+	AddUser(
+		# The email.
+		email: String!,
+
+		# The role.
+		role: UserRole!
+	): TenantUser!
 
 	# Deletes this.
 	Delete: Boolean!
@@ -3034,7 +3065,14 @@ type Tenant @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	Update(config: AWSJSON, description: String): Tenant!
+	# Updates and returns the Tenant.
+	Update(
+		# The config, in JSON object format (i.e. - dict, map). Null is ignored.
+		config: AWSJSON,
+
+		# A human-readable description.
+		description: String
+	): Tenant!
 }
 
 # A (possibly) paginated result set.
@@ -3049,29 +3087,38 @@ type TenantResult @aws_cognito_user_pools {
 	scannedCount: Int
 }
 
+# Represents a user in EchoStream that is authorized within
+# a Tenant.
 type TenantUser @aws_cognito_user_pools {
+	# When the user became active.
 	activeAt: String
 
 	# When and who created.
 	created: AtBy!
 
+	# The email.
 	email: AWSEmail!
 
+	# The first name.
 	firstName: String
 
+	# A set of layouts of the Tenant. Only ushoudl be used by the
+	# EchoStream Application UI.
 	graphLayouts: [GraphLayout!]
 
+	# When this user was invited to the Tenant.
 	invitationAt: String
-
-	invitationToken: String
 
 	# When and who modified.
 	lastModified: AtBy!
 
+	# The last name.
 	lastName: String
 
+	# The role.
 	role: UserRole!
 
+	# The status.
 	status: UserStatus!
 
 	# The Tenant.
@@ -3080,7 +3127,11 @@ type TenantUser @aws_cognito_user_pools {
 	# Deletes this.
 	Delete: Boolean!
 
-	DeleteGraphLayout(name: String!): Boolean!
+	# Deletes a graph layout.
+	DeleteGraphLayout(
+		# The name of the layout.
+		name: String!
+	): Boolean!
 
 	# Lists the changes.
 	ListChanges(
@@ -3100,9 +3151,23 @@ type TenantUser @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	SaveGraphLayout(name: String!, layout: AWSJSON!): GraphLayout!
+	# Saves aand returns a graph layout.
+	SaveGraphLayout(
+		# The name of the layout.
+		name: String!,
 
-	Update(role: UserRole, status: UserStatus): TenantUser!
+		# The layout.
+		layout: AWSJSON!
+	): GraphLayout!
+
+	# Updates and returns the TenantUser.
+	Update(
+		# The role. Null is ignored.
+		role: UserRole,
+
+		# The status. Null is ignored.
+		status: UserStatus
+	): TenantUser!
 }
 
 # A (possibly) paginated result set.
@@ -3166,7 +3231,11 @@ type TimerNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	Update(description: String): TimerNode!
+	# Updates and returns the TimerNode.
+	Update(
+		# A human-readable description.
+		description: String
+	): TimerNode!
 }
 
 # List of the allowable roles for TenantUsers
@@ -3185,10 +3254,14 @@ enum UserStatus {
 	pending
 }
 
+# The result of a Validate call.
 type ValidationResult @aws_cognito_user_pools {
+	# The logs output by the Validate call.
 	logs: String!
 
+	# The result of the Validate call.
 	result: AWSJSON!
 
+	# Any output to stdout during the execution of the Validate call.
 	stdout: String!
 }
