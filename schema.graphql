@@ -365,7 +365,7 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 		# The code to validate.
 		code: String!,
 
-		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
 }
@@ -498,7 +498,7 @@ type BitmapRouterNode implements Node @aws_cognito_user_pools {
 		# The code to validate.
 		code: String!,
 
-		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
 }
@@ -957,7 +957,7 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 		# The code to validate.
 		code: String!,
 
-		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
 }
@@ -1296,7 +1296,7 @@ interface Function @aws_cognito_user_pools {
 		# The code to validate.
 		code: String!,
 
-		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
 }
@@ -1904,7 +1904,7 @@ type MessageType @aws_cognito_user_pools {
 		# The code to validate.
 		code: String!,
 
-		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
 }
@@ -1929,7 +1929,7 @@ type Mount @aws_cognito_user_pools {
 	# The source of the mount. If not present, an anonymous volume will be created.
 	source: String
 
-	# The path to mount the volume in the Docker contatiner.
+	# The path to mount the volume in the Docker container.
 	target: String!
 }
 
@@ -1938,7 +1938,7 @@ input MountInput {
 	# The source of the mount. If not present, an anonymous volume will be created.
 	source: String
 
-	# The path to mount the volume in the Docker contatiner.
+	# The path to mount the volume in the Docker container.
 	target: String!
 }
 
@@ -1950,7 +1950,7 @@ type MountRequirement @aws_cognito_user_pools {
 	# The source of the mount.
 	source: String
 
-	# The path to mount the volume in the Docker contatiner.
+	# The path to mount the volume in the Docker container.
 	target: String!
 }
 
@@ -1962,7 +1962,7 @@ input MountRequirementInput {
 	# The source of the mount.
 	source: String
 
-	# The path to mount the volume in the Docker contatiner.
+	# The path to mount the volume in the Docker container.
 	target: String!
 }
 
@@ -2015,7 +2015,7 @@ type Mutation @aws_cognito_user_pools {
 		# The name of the MessageType that will be received.
 		receiveMessageType: String!,
 
-		# The route table. A route table is a JSON object with hexidecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
+		# The route table. A route table is a JSON object with hexadecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
 		routeTable: AWSJSON!,
 
 		# The name of the Tenant to create this in.
@@ -2619,7 +2619,7 @@ type ProcessorFunction implements Function @aws_cognito_user_pools {
 		# The code to validate.
 		code: String!,
 
-		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
 }
@@ -2754,7 +2754,7 @@ type ProcessorNode implements Node @aws_cognito_user_pools {
 		# The code to validate.
 		code: String!,
 
-		# The loggingLevel to use duuring the validation. Defaults to INFO.
+		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
 }
@@ -2965,7 +2965,7 @@ type Query @aws_cognito_user_pools {
 		# The maximum number of items to return.
 		limit: Int,
 
-		# The name of the Tenant. If no name is specificed, will return only the EchoStream system ManagedNodeTypes.
+		# The name of the Tenant. If no name is specified, will return only the EchoStream system ManagedNodeTypes.
 		tenant: String
 	): ManagedNodeTypeResult!
 	
