@@ -1,0 +1,8 @@
+{
+    "name": "echostream",
+    "description": "EchoStream GraphQL API",
+    "graphdoc": {
+        "output": "./doc/",
+        "schemaFile": "./echo.graphql"
+    }
+}
