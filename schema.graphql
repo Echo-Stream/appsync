@@ -2483,9 +2483,6 @@ input PortInput {
 	# The exposed container port.
 	containerPort: Int!
 
-	# A human-readable description.
-	description: String!
-
 	# The host address the port is exposed on. Defaults to 0.0.0.0.
 	hostAddress: AWSIPAddress
 
