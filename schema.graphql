@@ -1694,7 +1694,7 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 
 # Represents a ManagedNodeType which may be used to create ManagedNodes.
 # ManagedNodeTypes are wrappers around Docker image definitions and define the
-# requirements necessary to instanctiate those images as Docker containers inside
+# requirements necessary to instantiate those images as Docker containers inside
 # a ManagedApp.
 type ManagedNodeType @aws_cognito_user_pools {
 	# A JSON Schema ( https://json-schema.org/ ) document that specifies the requirements for the config attribute of ManagedNodes created using this ManagedNodeType.
@@ -2482,9 +2482,6 @@ type Port @aws_cognito_user_pools {
 input PortInput {
 	# The exposed container port.
 	containerPort: Int!
-
-	# A human-readable description.
-	description: String!
 
 	# The host address the port is exposed on. Defaults to 0.0.0.0.
 	hostAddress: AWSIPAddress
