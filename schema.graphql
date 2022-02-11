@@ -1462,6 +1462,9 @@ enum LogLevel {
 
 # Represents an App that exists outside the EchoStream Cloud but is fully managed by EchoStream.
 # ManagedApps are implemented as virtual machines within a customer or client datacenter.
+#
+# Managed apps can be implemented as a Virtual Machine in VMWare, VirtualBox, KVM, Hyper-V, or EC2.
+# For VMWare, VirtualBox, KVM or Hyper-V, use the isol; for EC2, use the userdata directly.
 type ManagedApp implements App @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
@@ -1478,7 +1481,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	# A list of registered instances.
 	managedInstances: [ManagedInstance]
 
-	# The iso image. Used to install and setup the ManagedApp virtual machine.
+	# The iso image. Used to install and setup the ManagedApp virtual machine. Gzip'd and base64 encoded.
 	iso: String!
 
 	# When and who modified.
@@ -1495,6 +1498,9 @@ type ManagedApp implements App @aws_cognito_user_pools {
 
 	# The Tenant.
 	tenant: Tenant!
+
+	# The userdata. Used to install and setup the ManagedApp EC2 instance.
+	userdata: String!
 
 	# Deletes this App and all of its Nodes.
 	Delete(
