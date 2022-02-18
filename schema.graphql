@@ -3274,7 +3274,7 @@ type ValidationResult @aws_cognito_user_pools {
 	logs: String!
 
 	# The result of the Validate call.
-	result: AWSJSON!
+	result: AWSJSON
 
 	# Any output to stdout during the execution of the Validate call.
 	stdout: String!
