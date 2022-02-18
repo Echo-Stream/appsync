@@ -873,6 +873,11 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	# The list of Python requirements, in pip format.
 	requirements: [String!]
 
+	# The MessageType that this Node is capable of sending.
+	# Note that this can ONLY be used for informational purposes!
+	# CrossTenantSendingNodes will not accept Edges where they are the source!
+	sendMessageType: MessageType
+
 	# True if messages should not be processed concurrently. If False, messages are processed concurrently.
 	sequentialProcessing: Boolean
 
@@ -3269,7 +3274,7 @@ type ValidationResult @aws_cognito_user_pools {
 	logs: String!
 
 	# The result of the Validate call.
-	result: AWSJSON!
+	result: AWSJSON
 
 	# Any output to stdout during the execution of the Validate call.
 	stdout: String!
