@@ -584,6 +584,9 @@ type CrossAccountApp implements App @aws_cognito_user_pools {
 	# The AWS account number that is authorized to use this App's EchoStream Cloud resources.
 	account: String!
 
+	# The AppSync Endpoint used by this app
+	appsyncEndpoint: AWSURL!
+
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 
@@ -1089,6 +1092,9 @@ type EdgeResult @aws_cognito_user_pools {
 
 # An App that exists outside of the EchoStream Cloud. Access to the EchoStream Cloud is accomplished through GetAwsCredentials.
 type ExternalApp implements App @aws_cognito_user_pools {
+	# The AppSync Endpoint used by this app
+	appsyncEndpoint: AWSURL!
+
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 
