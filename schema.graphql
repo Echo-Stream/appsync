@@ -505,11 +505,17 @@ type BitmapRouterNode implements Node @aws_cognito_user_pools {
 
 # Bulk data storage URLs.
 type BulkDataStorage @aws_cognito_user_pools {
+	# The expiration of the persignedPost/presignedPut.
+	expiration: AWSTimestamp!
+
 	# The presigned GET URL. Intended on being embedded in a message as a "ticket". Will return the data stored using the presignedPost.
 	presignedGet: AWSURL!
 
-	# The presigned POST URL. Used to store bulk data for retrieval by presignedGet.
+	# The presigned POST URL. Used to store bulk data for retrieval by presignedGet. Can be used interchangeably with presignedPut.
 	presignedPost: PresignedPost!
+
+	# The presigned PUT URL. Used to store bulk data for retrieval by presignedGet. Can be used interchangeably with presignedPost.
+	presignedPut: AWSURL!
 }
 
 # Represents a Change to a resource in EchoStream.
@@ -2536,9 +2542,6 @@ input PortRequirementInput {
 
 # Pre-signed POST for BulkDataStorage
 type PresignedPost @aws_cognito_user_pools {
-	# The expiration.
-	expiration: AWSTimestamp!
-
 	# The fields that must be passed in the Header when POSTing.
 	fields: AWSJSON!
 
