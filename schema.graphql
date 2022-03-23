@@ -515,7 +515,7 @@ type BulkDataStorage @aws_cognito_user_pools {
 	presignedPost: PresignedPost!
 
 	# The presigned PUT URL. Used to store bulk data for retrieval by presignedGet. Can be used interchangeably with presignedPost.
-	presignedPut: AWSURL!
+	presignedPut: PresignedPut!
 }
 
 # Represents a Change to a resource in EchoStream.
@@ -2542,10 +2542,19 @@ input PortRequirementInput {
 
 # Pre-signed POST for BulkDataStorage
 type PresignedPost @aws_cognito_user_pools {
-	# The fields that must be passed in the Header when POSTing.
+	# The fields that must be passed in when POSTing.
 	fields: AWSJSON!
 
 	# The URL to POST to.
+	url: AWSURL!
+}
+
+# Pre-signed PUT for BulkDataStorage
+type PresignedPut @aws_cognito_user_pools {
+	# The fields that must be passed in the Header when PUTing.
+	headers: AWSJSON!
+
+	# The URL to PUT to.
 	url: AWSURL!
 }
 
