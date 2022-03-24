@@ -2817,11 +2817,18 @@ type Query @aws_cognito_user_pools {
 		# The name of the Tenant.
 		tenant: String!,
 	
-		# The content encoding to use for the returned BulkDataStorage.
+		# The content encoding to use for the returned BulkDataStorage. Defaults to 'gzip'.
 		contentEncoding: ContentEncoding,
 	
 		# The number of BulkDataStorage objects to get. Must be between 1 and 100. Defaults to 1.
-		count: Int
+		count: Int,
+
+		# The number of seconds that the presignedPost/presignedPut will be valid for. Defaults to 1800.
+		expiresIn: Int,
+
+		# The returned presigned URLs will use the acceleration endpoint. This endpoint provides
+		# for speed increases of 150% or more, but elimianates the ability to use CORS. Defaults to `false`.
+		useAccelerationEndpoint: Boolean
 	): [BulkDataStorage!]!
 	
 	# Gets the Edge. Returns null if not found.
