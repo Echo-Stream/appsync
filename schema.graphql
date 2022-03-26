@@ -2008,7 +2008,7 @@ type Mutation @aws_cognito_user_pools {
 		# The name of the Tenant to create this in.
 		tenant: String!,
 
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.:]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
 		# A Python code string that contains a single top-level function definition.
@@ -2032,7 +2032,7 @@ type Mutation @aws_cognito_user_pools {
 
 	# Creates a BitmapRouterNode and returns it.
 	CreateBitmapRouterNode(
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_ ]{3,80}$"
 		name: String!,
 
 		# The name of the MessageType that will be received.
@@ -2073,7 +2073,7 @@ type Mutation @aws_cognito_user_pools {
 		# The name of the Tenant to create this in.
 		tenant: String!,
 
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.:]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
 		# The config, in JSON object format (i.e. - dict, map).
@@ -2091,7 +2091,7 @@ type Mutation @aws_cognito_user_pools {
 		# The name of the Tenant to create this in.
 		tenant: String!,
 
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.:]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
 		# The name of the Tenant that will be sending messages.
@@ -2103,7 +2103,7 @@ type Mutation @aws_cognito_user_pools {
 		# The name of the Tenant to create this in.
 		tenant: String!,
 
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.:]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
 		# The name of the Tenant that will be receiving messages.
@@ -2118,7 +2118,7 @@ type Mutation @aws_cognito_user_pools {
 		# The name of the CrossTenantSendingApp.
 		app: String!,
 
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.:]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
 		# The name of the MessageType.
@@ -2182,7 +2182,7 @@ type Mutation @aws_cognito_user_pools {
 		# The name of the Tenant to create this in.
 		tenant: String!,
 
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.:]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
 		# The config, in JSON object format (i.e. - dict, map).
@@ -2203,7 +2203,7 @@ type Mutation @aws_cognito_user_pools {
 		# The name of the ExternalApp or CrossAccountApp.
 		app: String!,
 
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.:]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
 		# The name of the MessageType that will be received.
@@ -2287,7 +2287,7 @@ type Mutation @aws_cognito_user_pools {
 		# The URI of the Docker image. Must be a public or a private AWS ECR repository.
 		imageUri: String!
 	
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.:]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 	
 		# The name of the Tenant to create this in.
@@ -2355,7 +2355,7 @@ type Mutation @aws_cognito_user_pools {
 		# The name of the Tenant to create this in.
 		tenant: String!,
 
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.:]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
 		# A Python code string that contains a single top-level function definition.
@@ -2380,7 +2380,7 @@ type Mutation @aws_cognito_user_pools {
 
 	# Creates a ProcessorNode and returns it.
 	CreateProcessorNode(
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_ ]{3,80}$"
 		name: String!,
 
 		# The name of the MessageType that will be received.
@@ -2432,7 +2432,7 @@ type Mutation @aws_cognito_user_pools {
 
 	# Creates a TimerNode and returns it.
 	CreateTimerNode(
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.:]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
 		# An Amazon Event Bridge cron expression ( https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-create-rule-schedule.html#eb-cron-expressions )
