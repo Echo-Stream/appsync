@@ -1446,6 +1446,9 @@ type LoginUser @aws_cognito_user_pools {
 
 	# A list of TenantUsers linked to this LoginUser.
 	tenantUsers: [TenantUser!]
+
+	# Deletes this.
+	Delete: Boolean!
 }
 
 # A log event recorded by certain Nodes.
