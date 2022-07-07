@@ -977,7 +977,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 }
 
 # A union of all EchoStream object types
-union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | BitmapRouterNode | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | ProcessorFunction | ProcessorNode | Tenant | TimerNode
+union Echo = AlertEmitterNode | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | BitmapRouterNode | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | FilesDotComWebhookNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | ProcessorFunction | ProcessorNode | Tenant | TimerNode
 
 # Transmits messages between Nodes.
 type Edge @aws_cognito_user_pools {
@@ -1220,6 +1220,72 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 		# A human-readable description.
 		description: String
 	): ExternalNode!
+}
+
+type FilesDotComWebhookNode implements Node @aws_cognito_user_pools {
+	# When and who created.
+	created: AtBy!
+
+	# A human-readable description.
+	description: String
+
+	# The Webhooks endpoint to forward Files.com webhooks events to.
+	# Accepts all version of Files.com webhook events at the root path.
+	endpoint: AWSURL!
+
+	# When and who modified.
+	lastModified: AtBy!
+
+	# The name.
+	name: String!
+
+	# A list of the Edges messages are sent on.
+	sendEdges: [Edge]
+
+	# The MessageType that this Node is capable of sending.
+	# Will always be echo.files-dot-com
+	sendMessageType: MessageType
+
+	# The Tenant.
+	tenant: Tenant!
+
+	# The token for the event endpoint. Files.com doesn't support real Webhooks
+	# security, so we add a token that is to be sent in the webhook in the headers.
+	# Place this token as the value for the "x-echostream-token" header.
+	token: String!
+
+	# Deletes this Node and all of its Edges.
+	Delete(
+		# If sending Edges attached to this Nodes should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
+
+	# Lists the changes.
+	ListChanges(
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
+		exclusiveStartKey: AWSJSON,
+
+		# Used for limiting the number of results when paginating. Defaults to "all".
+		limit: Int, 
+
+		# True for ascending results, False for descending result. Defaults to True.
+		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): ChangeResult!
+
+	# Updates and returns the TimerNode.
+	Update(
+		# The API Key for your Files.com site that is sending webhooks.
+		apiKey: String,
+
+		# A human-readable description.
+		description: String
+	): FilesDotComWebhookNode!
 }
 
 # Describes common attributes and methods supported by Functions.
@@ -2185,6 +2251,22 @@ type Mutation @aws_cognito_user_pools {
 		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON
 	): ExternalNode!
+
+	# Creates a FilesDotComWebhookNode and returns it.
+	CreateFilesDotComWebhookNode(
+		# The API Key for your Files.com site that is sending webhooks.
+		# Used to query Files.com for the IP addresses to whitelist.
+		apiKey: String!,
+
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
+		name: String!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
+
+		# A human-readable description.
+		description: String
+	): FilesDotComWebhookNode!
 
 	# Create a KmsKey and return it.
 	CreateKmsKey(
