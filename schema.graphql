@@ -332,11 +332,11 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 
 	# Validates the supplied code against the supplied message.
 	Validate(
-		# The message to use for validation.
-		message: String!,
-
 		# The code to validate.
 		code: String!,
+
+		# The message to use for validation.
+		message: String!,
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
@@ -465,11 +465,11 @@ type BitmapRouterNode implements Node @aws_cognito_user_pools {
 
 	# Validates the supplied code against the supplied message.
 	Validate(
-		# The message to use for validation.
-		message: String!,
-
 		# The code to validate.
 		code: String!,
+
+		# The message to use for validation.
+		message: String!,
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
@@ -941,11 +941,11 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 
 	# Validates the supplied code against the supplied message.
 	Validate(
-		# The message to use for validation.
-		message: String!,
-
 		# The code to validate.
 		code: String!,
+
+		# The message to use for validation.
+		message: String!,
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
@@ -1290,8 +1290,6 @@ type FilesDotComWebhookNode implements Node @aws_cognito_user_pools {
 
 # Describes common attributes and methods supported by Functions.
 interface Function @aws_cognito_user_pools {
-	# The MessageType passed in to the Function.
-	argumentMessageType: MessageType!
 
 	# The code of the Function in Python string format.
 	code: String!
@@ -1340,18 +1338,6 @@ interface Function @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
-
-	# Validates the supplied code against the supplied message.
-	Validate(
-		# The message to use for validation.
-		message: String!,
-
-		# The code to validate.
-		code: String!,
-
-		# The loggingLevel to use during the validation. Defaults to INFO.
-		loggingLevel: LogLevel
-	): ValidationResult!
 }
 
 # A (possibly) paginated result set.
@@ -1954,11 +1940,11 @@ type MessageType @aws_cognito_user_pools {
 
 	# Validates the supplied code against the supplied message.
 	Validate(
-		# The message to use for validation.
-		message: String!,
-
 		# The code to validate.
 		code: String!,
+
+		# The message to use for validation.
+		message: String!,
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
@@ -2688,11 +2674,11 @@ type ProcessorFunction implements Function @aws_cognito_user_pools {
 
 	# Validates the supplied code against the supplied message.
 	Validate(
-		# The message to use for validation.
-		message: String!,
-
 		# The code to validate.
 		code: String!,
+
+		# The message to use for validation.
+		message: String!,
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
@@ -2823,11 +2809,11 @@ type ProcessorNode implements Node @aws_cognito_user_pools {
 
 	# Validates the supplied code against the supplied message.
 	Validate(
-		# The message to use for validation.
-		message: String!,
-
 		# The code to validate.
 		code: String!,
+
+		# The message to use for validation.
+		message: String!,
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
