@@ -2479,6 +2479,29 @@ type Mutation @aws_cognito_user_pools {
 		# A human-readable description.
 		description: String
 	): TimerNode!
+
+	# Creates a WebhookAuthenticatorFunction and returns it.
+	CreateWebhookAuthenticatorFunction(
+		# The name of the Tenant to create this in.
+		tenant: String!,
+
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
+		name: String!,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, conn, **kwargs) and return None or a tuple containing
+		# an AuthCredentials and BaseUser (or subclasses).
+		code: String!,
+
+		# A human-readable description.
+		description: String!,
+
+		# The README in MarkDown format.
+		readme: String,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!],
+	): WebhookAuthenticatorFunction!
 }
 
 # Defines the requirements for all Node types
@@ -3338,4 +3361,91 @@ type ValidationResult @aws_cognito_user_pools {
 
 	# Any output to stdout during the execution of the Validate call.
 	stdout: String!
+}
+
+# A managed Function used in WebhookNodes.
+type WebhookAuthenticatorFunction implements Function @aws_cognito_user_pools {
+	# A Python code string that contains a single top-level function definition.
+	# This function is used as a template when creating authentication in WebhookNodes
+	# that use this MessageType. This function must have the signature
+	# (*, context, conn, **kwargs) where context is an EchoStream Context and conn 
+	# is a starlette.requests.HTTPConnection and returns a tuple containing a 
+	# starlette.authentication.AuthCredentials and starlette.authentication.BaseUser (or subclasses).
+	code: String!
+
+	# When and who created.
+	created: AtBy!
+
+	# A human-readable description.
+	description: String!
+
+	# When and who modified.
+	lastModified: AtBy!
+
+	# The name.
+	name: String!
+
+	# README in MarkDown format.
+	readme: String
+
+	# The list of Python requirements, in pip format.
+	requirements: [String!]
+
+	# True if this is an EchoStream system resource.
+	system: Boolean
+
+	# The Tenant.
+	tenant: Tenant
+
+	# Deletes this.
+	Delete: Boolean!
+
+	# Lists the changes.
+	ListChanges(
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
+		exclusiveStartKey: AWSJSON,
+
+		# Used for limiting the number of results when paginating. Defaults to "all".
+		limit: Int, 
+
+		# True for ascending results, False for descending result. Defaults to True.
+		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): ChangeResult!
+
+	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
+	Update(
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom processing in ProcessorNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		code: String,
+
+		# The description. Null is ignored.
+		description: String,
+
+		# The README. Must be in MarkDown format. Null removes the readme.
+		# The README in MarkDown format.
+		readme: String,
+
+		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
+		requirements: [String!]
+	): WebhookAuthenticatorFunction!
+
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The code to validate.
+		code: String!,
+
+		# The message to use for validation.
+		message: AWSJSON,
+
+		# The loggingLevel to use during the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
