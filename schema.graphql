@@ -2489,7 +2489,7 @@ type Mutation @aws_cognito_user_pools {
 		name: String!,
 
 		# A Python code string that contains a single top-level function definition.
-		# This function must have the signature (*, context, conn, **kwargs) and return None or a tuple containing
+		# This function must have the signature (*, context, request, **kwargs) and return None or a tuple containing
 		# an AuthCredentials and BaseUser (or subclasses).
 		code: String!,
 
@@ -3369,8 +3369,10 @@ type WebhookAuthenticatorFunction implements Function @aws_cognito_user_pools {
 	# This function is used as a template when creating authentication in WebhookNodes
 	# that use this MessageType. This function must have the signature
 	# (*, context, conn, **kwargs) where context is an EchoStream Context and conn 
-	# is a starlette.requests.HTTPConnection and returns a tuple containing a 
+	# is a fastapi.Request and returns a tuple containing a 
 	# starlette.authentication.AuthCredentials and starlette.authentication.BaseUser (or subclasses).
+	#
+	# This function should throw fastapi.HTTPException when authentication fails.
 	code: String!
 
 	# When and who created.
