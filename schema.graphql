@@ -3590,7 +3590,7 @@ type WebhookNode implements Node @aws_cognito_user_pools {
 		loggingLevel: LogLevel,
 
 		# The managedWebhookAuthenticator. Mutually exclusive with the inlineWebhookAuthenticator.
-		managedWebhookAuthenticator: WebhookAuthenticatorFunction
+		managedWebhookAuthenticator: String
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!],
