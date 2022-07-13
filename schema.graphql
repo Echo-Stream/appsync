@@ -2532,6 +2532,9 @@ type Mutation @aws_cognito_user_pools {
 		# The list of Python requirements, in pip format.
 		requirements: [String!],
 
+		# The name of the MessageType that will be sent. Must be JSON based. Defaults to echo.json.
+		sendMessageType: String,
+
 	): WebhookNode!
 }
 
