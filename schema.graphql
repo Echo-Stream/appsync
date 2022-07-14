@@ -340,6 +340,9 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
+
+		# The source "node" of the test message. Defaults to "Validation".
+		source: String
 	): ValidationResult!
 }
 
@@ -473,6 +476,9 @@ type BitmapRouterNode implements Node @aws_cognito_user_pools {
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
+
+		# The source "node" of the test message. Defaults to "Validation".
+		source: String
 	): ValidationResult!
 }
 
@@ -949,6 +955,9 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
+
+		# The source "node" of the test message. Defaults to "Validation".
+		source: String
 	): ValidationResult!
 }
 
@@ -1939,7 +1948,7 @@ type MessageType @aws_cognito_user_pools {
 		sampleMessage: String,
 	): MessageType!
 
-	# Validates the supplied code against the supplied message.
+	# Validates the supplied auditor code against the supplied message.
 	Validate(
 		# The code to validate.
 		code: String!,
@@ -2740,6 +2749,9 @@ type ProcessorFunction implements Function @aws_cognito_user_pools {
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
+
+		# The source "node" of the test message. Defaults to "Validation".
+		source: String
 	): ValidationResult!
 }
 
@@ -2875,6 +2887,9 @@ type ProcessorNode implements Node @aws_cognito_user_pools {
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
+
+		# The source "node" of the test message. Defaults to "Validation".
+		source: String
 	): ValidationResult!
 }
 
@@ -3479,8 +3494,8 @@ type WebhookAuthenticatorFunction implements Function @aws_cognito_user_pools {
 		# The code to validate.
 		code: String!,
 
-		# The message to use for validation.
-		message: AWSJSON!,
+		# The request to use for validation. This is a JSON representation of a starlette Request object.
+		request: AWSJSON!,
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
@@ -3605,8 +3620,8 @@ type WebhookNode implements Node @aws_cognito_user_pools {
 		# The code to validate.
 		code: String!,
 
-		# The message to use for validation.
-		message: AWSJSON!,
+		# The request to use for validation. This is a JSON representation of a starlette Request object.
+		request: AWSJSON!,
 
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
