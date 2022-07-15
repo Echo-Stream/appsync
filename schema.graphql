@@ -3191,6 +3191,12 @@ type Tenant @aws_cognito_user_pools {
 	# Deletes this.
 	Delete: Boolean!
 
+	# Returns that AwsCredentials required to access the EchoStream resources assigned to this Tenant.
+	GetAwsCredentials(
+		# The length of time, in seconds, that the returned credentials are valid for. Between 900 and 43,200. Defaults to 3,600.
+		duration: Int
+	): AwsCredentials!
+
 	# Lists the changes.
 	ListChanges(
 		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
