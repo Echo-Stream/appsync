@@ -1261,7 +1261,7 @@ type FilesDotComWebhookNode implements Node @aws_cognito_user_pools {
 	# The token for the event endpoint. Files.com doesn't support real Webhooks
 	# security, so we add a token that is to be sent in the webhook in the headers.
 	# Place this token as the value for the "Authorization" header, prepending it with "Bearer ".
-	# For example, if token was "12345" then the header woudl be "Authorization: Bearer 12345".
+	# For example, if token was "12345" then the header would be "Authorization: Bearer 12345".
 	token: String!
 
 	# Deletes this Node and all of its Edges.
