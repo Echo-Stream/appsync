@@ -986,7 +986,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 }
 
 # A union of all EchoStream object types
-union Echo = AlertEmitterNode | ApiAuthenticatorFunction | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | BitmapRouterNode | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | FilesDotComWebhookNode | KmsKey | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | ProcessorFunction | ProcessorNode | Tenant | TimerNode | WebhookNode
+union Echo = AlertEmitterNode | ApiAuthenticatorFunction | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | BitmapRouterNode | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | FilesDotComWebhookNode | KmsKey | LoadBalancerNode | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | ProcessorFunction | ProcessorNode | Tenant | TimerNode | WebhookNode
 
 # Transmits messages between Nodes.
 type Edge @aws_cognito_user_pools {
@@ -1430,6 +1430,69 @@ type KmsKeyResult @aws_cognito_user_pools {
 
 	# The number of records scanned to obtain the contained results.
 	scannedCount: Int
+}
+
+# Load balances received messages across all sendEdges by distributing
+# messages evenly and then randomly distributing any remaining messages.
+# While not required, all Nodes that are targets to a LoadBalancerNode's
+# sendEdges shoudl be clones of each other. By definition will eliminate guaranteed ordering.
+type LoadBalancerNode implements Node @aws_cognito_user_pools {
+	# When and who created.
+	created: AtBy!
+
+	# A human-readable description.
+	description: String
+
+	# When and who modified.
+	lastModified: AtBy!
+
+	# The name.
+	name: String!
+
+	# A list of the Edges messages are received on.
+	receiveEdges: [Edge]
+
+	# The MessageType that this Node is capable of receiving.
+	receiveMessageType: MessageType
+
+	# A list of the Edges messages are sent on.
+	sendEdges: [Edge]
+
+	# The MessageType that this Node is capable of sending.
+	sendMessageType: MessageType
+
+	# The Tenant.
+	tenant: Tenant!
+
+	# Deletes this Node and all of its Edges.
+	Delete(
+		# If sending Edges attached to this Nodes should be drained. Defaults to True.
+		drainEdges: Boolean
+	): Boolean!
+
+	# Lists the changes.
+	ListChanges(
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
+		exclusiveStartKey: AWSJSON,
+
+		# Used for limiting the number of results when paginating. Defaults to "all".
+		limit: Int, 
+
+		# True for ascending results, False for descending result. Defaults to True.
+		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): ChangeResult!
+
+	# Updates and returns the LoadBalancerNode
+	Update(
+		# A human-readable description.
+		description: String,
+	): LoadBalancerNode!
 }
 
 # Emits log messages created by various Node types.  One per Tenant, automatically created when the Tenant is created.
@@ -2298,6 +2361,22 @@ type Mutation @aws_cognito_user_pools {
 		# A human-readable description.
 		description: String
 	): KmsKey!
+
+	# Creates a LoadBalancerNode and returns it.
+	CreateLoadBalancerNode(
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_ ]{3,80}$"
+		name: String!,
+
+		# The name of the MessageType that will be received.
+		receiveMessageType: String!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
+
+		# A human-readable description.
+		description: String,
+	): LoadBalancerNode!
+
 
 	# Creates a ManagedApp and returns it.
 	CreateManagedApp(
