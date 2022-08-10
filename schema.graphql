@@ -18,17 +18,30 @@ type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 	
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 }
 
-# Emits audit messages. One per Tenant, automatically created when the Tenant is created.
-type AuditEmitterNode implements Node @aws_cognito_user_pools {
+# A managed Function used in WebhookNodes.
+type ApiAuthenticatorFunction implements Function @aws_cognito_user_pools {
+	# A Python code string that contains a single top-level function definition.
+	# This function is used as a template when creating authentication in WebhookNodes
+	# that use this MessageType. This function must have the signature
+	# (*, context, conn, **kwargs) where context is an EchoStream Context and conn 
+	# is a fastapi.Request and returns a tuple containing a 
+	# starlette.authentication.AuthCredentials and starlette.authentication.BaseUser (or subclasses).
+	#
+	# This function should throw fastapi.HTTPException when authentication fails.
+	code: String!
+
 	# When and who created.
 	created: AtBy!
 
 	# A human-readable description.
-	description: String
+	description: String!
 
 	# When and who modified.
 	lastModified: AtBy!
@@ -36,14 +49,69 @@ type AuditEmitterNode implements Node @aws_cognito_user_pools {
 	# The name.
 	name: String!
 
-	# A list of the Edges messages are sent on.
-	sendEdges: [Edge]
+	# README in MarkDown format.
+	readme: String
 
-	# The MessageType that this Node is capable of sending.
-	sendMessageType: MessageType
+	# The list of Python requirements, in pip format.
+	requirements: [String!]
+
+	# True if this is an EchoStream system resource.
+	system: Boolean
 
 	# The Tenant.
-	tenant: Tenant!
+	tenant: Tenant
+
+	# Deletes this.
+	Delete: Boolean!
+
+	# Lists the changes.
+	ListChanges(
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
+		exclusiveStartKey: AWSJSON,
+
+		# Used for limiting the number of results when paginating. Defaults to "all".
+		limit: Int, 
+
+		# True for ascending results, False for descending result. Defaults to True.
+		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): ChangeResult!
+
+	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
+	Update(
+		# A Python code string that contains a single top-level function definition.
+		# This function is used as a template when creating custom processing in ProcessorNodes
+		# that use this MessageType. This function must have the signature
+		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
+		code: String,
+
+		# The description. Null is ignored.
+		description: String,
+
+		# The README. Must be in MarkDown format. Null removes the readme.
+		# The README in MarkDown format.
+		readme: String,
+
+		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
+		requirements: [String!]
+	): ApiAuthenticatorFunction!
+
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The code to validate.
+		code: String!,
+
+		# The request to use for validation. This is a JSON representation of a starlette Request object.
+		request: AWSJSON!,
+
+		# The loggingLevel to use during the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
 }
 
 # A programmatic user of the EchoStream API.
@@ -188,6 +256,9 @@ type AppChangeReceiverNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of receiving.
 	receiveMessageType: MessageType
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 }
@@ -218,6 +289,9 @@ type AppChangeRouterNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 }
@@ -241,6 +315,33 @@ type AtBy @aws_cognito_user_pools {
 
 	# Who.
 	by: String
+}
+
+# Emits audit messages. One per Tenant, automatically created when the Tenant is created.
+type AuditEmitterNode implements Node @aws_cognito_user_pools {
+	# When and who created.
+	created: AtBy!
+
+	# A human-readable description.
+	description: String
+
+	# When and who modified.
+	lastModified: AtBy!
+
+	# The name.
+	name: String!
+
+	# A list of the Edges messages are sent on.
+	sendEdges: [Edge]
+
+	# The MessageType that this Node is capable of sending.
+	sendMessageType: MessageType
+
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
+	# The Tenant.
+	tenant: Tenant!
 }
 
 # Temporary credentials used to access EchoStream Cloud resources. The scope of the resource access is context-specific.
@@ -394,6 +495,9 @@ type BitmapRouterNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -439,6 +543,11 @@ type BitmapRouterNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): LogEventResults!
 
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: bool!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: bool!
 
 	# Updates and returns the BitmapRouterNode
 	Update(
@@ -525,6 +634,9 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
+
+	# Is the Node stopped; null == false.
+	stopped: Boolean
 
 	# The Tenant.
 	tenant: Tenant!
@@ -731,6 +843,9 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -872,6 +987,9 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	# True if messages should not be processed concurrently. If False, messages are processed concurrently.
 	sequentialProcessing: Boolean
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -916,6 +1034,12 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): LogEventResults!
+
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: bool!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: bool!
 
 	# Updates the Node and returns it.
 	Update(
@@ -980,6 +1104,9 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
+
+	# Is the Node stopped; null == false.
+	stopped: Boolean
 
 	# The Tenant.
 	tenant: Tenant!
@@ -1194,6 +1321,9 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -1220,6 +1350,12 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: bool!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: bool!
 
 	# Updates the Node and returns it.
 	Update(
@@ -1255,6 +1391,9 @@ type FilesDotComWebhookNode implements Node @aws_cognito_user_pools {
 	# Will always be echo.files-dot-com
 	sendMessageType: MessageType
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -1287,6 +1426,12 @@ type FilesDotComWebhookNode implements Node @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: bool!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: bool!
 
 	# Updates and returns the TimerNode.
 	Update(
@@ -1461,6 +1606,9 @@ type LoadBalancerNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -1488,6 +1636,12 @@ type LoadBalancerNode implements Node @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: bool!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: bool!
+
 	# Updates and returns the LoadBalancerNode
 	Update(
 		# A human-readable description.
@@ -1514,6 +1668,9 @@ type LogEmitterNode implements Node @aws_cognito_user_pools {
 
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
+
+	# Is the Node stopped; null == false.
+	stopped: Boolean
 
 	# The Tenant.
 	tenant: Tenant!
@@ -1743,6 +1900,9 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -1787,6 +1947,12 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): LogEventResults!
+
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: bool!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: bool!
 
 	# Update and return the ManagedNode.
 	Update(
@@ -2641,6 +2807,9 @@ interface Node @aws_cognito_user_pools {
 	# The name.
 	name: String!
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 }
@@ -2883,6 +3052,9 @@ type ProcessorNode implements Node @aws_cognito_user_pools {
 	# True if messages should not be processed concurrently. If False, messages are processed concurrently.
 	sequentialProcessing: Boolean
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -2927,6 +3099,12 @@ type ProcessorNode implements Node @aws_cognito_user_pools {
 		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): LogEventResults!
+
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: bool!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: bool!
 
 	# Updates the Node and returns it.
 	Update(
@@ -3436,6 +3614,9 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -3462,6 +3643,12 @@ type TimerNode implements Node @aws_cognito_user_pools {
 		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): ChangeResult!
+
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: bool!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: bool!
 
 	# Updates and returns the TimerNode.
 	Update(
@@ -3496,95 +3683,6 @@ type ValidationResult @aws_cognito_user_pools {
 
 	# Any output to stdout during the execution of the Validate call.
 	stdout: String!
-}
-
-# A managed Function used in WebhookNodes.
-type ApiAuthenticatorFunction implements Function @aws_cognito_user_pools {
-	# A Python code string that contains a single top-level function definition.
-	# This function is used as a template when creating authentication in WebhookNodes
-	# that use this MessageType. This function must have the signature
-	# (*, context, conn, **kwargs) where context is an EchoStream Context and conn 
-	# is a fastapi.Request and returns a tuple containing a 
-	# starlette.authentication.AuthCredentials and starlette.authentication.BaseUser (or subclasses).
-	#
-	# This function should throw fastapi.HTTPException when authentication fails.
-	code: String!
-
-	# When and who created.
-	created: AtBy!
-
-	# A human-readable description.
-	description: String!
-
-	# When and who modified.
-	lastModified: AtBy!
-
-	# The name.
-	name: String!
-
-	# README in MarkDown format.
-	readme: String
-
-	# The list of Python requirements, in pip format.
-	requirements: [String!]
-
-	# True if this is an EchoStream system resource.
-	system: Boolean
-
-	# The Tenant.
-	tenant: Tenant
-
-	# Deletes this.
-	Delete: Boolean!
-
-	# Lists the changes.
-	ListChanges(
-		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
-		endDateTime: AWSDateTime,
-
-		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
-		exclusiveStartKey: AWSJSON,
-
-		# Used for limiting the number of results when paginating. Defaults to "all".
-		limit: Int, 
-
-		# True for ascending results, False for descending result. Defaults to True.
-		sortAscending: Boolean,
-
-		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
-		startDateTime: AWSDateTime
-	): ChangeResult!
-
-	# Updates the Function. Note that all Nodes that use this Function may also be updated - see blow.
-	Update(
-		# A Python code string that contains a single top-level function definition.
-		# This function is used as a template when creating custom processing in ProcessorNodes
-		# that use this MessageType. This function must have the signature
-		# (*, context, message, source, **kwargs) and return None, a string or a list of strings.
-		code: String,
-
-		# The description. Null is ignored.
-		description: String,
-
-		# The README. Must be in MarkDown format. Null removes the readme.
-		# The README in MarkDown format.
-		readme: String,
-
-		# The requirements. Each element must be in pip requirement format. Null or an empty list removes all requirements.
-		requirements: [String!]
-	): ApiAuthenticatorFunction!
-
-	# Validates the supplied code against the supplied message.
-	Validate(
-		# The code to validate.
-		code: String!,
-
-		# The request to use for validation. This is a JSON representation of a starlette Request object.
-		request: AWSJSON!,
-
-		# The loggingLevel to use during the validation. Defaults to INFO.
-		loggingLevel: LogLevel
-	): ValidationResult!
 }
 
 # WebhookNodes allow for almost any processing of messages, including transformation,
@@ -3631,6 +3729,9 @@ type WebhookNode implements Node @aws_cognito_user_pools {
 	# The MessageType that this Node is capable of sending.
 	sendMessageType: MessageType
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
@@ -3675,6 +3776,12 @@ type WebhookNode implements Node @aws_cognito_user_pools {
 		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
 		startDateTime: AWSDateTime
 	): LogEventResults!
+
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: bool!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: bool!
 
 	# Updates the Node and returns it.
 	Update(
