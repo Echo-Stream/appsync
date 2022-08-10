@@ -544,10 +544,10 @@ type BitmapRouterNode implements Node @aws_cognito_user_pools {
 	): LogEventResults!
 
 	# Starts a stopped Node. Has no effect on an already running Node.
-	Start: bool!
+	Start: Boolean!
 
 	# Stops a running Node. Has no effect on an already stopped Node.
-	Stop: bool!
+	Stop: Boolean!
 
 	# Updates and returns the BitmapRouterNode
 	Update(
@@ -1036,10 +1036,10 @@ type CrossTenantSendingNode implements Node @aws_cognito_user_pools {
 	): LogEventResults!
 
 	# Starts a stopped Node. Has no effect on an already running Node.
-	Start: bool!
+	Start: Boolean!
 
 	# Stops a running Node. Has no effect on an already stopped Node.
-	Stop: bool!
+	Stop: Boolean!
 
 	# Updates the Node and returns it.
 	Update(
@@ -1352,10 +1352,10 @@ type ExternalNode implements Node @aws_cognito_user_pools {
 	): ChangeResult!
 
 	# Starts a stopped Node. Has no effect on an already running Node.
-	Start: bool!
+	Start: Boolean!
 
 	# Stops a running Node. Has no effect on an already stopped Node.
-	Stop: bool!
+	Stop: Boolean!
 
 	# Updates the Node and returns it.
 	Update(
@@ -1428,10 +1428,10 @@ type FilesDotComWebhookNode implements Node @aws_cognito_user_pools {
 	): ChangeResult!
 
 	# Starts a stopped Node. Has no effect on an already running Node.
-	Start: bool!
+	Start: Boolean!
 
 	# Stops a running Node. Has no effect on an already stopped Node.
-	Stop: bool!
+	Stop: Boolean!
 
 	# Updates and returns the TimerNode.
 	Update(
@@ -1637,10 +1637,10 @@ type LoadBalancerNode implements Node @aws_cognito_user_pools {
 	): ChangeResult!
 
 	# Starts a stopped Node. Has no effect on an already running Node.
-	Start: bool!
+	Start: Boolean!
 
 	# Stops a running Node. Has no effect on an already stopped Node.
-	Stop: bool!
+	Stop: Boolean!
 
 	# Updates and returns the LoadBalancerNode
 	Update(
@@ -1949,10 +1949,10 @@ type ManagedNode implements Node @aws_cognito_user_pools {
 	): LogEventResults!
 
 	# Starts a stopped Node. Has no effect on an already running Node.
-	Start: bool!
+	Start: Boolean!
 
 	# Stops a running Node. Has no effect on an already stopped Node.
-	Stop: bool!
+	Stop: Boolean!
 
 	# Update and return the ManagedNode.
 	Update(
@@ -3101,10 +3101,10 @@ type ProcessorNode implements Node @aws_cognito_user_pools {
 	): LogEventResults!
 
 	# Starts a stopped Node. Has no effect on an already running Node.
-	Start: bool!
+	Start: Boolean!
 
 	# Stops a running Node. Has no effect on an already stopped Node.
-	Stop: bool!
+	Stop: Boolean!
 
 	# Updates the Node and returns it.
 	Update(
@@ -3645,10 +3645,10 @@ type TimerNode implements Node @aws_cognito_user_pools {
 	): ChangeResult!
 
 	# Starts a stopped Node. Has no effect on an already running Node.
-	Start: bool!
+	Start: Boolean!
 
 	# Stops a running Node. Has no effect on an already stopped Node.
-	Stop: bool!
+	Stop: Boolean!
 
 	# Updates and returns the TimerNode.
 	Update(
@@ -3778,10 +3778,10 @@ type WebhookNode implements Node @aws_cognito_user_pools {
 	): LogEventResults!
 
 	# Starts a stopped Node. Has no effect on an already running Node.
-	Start: bool!
+	Start: Boolean!
 
 	# Stops a running Node. Has no effect on an already stopped Node.
-	Stop: bool!
+	Stop: Boolean!
 
 	# Updates the Node and returns it.
 	Update(
