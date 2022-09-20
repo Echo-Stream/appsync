@@ -1,0 +1,1 @@
+directive @aws_cognito_user_pools on OBJECT | INTERFACE
