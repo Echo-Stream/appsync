@@ -42,7 +42,7 @@ jobs:
       - name: Install graphdoc and generate docs
         run: |
           npm install -g @2fd/graphdoc
-          cat scalars.graphql schema.graphql > echo.graphql
+          cat directives.graphql scalars.graphql schema.graphql > echo.graphql
           graphdoc
       - name: Upload docs
         run: |
