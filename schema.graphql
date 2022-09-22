@@ -3480,7 +3480,7 @@ type TenantResult @aws_cognito_user_pools {
 # a Tenant.
 type TenantUser @aws_cognito_user_pools {
 	# When the user became active.
-	activeAt: String
+	activeAt: AWSDateTime
 
 	# When and who created.
 	created: AtBy!
@@ -3495,8 +3495,8 @@ type TenantUser @aws_cognito_user_pools {
 	# EchoStream Application UI.
 	graphLayouts: [GraphLayout!]
 
-	# When this user was invited to the Tenant.
-	invitationAt: String
+	# When and who this user was invited to the Tenant.
+	invited: AtBy!
 
 	# When and who modified.
 	lastModified: AtBy!
@@ -3540,7 +3540,7 @@ type TenantUser @aws_cognito_user_pools {
 		startDateTime: AWSDateTime
 	): ChangeResult!
 
-	# Saves aand returns a graph layout.
+	# Saves and returns a graph layout.
 	SaveGraphLayout(
 		# The name of the layout.
 		name: String!,
