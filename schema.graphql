@@ -113,6 +113,9 @@ type ApiAuthenticatorFunction implements Function @aws_cognito_user_pools {
 
 # A programmatic user of the EchoStream API.
 type ApiUser @aws_cognito_user_pools {
+	# The AppSync Endpoint used by this api user
+	appsyncEndpoint: AWSURL!
+
 	# When and who created.
 	created: AtBy!
 	
@@ -3393,6 +3396,10 @@ union RemoteAppNode = AppChangeReceiverNode | ExternalNode
 # AWS region and allow for secure processing of messages within the
 # Network.
 type Tenant @aws_cognito_user_pools {
+	# After Tenant creation it can take several minutes the Tenant to
+	# become active. Only active Tenants can have requests made for them.
+	active: Boolean!
+
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
 
