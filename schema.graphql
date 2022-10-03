@@ -1742,7 +1742,7 @@ type ManagedApp implements App @aws_cognito_user_pools {
 	description: String
 
 	# A list of registered instances.
-	managedInstances: [ManagedInstance]
+	managedInstances: [ManagedInstance]!
 
 	# The iso image. Used to install and setup the ManagedApp virtual machine. Gzip'd and base64 encoded.
 	iso: String!
