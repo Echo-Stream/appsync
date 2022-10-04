@@ -3306,14 +3306,14 @@ type Query @aws_cognito_user_pools {
 	
 	# Lists the Functions available to the Tenant. May paginate.
 	ListFunctions(
+		# The name of the Tenant.
+		tenant: String!,
+
 		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
 
 		# The maximum number of items to return.
-		limit: Int,
-
-		# The name of the Tenant. If no name is specificed, will return only the EchoStream system Functions.
-		tenant: String
+		limit: Int
 	): FunctionResult!
 	
 	# Lists the KmsKeys in the Tenant. The Tenant default KmsKey will not be listed. May paginate.
@@ -3342,26 +3342,26 @@ type Query @aws_cognito_user_pools {
 	
 	# Lists the ManagedNodeTypes available to the Tenant. May paginate.
 	ListManagedNodeTypes(
+		# The name of the Tenant.
+		tenant: String!,
+
 		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
 
 		# The maximum number of items to return.
-		limit: Int,
-
-		# The name of the Tenant. If no name is specified, will return only the EchoStream system ManagedNodeTypes.
-		tenant: String
+		limit: Int
 	): ManagedNodeTypeResult!
 	
 	# Lists the MessageTypes available to the Tenant. May paginate.
 	ListMessageTypes(
+		# The name of the Tenant.
+		tenant: String!,
+
 		# The lastEvaluatedKey from a previous result.
 		exclusiveStartKey: AWSJSON,
 
 		# The maximum number of items to return.
-		limit: Int,
-
-		# The name of the Tenant.
-		tenant: String
+		limit: Int
 	): MessageTypeResult!
 	
 	# Lists the Tenants available to the current User. May paginate.
