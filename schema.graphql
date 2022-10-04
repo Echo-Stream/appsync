@@ -3198,8 +3198,8 @@ type Query @aws_cognito_user_pools {
 		# The name.
 		name: String!,
 
-		# The name of the Tenant. If null, looks for EchoStream system Function.
-		tenant: String
+		# The name of the Tenant.
+		tenant: String!
 	): Function
 	
 	# Gets the KmsKey. Returns null if not found. The Tenant default KmsKey is not gettable.
@@ -3216,8 +3216,8 @@ type Query @aws_cognito_user_pools {
 		# The name.
 		name: String!,
 
-		# The name of the Tenant. If null, looks for EchoStream system ManagedNodeType.
-		tenant: String
+		# The name of the Tenant.
+		tenant: String!
 	): ManagedNodeType
 
 	# Gets the MessageType. Returns null if not found. 
@@ -3225,8 +3225,8 @@ type Query @aws_cognito_user_pools {
 		# The name.
 		name: String!,
 
-		# The name of the Tenant. If null, looks for EchoStream system MessageType.
-		tenant: String
+		# The name of the Tenant.
+		tenant: String!
 	): MessageType
 	
 	# Gets the Node. Returns null if not found. 
