@@ -40,6 +40,9 @@ type ApiAuthenticatorFunction implements Function @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String!
 
+	# True if this is used by other resources.
+	inUse: Boolean!
+
 	# When and who modified.
 	lastModified: AtBy!
 
@@ -365,6 +368,9 @@ type BitmapperFunction implements Function @aws_cognito_user_pools {
 
 	# A human-readable description.
 	description: String!
+
+	# True if this is used by other resources.
+	inUse: Boolean!
 
 	# When and who modified.
 	lastModified: AtBy!
@@ -1446,6 +1452,9 @@ interface Function @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String!
 
+	# True if this is used by other resources.
+	inUse: Boolean!
+
 	# The name.
 	name: String!
 
@@ -1978,6 +1987,9 @@ type ManagedNodeType @aws_cognito_user_pools {
 	# The URI of the Docker image. Must be a public or a private AWS ECR repository.
 	imageUri: String!
 
+	# True if this is used by other resources.
+	inUse: Boolean!
+
 	# When and who modified.
 	lastModified: AtBy!
 
@@ -2083,6 +2095,9 @@ type MessageType @aws_cognito_user_pools {
 
 	# A human-readable description.
 	description: String!,
+
+	# True if this is used by other resources.
+	inUse: Boolean!
 
 	# When and who modified.
 	lastModified: AtBy!
@@ -2910,6 +2925,9 @@ type ProcessorFunction implements Function @aws_cognito_user_pools {
 
 	# A human-readable description.
 	description: String!
+
+	# True if this is used by other resources.
+	inUse: Boolean!
 
 	# When and who modified.
 	lastModified: AtBy!
