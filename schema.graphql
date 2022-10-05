@@ -2254,12 +2254,6 @@ input MountRequirementInput {
 type Mutation @aws_cognito_user_pools {
 	# Creates a ApiAuthenticatorFunction and returns it.
 	CreateApiAuthenticatorFunction(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
-		name: String!,
-
 		# A Python code string that contains a single top-level function definition.
 		# This function must have the signature (*, context, request, **kwargs) and return None or a tuple containing
 		# an AuthCredentials and BaseUser (or subclasses).
@@ -2267,6 +2261,12 @@ type Mutation @aws_cognito_user_pools {
 
 		# A human-readable description.
 		description: String!,
+
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
+		name: String!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
 
 		# The README in MarkDown format.
 		readme: String,
@@ -2289,11 +2289,8 @@ type Mutation @aws_cognito_user_pools {
 
 	# Creates a new BitmapperFunction and returns it.
 	CreateBitmapperFunction(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
-		name: String!,
+		# The name of the MessageType.
+		argumentMessageType: String!,
 
 		# A Python code string that contains a single top-level function definition.
 		# This function is used as a template when creating custom routing rules in RouterNodes
@@ -2304,8 +2301,11 @@ type Mutation @aws_cognito_user_pools {
 		# A human-readable description.
 		description: String!,
 
-		# The name of the MessageType.
-		argumentMessageType: String!,
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
+		name: String!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
 
 		# The README in MarkDown format.
 		readme: String,
@@ -2668,11 +2668,8 @@ type Mutation @aws_cognito_user_pools {
 
 	# Creates a ProcessorFunction and returns it.
 	CreateProcessorFunction(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
-		name: String!,
+		# The name of the MessageType.
+		argumentMessageType: String!,
 
 		# A Python code string that contains a single top-level function definition.
 		# This function must have the signature (*, context, message, source, **kwargs) and return None, a string or a list of strings.
@@ -2681,8 +2678,11 @@ type Mutation @aws_cognito_user_pools {
 		# A human-readable description.
 		description: String!,
 
-		# The name of the MessageType.
-		argumentMessageType: String!,
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
+		name: String!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
 
 		# The README in MarkDown format.
 		readme: String,
