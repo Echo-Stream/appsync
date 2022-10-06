@@ -2521,11 +2521,11 @@ type Mutation @aws_cognito_user_pools {
 
 	# Create a KmsKey and return it.
 	CreateKmsKey(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-	
 		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9_\-]{3,80}$"
 		name: String!, 
+	
+		# The name of the Tenant to create this in.
+		tenant: String!,
 	
 		# A human-readable description.
 		description: String
