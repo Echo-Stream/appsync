@@ -1528,6 +1528,9 @@ type KmsKey @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String
 
+	# True if this is used by other resources.
+	inUse: Boolean!
+
 	# When and who modified.
 	lastModified: AtBy!
 
