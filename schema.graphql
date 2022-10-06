@@ -2357,11 +2357,11 @@ type Mutation @aws_cognito_user_pools {
 		# The AWS account number that is authorized to use this App's EchoStream Cloud resources.
 		account: String!,
 
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
 		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
 
 		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON,
@@ -2375,29 +2375,29 @@ type Mutation @aws_cognito_user_pools {
 
 	# Creates a new CrossTenantReceivingApp and returns it.
 	CreateCrossTenantReceivingApp(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
 		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
 		# The name of the Tenant that will be sending messages.
 		sendingTenant: String!
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
 	): CrossTenantReceivingApp!
 
 	# Creates a new CrossTenantSendingApp and returns it.
 	CreateCrossTenantSendingApp(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
 		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
+
+		# The name of the CrossTenantReceivingApp in the receivingTenant. 
+		receivingApp: String!
 
 		# The name of the Tenant that will be receiving messages.
 		receivingTenant: String!,
 
-		# The name of the CrossTenantReceivingApp in the receivingTenant. 
-		receivingApp: String!
+		# The name of the Tenant to create this in.
+		tenant: String!,
 	): CrossTenantSendingApp!
 
 	# Creates a new CrossTenantSendingNode and returns it.
@@ -2466,11 +2466,11 @@ type Mutation @aws_cognito_user_pools {
 
 	# Creates an ExternalApp and returns it.
 	CreateExternalApp(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
 		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
 
 		# The config, in JSON object format (i.e. - dict, map).
 		config: AWSJSON,
