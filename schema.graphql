@@ -2325,9 +2325,6 @@ type Mutation @aws_cognito_user_pools {
 		# The name of the MessageType that will be received.
 		receiveMessageType: String!,
 
-		# The route table. A route table is a JSON object with hexadecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
-		routeTable: AWSJSON!,
-
 		# The name of the Tenant to create this in.
 		tenant: String!,
 
@@ -2350,6 +2347,9 @@ type Mutation @aws_cognito_user_pools {
 
 		# The list of Python requirements, in pip format.
 		requirements: [String!]
+
+		# The route table. A route table is a JSON object with hexadecimal (base-16) keys (the route bitmaps - e.g. 0xF1) and a list of target Node names as the values.
+		routeTable: AWSJSON,
 	): BitmapRouterNode!
 
 	# Creates a new CrossAccountApp and returns it.
