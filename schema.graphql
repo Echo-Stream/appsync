@@ -2484,26 +2484,26 @@ type Mutation @aws_cognito_user_pools {
 
 	# Creates an ExternalNode and returns it.
 	CreateExternalNode(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
 		# The name of the ExternalApp or CrossAccountApp.
 		app: String!,
 
 		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_\.: ]{3,80}$"
 		name: String!,
 
+		# The name of the Tenant to create this in.
+		tenant: String!,
+
+		# The config, in JSON object format (i.e. - dict, map).
+		config: AWSJSON
+
+		# A human-readable description.
+		description: String,
+
 		# The name of the MessageType that will be received.
 		receiveMessageType: String,
 
 		# The name of the MessageType that will be sent.
 		sendMessageType: String
-
-		# A human-readable description.
-		description: String,
-
-		# The config, in JSON object format (i.e. - dict, map).
-		config: AWSJSON
 	): ExternalNode!
 
 	# Creates a FilesDotComWebhookNode and returns it.
