@@ -2280,11 +2280,11 @@ type Mutation @aws_cognito_user_pools {
 
 	# Creates a new APIUser and returns it.
 	CreateApiUser(
-		# The name of the Tenant to create this in.
-		tenant: String!,
-
 		# The role of the new API User.
 		role: ApiUserRole!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
 
 		# A human-readable description.
 		description: String
@@ -3270,11 +3270,11 @@ type Query @aws_cognito_user_pools {
 	
 	# Gets the TenantUser. Returns null if not found. 
 	GetTenantUser(
-		# The name of the Tenant.
-		tenant: String!,
-
 		# The email.
 		email: AWSEmail!
+
+		# The name of the Tenant.
+		tenant: String!,
 	): TenantUser
 	
 	# Gets the current User. 
