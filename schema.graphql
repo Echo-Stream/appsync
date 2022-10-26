@@ -22,7 +22,7 @@ type AlertEmitterNode implements Node @aws_cognito_user_pools {
 	tenant: Tenant!
 }
 
-# A managed Function used in WebhookNodes.
+# A managed Function used in API-based Nodes (e.g. - WebhookNode).
 type ApiAuthenticatorFunction implements Function @aws_cognito_user_pools {
 	# A Python code string that contains a single top-level function definition.
 	# This function is used as a template when creating authentication in WebhookNodes
@@ -1583,7 +1583,7 @@ type KmsKeyResult @aws_cognito_user_pools {
 # Load balances received messages across all sendEdges by distributing
 # messages evenly and then randomly distributing any remaining messages.
 # While not required, all Nodes that are targets to a LoadBalancerNode's
-# sendEdges shoudl be clones of each other. By definition will eliminate guaranteed ordering.
+# sendEdges should be clones of each other. By definition will eliminate guaranteed ordering.
 type LoadBalancerNode implements Node @aws_cognito_user_pools {
 	# When and who created.
 	created: AtBy!
@@ -3708,8 +3708,8 @@ type WebhookNode implements Node @aws_cognito_user_pools {
 	description: String
 
 	# The Webhooks endpoint to forward webhooks events to.
-	# Accepts GET and POST webhook events at the root path.
-	# POST events may be form data, XML, or JSON payloads.
+	# Accepts POST webhook events at the root path.
+	# POST events may be any JSON-based payload.
 	endpoint: AWSURL!
 
 	# A Python code string that contains a single top-level function definition.
