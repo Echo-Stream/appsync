@@ -3278,7 +3278,10 @@ type Query @aws_cognito_user_pools {
 	): TenantUser
 	
 	# Gets the current User. 
-	GetUser: LoginUser
+	GetUser: LoginUser!
+
+	# Gets the EchoStream version
+	GetVersion: String!
 
 	# Lists the APIUsers in the Tenant. May paginate.
 	ListApiUsers(
