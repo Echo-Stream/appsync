@@ -872,12 +872,6 @@ type CrossTenantReceivingNode implements Node @aws_cognito_user_pools {
 
 	# Stops a running Node. Has no effect on an already stopped Node.
 	Stop: Boolean!
-
-	# Updates this Node.
-	Update(
-		# The human-readable description.
-		description: String
-	): CrossTenantReceivingNode!
 }
 
 # Allows for sending messages to another Tenant.
