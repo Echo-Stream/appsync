@@ -2832,7 +2832,7 @@ enum PingStatus {
 
 # A mapped port in a ManagedNode
 type Port @aws_cognito_user_pools {
-	# The exposed container port.
+	# The exposed container port. Must be betweeen 1 and 65535.
 	containerPort: Int!
 
 	# A human-readable description.
@@ -2841,7 +2841,7 @@ type Port @aws_cognito_user_pools {
 	# The host address the port is exposed on.
 	hostAddress: AWSIPAddress
 
-	# The exposed host port.
+	# The exposed host port. Must be betweeen 1024 and 65535.
 	hostPort: Int!
 
 	# The protocol that will be used by the port.
@@ -2850,13 +2850,13 @@ type Port @aws_cognito_user_pools {
 
 # Input for a mapped port in a ManagedNode
 input PortInput {
-	# The exposed container port.
+	# The exposed container port. Must be betweeen 1 and 65535.
 	containerPort: Int!
 
 	# The host address the port is exposed on. Defaults to 0.0.0.0.
 	hostAddress: AWSIPAddress
 
-	# The exposed host port.
+	# The exposed host port.  Must be betweeen 1024 and 65535.
 	hostPort: Int!
 
 	# The protocol that will be used by the port.
@@ -2865,7 +2865,7 @@ input PortInput {
 
 # A port requirement for a ManagedNodeType
 type PortRequirement @aws_cognito_user_pools {
-	# The exposed container port.
+	# The exposed container port. Must be betweeen 1 and 65535.
 	containerPort: Int!
 
 	# A human-readable description.
@@ -2877,7 +2877,7 @@ type PortRequirement @aws_cognito_user_pools {
 
 # Input for a port requirement for a ManagedNodeType
 input PortRequirementInput {
-	# The exposed container port.
+	# The exposed container port. Must be betweeen 1 and 65535.
 	containerPort: Int!
 
 	# A human-readable description.
