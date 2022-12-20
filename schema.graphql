@@ -181,9 +181,6 @@ type ApiUserResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # The allowed roles for an API User
@@ -300,9 +297,6 @@ type AppResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # Defines when and who. Used for creation and last modified stamps.
@@ -643,9 +637,6 @@ type ChangeResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # Cognito login credentials. Used by APIUsers and Apps.
@@ -1194,9 +1185,6 @@ type EdgeResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # An App that exists outside of the EchoStream Cloud. Access to the EchoStream Cloud is accomplished through GetAwsCredentials.
@@ -1496,9 +1484,6 @@ type FunctionResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # Layout information in the EchoStream UI. Only to be used by the UI.
@@ -1569,9 +1554,6 @@ type KmsKeyResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # Load balances received messages across all sendEdges by distributing
@@ -2055,9 +2037,6 @@ type ManagedNodeTypeResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # Approximate counts of the messages currently on an Edge.
@@ -2197,9 +2176,6 @@ type MessageTypeResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # A fully defined mount in a ManagedNode's Docker container.
@@ -2818,9 +2794,6 @@ type NodeResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # The status codes for instances of ManagedApps in EchoStream.
@@ -3496,9 +3469,6 @@ type TenantResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # Represents a user in EchoStream that is authorized within
@@ -3591,9 +3561,6 @@ type TenantUserResult @aws_cognito_user_pools {
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
-
-	# The number of records scanned to obtain the contained results.
-	scannedCount: Int
 }
 
 # TimerNodes emit echo.timer messages on a time period defined by the
