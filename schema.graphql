@@ -1095,7 +1095,7 @@ type DeadLetterEmitterNode implements Node @aws_cognito_user_pools {
 }
 
 # A union of all EchoStream object types
-union Echo = AlertEmitterNode | ApiAuthenticatorFunction | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | BitmapRouterNode | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | FilesDotComWebhookNode | KmsKey | LoadBalancerNode | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | ProcessorFunction | ProcessorNode | Tenant | TimerNode | WebhookNode
+union Echo = AlertEmitterNode | ApiAuthenticatorFunction | AppChangeReceiverNode | AppChangeRouterNode | AuditEmitterNode | BitmapperFunction | BitmapRouterNode | ChangeEmitterNode | CrossAccountApp | CrossTenantReceivingApp | CrossTenantReceivingNode | CrossTenantSendingApp | CrossTenantSendingNode | DeadLetterEmitterNode | Edge |  ExternalApp | ExternalNode | FilesDotComWebhookNode | KmsKey | LoadBalancerNode | LogEmitterNode | ManagedApp | ManagedNode | ManagedNodeType | MessageType | ProcessorFunction | ProcessorNode | Tenant | TimerNode | WebhookNode | WebSubHubNode | WebSubSubscriptionNode
 
 # Transmits messages between Nodes.
 type Edge @aws_cognito_user_pools {
@@ -2767,6 +2767,67 @@ type Mutation @aws_cognito_user_pools {
 		sendMessageType: String,
 
 	): WebhookNode!
+
+	# Creates a WebSubHubNode and returns it.
+	CreateWebSubHubNode(
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_ ]{3,80}$"
+		name: String!,
+
+		# The name of the Tenant to create this in.
+		tenant: String!,
+
+		# The config, in JSON object format (i.e. - dict, map).
+		config: AWSJSON,
+
+		# The lease duration to apply to subscription requests
+		# that do not specify hub.lease_seconds. Must be greater
+		# than or equal to 300 (the minimum lease seconds allowed
+		# by the hub). Defaults to 864000 (10 days).
+		defaultLeaseSeconds: Int,
+
+		# The number of times to attempt delivery to a subscription.
+		# If not provided, the subscriptions will attempt to deliver
+		# a message for 7 days.
+		deliveryRetries: Int,
+
+		# A human-readable description.
+		description: String,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, request, **kwargs) and return None or a tuple containing
+		# an AuthCredentials and BaseUser (or subclasses).
+		# Mutually exclusive with managedApiAuthenticator.
+		#
+		# For WebSubHubNodes, the BaseUser subclass returned MUST implement the identity property
+		# (this is used to identify the subscriber).
+		inlineApiAuthenticator: String,
+
+		# The logging level. Defaults to INFO.
+		loggingLevel: LogLevel,
+
+		# The name of a ApiAuthenticatorFunction. Mutually exclusive with the inlineApiAuthenticator.
+		#
+		# For WebSubHubNodes, the BaseUser subclass returned MUST implement the identity property
+		# (this is used to identify the subscriber).
+		managedApiAuthenticator: String,
+
+		# The maximum lease duration for a subscription. Must
+		# be greater than or equal to defaultLeaseSeconds. Defaults
+		# to 864000 (10 days).
+		maxLeaseSeconds: Int,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!],
+
+		# The WebSub signature algorithm used by hub subscriptions
+		# when the subscription provides a secret. Defaults to SHA1.
+		signatureAlgorithm: WebSubSignatureAlgorithm,
+
+		# The security requirements the hub is enforcing on subscription
+		# requests. If not provided no security requirements will be placed
+		# on subscriptions.
+		subscriptionSecurity: WebSubSubscriptionSecurity,
+	): WebSubHubNode!
 }
 
 # Defines the requirements for all Node types
@@ -3659,8 +3720,9 @@ type ValidationResult @aws_cognito_user_pools {
 	stdout: String!
 }
 
-# WebhookNodes allow for almost any processing of messages, including transformation,
-# augmentation, generation, combination and splitting.
+# WebhookNodes allow for receiving of WebHooks from external senders in any
+# JSON mime type. These messages are emitted as-is by the WebHookNode for
+# further processing.
 type WebhookNode implements Node @aws_cognito_user_pools {
 	# The config, in JSON object format (i.e. - dict, map).
 	config: AWSJSON
@@ -3792,4 +3854,322 @@ type WebhookNode implements Node @aws_cognito_user_pools {
 		# The loggingLevel to use during the validation. Defaults to INFO.
 		loggingLevel: LogLevel
 	): ValidationResult!
+}
+
+# WebSubHubNodes implement the W3C WebSub Hub feature. They accept
+# echo.websub messages that contain content that requires publishing
+# to subscribers.
+type WebSubHubNode implements Node @aws_cognito_user_pools {
+	# The config, in JSON object format (i.e. - dict, map).
+	config: AWSJSON
+
+	# When and who created.
+	created: AtBy!
+
+	# The lease duration to apply to subscription requests
+	# that do not specify hub.lease_seconds. Must be greater
+	# than or equal to 300 (the minimum lease seconds allowed
+	# by the hub).
+	defaultLeaseSeconds: Int!
+
+	# The number of times to attempt delivery to a subscription.
+	# If not provided, the subscriptions will attempt to deliver
+	# a message for 7 days.
+	deliveryRetries: Int
+
+	# A human-readable description.
+	description: String
+
+	# The Webhooks endpoint to forward webhooks events to.
+	# Accepts POST webhook events at the root path.
+	# POST events may be any JSON-based payload.
+	endpoint: AWSURL!
+
+	# A Python code string that contains a single top-level function definition.
+	# This function must have the signature (*, context, request, **kwargs) and return None or a tuple containing
+	# an AuthCredentials and BaseUser (or subclasses).
+	# Mutually exclusive with managedApiAuthenticator.
+	#
+	# For WebSubHubNodes, the BaseUser subclass returned MUST implement the identity property
+	# (this is used to identify the subscriber).
+	inlineApiAuthenticator: String
+
+	# When and who modified.
+	lastModified: AtBy!
+
+	# The logging level.
+	loggingLevel: LogLevel
+
+	# The managedApiAuthenticator. Mutually exclusive with the inlineApiAuthenticator.
+	#
+	# For WebSubHubNodes, the BaseUser subclass returned MUST implement the identity property
+	# (this is used to identify the subscriber).
+	managedApiAuthenticator: ApiAuthenticatorFunction
+
+	# The maximum lease duration for a subscription. Must
+	# be greater than or equal to defaultLeaseSeconds.
+	maxLeaseSeconds: Int!
+
+	# The name.
+	name: String!
+
+	# A list of the Edges messages are received on.
+	receiveEdges: [Edge]
+
+	# The MessageType that this Node is capable of receiving.
+	receiveMessageType: MessageType
+
+	# The list of Python requirements, in pip format.
+	requirements: [String!]
+
+	# A list of the Edges messages are sent on.
+	sendEdges: [Edge]
+
+	# The MessageType that this Node is capable of sending.
+	sendMessageType: MessageType
+
+	# The WebSub signature algorithm used by hub subscriptions
+	# when the subscription provides a secret.
+	signatureAlgorithm: WebSubSignatureAlgorithm!
+
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
+	# The security requirements the hub is enforcing on subscription
+	# requests.
+	subscriptionSecurity: WebSubSubscriptionSecurity
+
+	# The Tenant.
+	tenant: Tenant!
+
+	# Deletes this Node and all of its Edges and Subscriptions.
+	Delete: Boolean!
+
+	# Lists the changes.
+	ListChanges(
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
+		exclusiveStartKey: AWSJSON,
+
+		# Used for limiting the number of results when paginating. Defaults to "all".
+		limit: Int, 
+
+		# True for ascending results, False for descending result. Defaults to True.
+		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): ChangeResult!
+
+	# Lists log events that are emitted by the inlineProcessor/managedProcessor
+	ListLogEvents(
+		# The end date/time, inclusive, to list the log events to. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The filter pattern to apply, in AWS Cloudwatch Logs filter pattern format ( https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/FilterAndPatternSyntax.html ).
+		filterPattern: String,
+
+		# The number of log events to return. Maximum 10,000.
+		limit: Int,
+
+		# The nextToken returned from a previous call to ListLogEvents.
+		nextToken: String,
+
+		# The start date/time, inclusive, to list the log events from. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): LogEventResults!
+
+	# Lists WebHubSubscriptionNodes (aka - subscriptions) that this WebSubHubNode
+	# is managing. You may filter these results by providing callback, topic an/or
+	# subscriber in any combination (note that callback and topic will return at 
+	# most one result when used together; callback alone SHOULD return a singular result,
+	# but that is not enforced by the WebSub standard).
+	#
+	# callback, subscriber and topic are and'ed together if present
+	ListSubscriptions(
+		# Filter by subscriber callback URL
+		callback: AWSURL,
+
+		# The lastEvaluatedKey from a previous result.
+		exclusiveStartKey: AWSJSON,
+
+		# The maximum number of items to return.
+		limit: Int
+
+		# Filter by subscriber
+		subscriber: String,
+
+		# Filter by topic URL
+		topic: AWSURL
+	): WebSubSubscriptionNodeResult!
+
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: Boolean!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: Boolean!
+
+	# Updates the Node and returns it.
+	Update(
+		# The config, in JSON object format (i.e. - dict, map). 
+		config: AWSJSON,
+
+		# The lease duration to apply to subscription requests
+		# that do not specify hub.lease_seconds. Must be greater
+		# than or equal to 300 (the minimum lease seconds allowed
+		# by the hub). Changes will only apply to new subscriptions.
+		defaultLeaseSeconds: Int,
+
+		# The number of times to attempt delivery to a subscription.
+		# If not provided, the subscriptions will attempt to deliver
+		# a message for 7 days. Changes will only apply to new subscriptions.
+		deliveryRetries: Int,
+
+		# A human-readable description.
+		description: String,
+
+		# A Python code string that contains a single top-level function definition.
+		# This function must have the signature (*, context, request, **kwargs) and return None or a tuple containing
+		# an AuthCredentials and BaseUser (or subclasses).
+		# Mutually exclusive with managedApiAuthenticator.
+		#
+		# For WebSubHubNodes, the BaseUser subclass returned MUST implement the identity property
+		# (this is used to identify the subscriber).
+		inlineApiAuthenticator: String
+
+		# The logging level.
+		loggingLevel: LogLevel,
+
+		# The managedApiAuthenticator. Mutually exclusive with the inlineApiAuthenticator.
+		#
+		# For WebSubHubNodes, the BaseUser subclass returned MUST implement the identity property
+		# (this is used to identify the subscriber).
+		managedApiAuthenticator: String
+
+		# The maximum lease duration for a subscription. Must
+		# be greater than or equal to defaultLeaseSeconds. Changes will
+		# only apply to new subscriptions.
+		maxLeaseSeconds: Int,
+
+		# The list of Python requirements, in pip format.
+		requirements: [String!],
+
+		# The WebSub signature algorithm used by hub subscriptions
+		# when the subscription provides a secret. Changes will apply
+		# to all existing and new subscriptions.
+		signatureAlgorithm: WebSubSignatureAlgorithm,
+
+		# The security requirements the hub is enforcing on subscription
+		# requests. Changes will only apply to new subscription requests.
+		subscriptionSecurity: WebSubSubscriptionSecurity
+	): WebSubHubNode!
+
+	# Validates the supplied code against the supplied message.
+	Validate(
+		# The code to validate.
+		code: String!,
+
+		# The request to use for validation. This is a JSON representation of a starlette Request object.
+		request: AWSJSON!,
+
+		# The loggingLevel to use during the validation. Defaults to INFO.
+		loggingLevel: LogLevel
+	): ValidationResult!
+}
+
+# The supported WebSub hash algorithms for 
+# authenticated content distribution (when
+# the subscriber providers a hub.secret).
+enum WebSubSignatureAlgorithm {
+	sha1
+	sha256
+	sha384
+	sha512
+}
+
+type WebSubSubscriptionNode implements Node @aws_cognito_user_pools {
+	# The subscriber's callback URL to send content to.
+	callback: AWSURL!
+
+	# When and who created.
+	created: AtBy!
+
+	# A human-readable description.
+	description: String
+
+	# The date/time that the subscription will expire
+	expiration: AWSDateTime!
+
+	# The WebSubHubNode that created this subscription.
+	hub: WebSubHubNode!
+
+	# When and who modified.
+	lastModified: AtBy!
+
+	# The name. Will always be the name of the WebSubHubNode followed by
+	# a SHA1 hash of the hub.topic and the hub.callback.
+	name: String!
+
+	# The Edge that messages are received on.
+	receiveEdge: Edge!
+
+	# The MessageType that this Node is capable of receiving.
+	receiveMessageType: MessageType
+
+	# True if the callback is an HTTPS URL and the subscription
+	# is using authenticated content distribution (i.e. - there
+	# is a secret from the subscriber)
+	secured: Boolean!
+
+	# The Tenant.
+	tenant: Tenant!
+
+	# The topic URL.
+	topic: AWSURL!
+
+	# Deletes this Node and all of its Edges.
+	Delete: Boolean!
+
+	# Lists the changes.
+	ListChanges(
+		# The end date/time (inclusive) to list changes for in ISO8601 format. Defaults to now.
+		endDateTime: AWSDateTime,
+
+		# The lastEvaluatedKey from a previous ChangeResult. Used when paginating.
+		exclusiveStartKey: AWSJSON,
+
+		# Used for limiting the number of results when paginating. Defaults to "all".
+		limit: Int, 
+
+		# True for ascending results, False for descending result. Defaults to True.
+		sortAscending: Boolean,
+
+		# The start date/time (inclusive) to list changes for in ISO8601 format. Defaults to the beginning of time.
+		startDateTime: AWSDateTime
+	): ChangeResult!
+
+	# Starts a stopped Node. Has no effect on an already running Node.
+	Start: Boolean!
+
+	# Stops a running Node. Has no effect on an already stopped Node.
+	Stop: Boolean!
+}
+
+# A (possibly) paginated result set.
+type WebSubSubscriptionNodeResult @aws_cognito_user_pools {
+	# The list of WebSubSubscriptionNodes.
+	echos: [WebSubSubscriptionNode]
+
+	# Used during pagination. Only present if more results are available.
+	lastEvaluatedKey: AWSJSON
+}
+
+# Security requirements type for subscriptions to the
+# WebSubHubNode.
+enum WebSubSubscriptionSecurity {
+	https
+	httpsAndSecret
+	secret
 }
