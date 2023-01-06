@@ -3332,7 +3332,14 @@ type Query @aws_cognito_user_pools {
 		exclusiveStartKey: AWSJSON,
 
 		# The maximum number of items to return.
-		limit: Int
+		limit: Int,
+
+		# A list of types to return. If a "!" is placed in front of a type it will be excluded.
+		# Included and excluded types may be mixed. Excluded types take precedemce.
+		# None or an empty list will return all types.
+		#
+		# Example: ["ExternalApp", "CrossAccountApp", "!ManagedApp"]
+		types: [String]
 	): AppResult!
 	
 	# Lists the Changes in the Tenant. May paginate.
@@ -3389,7 +3396,14 @@ type Query @aws_cognito_user_pools {
 		exclusiveStartKey: AWSJSON,
 
 		# The maximum number of items to return.
-		limit: Int
+		limit: Int,
+
+		# A list of types to return. If a "!" is placed in front of a type it will be excluded.
+		# Included and excluded types may be mixed. Excluded types take precedemce.
+		# None or an empty list will return all types.
+		#
+		# Example: ["ExternalNode", "ProcessorNode", "WebSubHubNode, "!WebSubSubcriptionNode"]
+		types: [String]
 	): NodeResult!
 	
 	# Lists the ManagedNodeTypes available to the Tenant. May paginate.
