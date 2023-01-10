@@ -633,7 +633,7 @@ type ChangeEmitterNode implements Node @aws_cognito_user_pools {
 # A (possibly) paginated result set.
 type ChangeResult @aws_cognito_user_pools {
 	# The list of Changes.
-	echos: [Change]!
+	echos: [Change]
 
 	# Used during pagination. Only present if more results are available.
 	lastEvaluatedKey: AWSJSON
