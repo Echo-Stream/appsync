@@ -2715,8 +2715,8 @@ type Mutation @aws_cognito_user_pools {
 		# The AWS region.
 		region: String!,
 
-		# The config, in JSON object format (i.e. - dict, map).
-		config: AWSJSON
+		# A human-readable description.
+		description: String
 	): Tenant!
 
 	# Creates a TimerNode and returns it.
