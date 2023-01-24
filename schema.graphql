@@ -4137,6 +4137,9 @@ type WebSubSubscriptionNode implements Node @aws_cognito_user_pools {
 	# is a secret from the subscriber)
 	secured: Boolean!
 
+	# Is the Node stopped; null == false.
+	stopped: Boolean
+
 	# The Tenant.
 	tenant: Tenant!
 
