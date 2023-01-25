@@ -1677,6 +1677,15 @@ type LoginUser @aws_cognito_user_pools {
 
 	# Deletes this.
 	Delete: Boolean!
+
+	# Update and return the LoginUser.
+	Update(
+		# The first name.
+		firstName: String,
+
+		# The last name.
+		lastName: String
+	): LoginUser!
 }
 
 # A log event recorded by certain Nodes.
