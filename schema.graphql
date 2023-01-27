@@ -2779,7 +2779,7 @@ type Mutation @aws_cognito_user_pools {
 
 	# Creates a WebSubHubNode and returns it.
 	CreateWebSubHubNode(
-		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_ ]{3,80}$"
+		# The name. Must be unique within the Tenant. Must conform to the regular expression "^[A-Za-z0-9\-_ ]{3,39}$"
 		name: String!,
 
 		# The name of the Tenant to create this in.
