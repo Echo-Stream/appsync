@@ -4149,6 +4149,9 @@ type WebSubSubscriptionNode implements Node @aws_cognito_user_pools {
 	# Is the Node stopped; null == false.
 	stopped: Boolean
 
+	# The subscriber that created this.
+	subscriber: String!
+
 	# The Tenant.
 	tenant: Tenant!
 
