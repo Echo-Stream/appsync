@@ -3903,9 +3903,8 @@ type WebSubHubNode implements Node @aws_cognito_user_pools {
 	# A human-readable description.
 	description: String
 
-	# The Webhooks endpoint to forward webhooks events to.
-	# Accepts POST webhook events at the root path.
-	# POST events may be any JSON-based payload.
+	# The WebSubHub endpoint to give to subscribers. Accepts POST calls
+	# using the WebSub protocol for subscriptions.
 	endpoint: AWSURL!
 
 	# A Python code string that contains a single top-level function definition.
