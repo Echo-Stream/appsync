@@ -1099,6 +1099,9 @@ union Echo = AlertEmitterNode | ApiAuthenticatorFunction | AppChangeReceiverNode
 
 # Transmits messages between Nodes.
 type Edge @aws_cognito_user_pools {
+	# The AWS ARN of the SQS Queue.
+	arn: String!
+
 	# When and who created.
 	created: AtBy!
 
